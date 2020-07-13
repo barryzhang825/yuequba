@@ -15,7 +15,14 @@
                         <a class="forget">忘记密码?</a>
                     </div>
                     <el-form-item>
-                        <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
+                        <div class="center-box">
+                            <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
+                        </div>
+                    </el-form-item>
+                    <el-form-item>
+                        <div class="center-box">
+                            <div class="register">还没有账号，去注册>></div>
+                        </div>
                     </el-form-item>
                 </el-form>
             </div>
@@ -84,7 +91,7 @@
             }
 
             .login-box {
-                margin: 30px auto;
+                margin:0 auto;
                 width: 640px;
                 height: 420px;
                 background: rgba(255, 255, 255, 1);
@@ -94,6 +101,9 @@
                 padding: 50px 80px;
                 box-sizing: border-box;
 
+                .el-form-item{
+                    margin: 30px 0;
+                }
                 .set{
                     margin-left: 80px;
                     display: flex;
@@ -106,6 +116,16 @@
                         color:rgba(255,194,49,1);
                     }
 
+                }
+                .center-box{
+                    width: 100%;
+                    display: flex;
+                    justify-content: center;
+                    .register{
+                        cursor: pointer;
+                        font-size:15px;
+                        color:rgba(153,153,153,1);
+                    }
                 }
             }
         }
