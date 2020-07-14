@@ -15,10 +15,11 @@
             </div>
             <div class="right">
                 <img class="search" src="../../../public/images/search.png" alt="">
-                <div class="alert-box">
-                    <img class="alert" src="../../../public/images/alert.png" alt="">
-                    <div class="num">1</div>
-                </div>
+<!--                <div class="alert-box">-->
+<!--                    <el-badge :value="1" class="item">-->
+<!--                        <img class="alert" src="../../../public/images/alert.png" alt="">-->
+<!--                    </el-badge>-->
+<!--                </div>-->
                 <div class="link"><a href="/login">登录</a> | <a href="/register">注册</a></div>
             </div>
         </div>
@@ -36,10 +37,10 @@
         },
         methods: {
             goTo(num) {
-                let path=''
+                let path = ''
                 switch (num) {
                     case 1: {
-                        path='/home'
+                        path = '/home'
                         break;
                     }
                     case 2: {
@@ -63,13 +64,13 @@
                         break;
                     }
                     case 7: {
-                        path='/user'
+                        path = '/user'
                         break;
                     }
                 }
 
                 this.$router.push({
-                    path:path
+                    path: path
                 })
             }
         }
