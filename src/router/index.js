@@ -19,7 +19,31 @@ const routes = [
         name: 'Login',
         component: () => import( '../views/pc/login')
     },
-
+    {
+        path: '/user',
+        name: 'User',
+        redirect: '/user/info',
+        component: () => import( '../views/pc/user'),
+        children:[{
+            path:'info',
+            component:() => import( '../views/pc/user-info'),
+        },{
+            path:'vip',
+            component:() => import( '../views/pc/user-vip'),
+        },{
+            path:'download',
+            component:() => import( '../views/pc/user-download'),
+        },{
+            path:'recommend-vip',
+            component:() => import( '../views/pc/user-recommend-vip'),
+        },{
+            path:'update-password',
+            component:() => import( '../views/pc/user-update-password'),
+        },{
+            path:'recommend',
+            component:() => import( '../views/pc/user-recommend'),
+        }]
+    },
     // {
     //   path: '/about',
     //   name: 'About',

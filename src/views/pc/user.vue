@@ -1,0 +1,135 @@
+<template>
+    <div class="page">
+        <Header :menu="7"></Header>
+        <div class="center-box">
+            <div class="left">
+                <div class="info">
+                    <div class="line1" :style="'background-image: url('+imgUrl+')'"></div>
+                    <div class="line2">枫叶</div>
+                    <div class="line3">ID：6809026597</div>
+                </div>
+                <div class="menus">
+                    <router-link class="menu" to="/user/info" :class="$route.path==='/user/info'?'selected':''">个人信息</router-link>
+                    <router-link class="menu" to="/user/vip" :class="$route.path==='/user/vip'?'selected':''">我的VIP</router-link>
+                    <router-link class="menu" to="/user/download" :class="$route.path==='/user/download'?'selected':''">下载清单</router-link>
+                    <router-link class="menu" to="/user/recommend" :class="$route.path==='/user/recommend'?'selected':''">推广注册</router-link>
+                    <router-link class="menu" to="/user/recommend-vip" :class="$route.path==='/user/recommend-vip'?'selected':''">推广VIP</router-link>
+                    <router-link class="menu" to="/user/update-password" :class="$route.path==='/user/update-password'?'selected':''">修改密码</router-link>
+                    <div class="menu" @click="loginOut">退出</div>
+                </div>
+            </div>
+            <div class="right">
+                <router-view class="right-view"></router-view>
+            </div>
+        </div>
+        <Footer></Footer>
+    </div>
+</template>
+
+<script>
+    import Header from '@/components/pc/Header'
+    import Footer from '@/components/pc/Footer'
+
+    export default {
+        name: "User",
+        components: {
+            Header: Header,
+            Footer: Footer,
+        },
+        data(){
+            return{
+                imgUrl: require('../../../public/images/avatar.gif'),
+            }
+        },
+        methods:{
+            loginOut(){
+                this.$router.push({
+                    path:'/login'
+                })
+            }
+        }
+
+    }
+</script>
+
+<style scoped lang="scss">
+    .page {
+        width: 100%;
+        background-color: $page-back-color;
+
+        .center-box {
+            margin: 20px auto;
+            width: 1200px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            .left{
+                width: 200px;
+                background-color: #ffffff;
+                display: flex;
+                flex-direction: column;
+                .info{
+                    margin-top: 50px;
+                    width: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    .line1{
+                        width:80px;
+                        height:80px;
+                        border-radius:50%;
+                        @include back-img-center;
+                    }
+                    .line2{
+                        margin: 20px 0;
+                        font-size:16px;
+                        font-weight:400;
+                        color:rgba(0,0,0,1);
+                        @include line-hidden(1)
+                    }
+                    .line3{
+                        font-size:14px;
+                        font-weight:400;
+                        color:rgba(204,204,204,1);
+                    }
+                }
+                .menus{
+                    margin-bottom: 150px;
+                    width: 100%;
+                    margin-top: 20px;
+                    display: flex;
+                    flex-direction: column;
+                    .menu{
+                        text-decoration: none;
+                        color: #333333;
+                        cursor: pointer;
+                        border-left: 4px solid #ffffff;
+                        width: 100%;
+                        height: 48px;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        font-size:14px;
+                        font-weight:400;
+                    }
+                    .menu:hover,.selected{
+                        border-left: 4px solid $theme-color;
+                        background:#FFF7E3;
+                        font-size:14px;
+                        font-weight:400;
+                        color:$theme-color;
+                    }
+                }
+            }
+            .right{
+                width: 971px;
+                background-color: #ffffff;
+                .right-view{
+                    width: 100%;
+                    height: 100%;
+                    background-color: #ffffff;
+                }
+            }
+        }
+    }
+</style>

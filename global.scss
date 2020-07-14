@@ -1,1 +1,14 @@
 $theme-color:#FFC231;
+$page-back-color:#f6f6f6;
+@mixin line-hidden($line:1){
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $line;
+  overflow: hidden;
+}
+
+@mixin back-img-center{
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
