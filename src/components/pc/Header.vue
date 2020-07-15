@@ -91,8 +91,12 @@
                 })
             },
             toSearch(){
-                console.log(this.searchWord)
-                this.searchShow=false
+                if(this.searchWord!=''){
+                    this.searchShow=false
+                    this.$router.push({
+                        path:'/result?keyword='+this.searchWord
+                    })
+                }
             }
         }
     }
