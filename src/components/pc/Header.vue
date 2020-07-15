@@ -14,7 +14,7 @@
                 <div class="item" :class="menu===7?'selected':''" @click="goTo(7)">用户中心</div>
             </div>
             <div class="right">
-                <img class="search" src="../../../public/images/search.png" alt="">
+                <img class="search" @click="searchShow = true" src="../../../public/images/search.png" alt="">
 <!--                <div class="alert-box">-->
 <!--                    <el-badge :value="1" class="item">-->
 <!--                        <img class="alert" src="../../../public/images/alert.png" alt="">-->
@@ -23,6 +23,17 @@
                 <div class="link"><a href="/login">登录</a> | <a href="/register">注册</a></div>
             </div>
         </div>
+        <van-overlay :show="searchShow" >
+            <div class="wrapper" @click.stop>
+                <div class="close" @click="searchShow = false;searchWord=''">
+                    <img src="../../../public/images/close2.png" alt="">
+                </div>
+                <div class="input">
+                        <el-input v-model="searchWord" placeholder="请输入内容"></el-input>
+                        <img src="../../../public/images/search.png" alt="" @click="toSearch">
+                </div>
+            </div>
+        </van-overlay>
     </div>
 </template>
 
@@ -33,6 +44,12 @@
             menu: {
                 type: Number,
                 default: 1
+            }
+        },
+        data(){
+            return{
+                searchShow:false,
+                searchWord:""
             }
         },
         methods: {
@@ -72,6 +89,10 @@
                 this.$router.push({
                     path: path
                 })
+            },
+            toSearch(){
+                console.log(this.searchWord)
+                this.searchShow=false
             }
         }
     }
@@ -175,6 +196,40 @@
                         font-size: 16px;
                         font-weight: 400;
                         color: $theme-color;
+                    }
+                }
+            }
+        }
+        .van-overlay{
+            z-index: 9999;
+            .wrapper{
+                width: 600px;
+                margin: 100px auto;
+                .close{
+                    width: 100%;
+                    text-align: right;
+                    margin: 30px 0;
+                    img{
+                        width: 33px;
+                        height: 33px;
+                        cursor: pointer;
+                    }
+                }
+                .input{
+                    margin: 0 auto;
+                    width: 60%;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    img{
+                        width: 28px;
+                        height: 28px;
+                        position: relative;
+                        left: -40px;
+                        cursor: pointer;
+                    }
+                    /deep/ .el-input__inner{
+                        padding-right: 50px;
                     }
                 }
             }

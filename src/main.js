@@ -10,6 +10,10 @@ import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI);
 import '../theme/index.css'
 
+import Vant from 'vant';
+import 'vant/lib/index.css';
+Vue.use(Vant)
+
 new Vue({
   router,
   store,
