@@ -93,6 +93,7 @@
             toSearch(){
                 if(this.searchWord!=''){
                     this.searchShow=false
+                    this.searchWord=''
                     this.$router.push({
                         path:'/result?keyword='+this.searchWord
                     })
