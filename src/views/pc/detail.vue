@@ -309,10 +309,10 @@
                 category:0,
                 menu:0,
                 commentContent:'',
-                faceList: [
-                    {value: '\ud83d\ude00', url: require('../assets/imgs/emoji/grinning-face_1f600.png')},  // value为表情对应的unicode码，url为路径
-                    {value: '\ud83d\ude01', url: require('../assets/imgs/emoji/grinning-face-with-smiling-eyes_1f601.png')}
-                    ]
+                // faceList: [
+                //     {value: '\ud83d\ude00', url: require('../assets/imgs/emoji/grinning-face_1f600.png')},  // value为表情对应的unicode码，url为路径
+                //     {value: '\ud83d\ude01', url: require('../assets/imgs/emoji/grinning-face-with-smiling-eyes_1f601.png')}
+                //     ]
             }
         },
         methods: {

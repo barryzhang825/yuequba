@@ -355,6 +355,7 @@
             </div>
         </div>
         <Footer></Footer>
+        <ToTop></ToTop>
     </div>
 </template>
 
@@ -363,10 +364,12 @@
     import 'swiper/dist/css/swiper.min.css';
     import Header from '@/components/pc/Header'
     import Footer from '@/components/pc/Footer'
+    import ToTop from "@/components/pc/ToTop";
 
     export default {
         name: "Category",
         components: {
+            ToTop,
             Header: Header,
             Footer: Footer,
             Swiper
