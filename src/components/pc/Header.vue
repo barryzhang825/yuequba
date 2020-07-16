@@ -61,23 +61,23 @@
                         break;
                     }
                     case 2: {
-
+                        path = '/category?type=1'
                         break;
                     }
                     case 3: {
-
+                        path = '/category?type=2'
                         break;
                     }
                     case 4: {
-
+                        path = '/category?type=3'
                         break;
                     }
                     case 5: {
-
+                        path = '/category?type=4'
                         break;
                     }
                     case 6: {
-
+                        path = '/purchase'
                         break;
                     }
                     case 7: {

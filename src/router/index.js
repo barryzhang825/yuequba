@@ -20,9 +20,29 @@ const routes = [
         component: () => import( '../views/pc/result'),
     },
     {
+        path: '/category',
+        name: 'Category',
+        component: () => import( '../views/pc/category')
+    },
+    {
+        path: '/detail',
+        name: 'Detail',
+        component: () => import( '../views/pc/detail')
+    },
+    {
         path: '/login',
         name: 'Login',
         component: () => import( '../views/pc/login')
+    },
+    {
+        path: '/forget',
+        name: 'Forget',
+        component: () => import( '../views/pc/forget')
+    },
+    {
+        path: '/register',
+        name: 'Register',
+        component: () => import( '../views/pc/register')
     },
     {
         path: '/user',

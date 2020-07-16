@@ -1,7 +1,7 @@
 <template>
     <div class="to-top">
         <transition name="fade">
-            <img v-if="show" src="../../../public/images/totop.png" @click="scorllToTop" alt="">
+            <img v-if="show" src="../../../public/images/totop.png" @click="scrollToTop" alt="">
         </transition>
     </div>
 </template>
@@ -15,8 +15,7 @@
             }
         },
         methods: {
-            scorllToTop() {
-
+            scrollToTop() {
                 var timer = setInterval(function () {
                     let osTop = document.documentElement.scrollTop || document.body.scrollTop;
                     let ispeed = Math.floor(-osTop / 5);
