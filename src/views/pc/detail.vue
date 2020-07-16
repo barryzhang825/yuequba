@@ -7,7 +7,8 @@
                     <div class="article">
                         <div class="resultTip">
                             <img src="../../../public/images/home.png" alt="">
-                            首页 ><span>&nbsp;{{category==1?'主播区':category==2?'美图区':category==3?'视频区':category==4?'包年精选区':''}}</span> > <span style="color:#646464;">正文</span>
+                            首页 ><span>&nbsp;{{category==1?'主播区':category==2?'美图区':category==3?'视频区':category==4?'包年精选区':''}}</span>
+                            > <span style="color:#646464;">正文</span>
                         </div>
                         <div class="line1">
                             <div class="tag tag1">主播</div>
@@ -82,7 +83,7 @@
                                 </div>
                             </div>
                             <div class="item">
-                                <div class="img" :style="'background-image: url('+imgUrl+')'" ></div>
+                                <div class="img" :style="'background-image: url('+imgUrl+')'"></div>
                                 <div class="info">
                                     <div class="title">
                                         冯提莫:主播不低俗却励志,不当网红一姐,却当佛系少女
@@ -112,6 +113,14 @@
                                 placeholder="说点什么..."
                                 v-model="commentContent">
                         </el-input>
+
+                        <div class="opration">
+                            <div class="emoji-panel-btn" @click="showEmojiPanel">
+                                <img src="../../assets/img/face_logo.png"/>
+                            </div>
+                            <div @click="saveComment" class="comment-send-btn comment-send-btn-bounce">发表评论</div>
+                            <emoji-panel @emojiClick="appendEmoji" v-if="isShowEmojiPanel"></emoji-panel>
+                        </div>
                     </div>
                 </div>
                 <div class="right">
@@ -274,12 +283,14 @@
     import 'swiper/dist/css/swiper.min.css';
     import Header from '@/components/pc/Header'
     import Footer from '@/components/pc/Footer'
-    import ToTop from "../../components/pc/ToTop";
+    import ToTop from "@/components/pc/ToTop";
+    import EmojiPanel from "@/components/pc/emoji/EmojiPanel";
 
     export default {
         name: "Detail",
         components: {
             ToTop,
+            EmojiPanel,
             Header: Header,
             Footer: Footer,
             Swiper
@@ -304,15 +315,15 @@
                     value: '选项3',
                     label: '女神主播'
                 }],
-                tagValue:'',
-                keyword:'',
-                category:0,
-                menu:0,
-                commentContent:'',
-                // faceList: [
-                //     {value: '\ud83d\ude00', url: require('../assets/imgs/emoji/grinning-face_1f600.png')},  // value为表情对应的unicode码，url为路径
-                //     {value: '\ud83d\ude01', url: require('../assets/imgs/emoji/grinning-face-with-smiling-eyes_1f601.png')}
-                //     ]
+                tagValue: '',
+                keyword: '',
+                category: 0,
+                menu: 0,
+
+                commentContent: '',
+                flag: false,
+                isShowEmojiPanel: false,
+                comments: []
             }
         },
         methods: {
@@ -322,13 +333,31 @@
             handleCurrentChange(val) {
                 console.log(`当前页: ${val}`);
             },
-            fetchData(){
-                this.category=this.$route.query.type;
-                this.menu=Number(this.$route.query.type)+1;
+            fetchData() {
+                this.category = this.$route.query.type;
+                this.menu = Number(this.$route.query.type) + 1;
+            },
+
+            saveComment() {
+                this.comments.push(this.commentContent.replace(/:.*?:/g, this.emoji)); // 替换":"符号包含的字符串,通过emoji方法生成表情<span></span>
+                this.commentContent = "";
+                this.isShowEmojiPanel = false;
+            },
+            showEmojiPanel() {
+                this.isShowEmojiPanel = !this.isShowEmojiPanel;
+            },
+            emoji(word) {
+                // 生成html
+                const type = word.substring(1, word.length - 1);
+                return `<span class="emoji-item-common emoji-${type} emoji-size-small" ></span>`;
+            },
+            appendEmoji(text) {
+                const el = document.getElementById("textpanel");
+                this.commentContent = el.value + ":" + text + ":";
             }
         },
-        watch:{
-            '$route':'fetchData'
+        watch: {
+            '$route': 'fetchData'
         },
         mounted() {
             this.fetchData()
@@ -338,13 +367,13 @@
                 nextButton: '.swiper-button-next',
                 prevButton: '.swiper-button-prev',
                 loop: true,
-                autoplay : 3000,
+                autoplay: 3000,
                 paginationClickable: true
             })
             let swiper2 = new Swiper('.block-swiper-container', {
                 pagination: '.swiper-pagination2',
                 loop: true,
-                autoplay : 3000,
+                autoplay: 3000,
                 paginationClickable: true
             })
         }
@@ -352,7 +381,9 @@
 </script>
 
 <style scoped lang="scss">
+    @import "../../assets/css/emoji.css"; // 导入精灵图样式
     .page {
+        min-width: 1200px;
         background-color: $page-back-color;
 
         .center-box {
@@ -465,34 +496,38 @@
                     display: flex;
                     flex-direction: column;
 
-                    .article{
+                    .article {
                         margin-bottom: 20px;
                         width: 800px;
-                        background:rgba(255,255,255,1);
-                        box-shadow:0px 0px 10px 0px rgba(179, 179, 179, 0.35);
-                        border-radius:10px;
+                        background: rgba(255, 255, 255, 1);
+                        box-shadow: 0px 0px 10px 0px rgba(179, 179, 179, 0.35);
+                        border-radius: 10px;
                         padding: 20px 30px;
                         box-sizing: border-box;
-                        .resultTip{
+
+                        .resultTip {
                             padding-bottom: 20px;
                             display: flex;
                             flex-direction: row;
                             align-items: center;
-                            font-size:16px;
-                            font-weight:400;
-                            color:rgba(255,194,49,1);
+                            font-size: 16px;
+                            font-weight: 400;
+                            color: rgba(255, 194, 49, 1);
 
                             white-space: pre-wrap;
-                            img{
+
+                            img {
                                 margin-right: 10px;
                             }
 
                         }
-                        .line1, .line2, .line3{
+
+                        .line1, .line2, .line3 {
                             width: 100%;
                             display: flex;
                             align-items: center;
                         }
+
                         .line1 {
                             .tag {
                                 padding: 7px 10px;
@@ -527,6 +562,7 @@
                                 background: #4793F1;
                             }
                         }
+
                         .line2 {
                             font-size: 24px;
                             font-weight: 400;
@@ -534,11 +570,12 @@
                             @include line-hidden(1);
                             margin: 10px 0;
                         }
+
                         .line3 {
                             margin: 20px 0;
                             display: flex;
 
-                            .type, .time, .like ,.com ,.download {
+                            .type, .time, .like, .com, .download {
                                 display: flex;
                                 align-items: center;
                                 margin-right: 20px;
@@ -595,160 +632,183 @@
                                 font-weight: 400;
                                 color: rgba(128, 128, 128, 1);
                             }
-                            .com{
+
+                            .com {
                                 .img-comment {
                                     width: 19px;
                                     height: 19px;
                                 }
-                                font-size:16px;
-                                font-weight:400;
-                                color:rgba(128,128,128,1);
+
+                                font-size: 16px;
+                                font-weight: 400;
+                                color: rgba(128, 128, 128, 1);
                             }
-                            .download{
-                                font-size:16px;
-                                font-weight:400;
-                                color:rgba(100,100,100,1);
+
+                            .download {
+                                font-size: 16px;
+                                font-weight: 400;
+                                color: rgba(100, 100, 100, 1);
                             }
                         }
-                        .introduction{
-                            background:rgba(247,247,247,1);
-                            border:1px solid rgba(230,230,230,1);
+
+                        .introduction {
+                            background: rgba(247, 247, 247, 1);
+                            border: 1px solid rgba(230, 230, 230, 1);
                             padding: 30px 20px;
                             box-sizing: border-box;
                             color: #666666;
-                            font-size:16px;
-                            font-weight:400;
+                            font-size: 16px;
+                            font-weight: 400;
                             line-height: 1.7;
                             margin-bottom: 10px;
-                            img{
+
+                            img {
                                 margin-right: 10px;
                                 position: relative;
                                 top: 5px;
-                                width:21px;
-                                height:21px;
+                                width: 21px;
+                                height: 21px;
                             }
                         }
-                        .images{
+
+                        .images {
                             width: 100%;
                             display: flex;
                             flex-direction: column;
-                            img{
+
+                            img {
                                 width: 100%;
                                 margin: 10px 0;
                             }
                         }
-                        .download-box{
+
+                        .download-box {
                             width: 100%;
-                            background:rgba(245,245,245,1);
-                            border:1px solid rgba(230,230,230,1);
-                            padding: 20px ;
+                            background: rgba(245, 245, 245, 1);
+                            border: 1px solid rgba(230, 230, 230, 1);
+                            padding: 20px;
                             box-sizing: border-box;
                             margin: 10px 0;
-                            .download-box-line1{
+
+                            .download-box-line1 {
                                 width: 100%;
-                                font-size:16px;
-                                font-weight:400;
-                                color:rgba(51,51,51,1);
+                                font-size: 16px;
+                                font-weight: 400;
+                                color: rgba(51, 51, 51, 1);
                                 display: flex;
                                 align-items: center;
-                                .tip{
+
+                                .tip {
                                     color: #333333;
                                     display: block;
                                 }
-                                .down{
+
+                                .down {
                                     display: block;
                                     padding: 7px 10px;
                                     cursor: pointer;
                                     margin-left: 20px;
-                                    background:rgba(27,191,112,1);
-                                    border-radius:4px;
+                                    background: rgba(27, 191, 112, 1);
+                                    border-radius: 4px;
                                     color: #ffffff;
                                 }
                             }
-                            .download-box-line2{
+
+                            .download-box-line2 {
                                 margin-top: 30px;
-                                font-size:16px;
-                                font-weight:400;
-                                color:#FF2F47;
+                                font-size: 16px;
+                                font-weight: 400;
+                                color: #FF2F47;
                                 line-height: 2;
                                 white-space: pre-line;
                             }
                         }
-                        .set{
+
+                        .set {
                             width: 100%;
                             display: flex;
                             justify-content: space-between;
                             margin: 20px 0;
                             margin-bottom: 50px;
-                            .set-like{
+
+                            .set-like {
                                 cursor: pointer;
-                                border:1px solid rgba(255,49,88,1);
-                                border-radius:8px;
-                                font-size:16px;
-                                font-weight:400;
-                                color:rgba(255,64,64,1);
+                                border: 1px solid rgba(255, 49, 88, 1);
+                                border-radius: 8px;
+                                font-size: 16px;
+                                font-weight: 400;
+                                color: rgba(255, 64, 64, 1);
                                 display: flex;
                                 justify-content: center;
                                 align-items: center;
                                 padding: 15px;
-                                img{
-                                    width:21px;
-                                    height:18px;
+
+                                img {
+                                    width: 21px;
+                                    height: 18px;
                                     margin-right: 10px;
                                 }
                             }
-                            .set-share{
+
+                            .set-share {
                                 cursor: pointer;
-                                border:1px solid rgba(204,204,204,1);
-                                border-radius:8px;
-                                font-size:16px;
-                                font-weight:400;
-                                color:rgba(128,128,128,1);
+                                border: 1px solid rgba(204, 204, 204, 1);
+                                border-radius: 8px;
+                                font-size: 16px;
+                                font-weight: 400;
+                                color: rgba(128, 128, 128, 1);
                                 display: flex;
                                 justify-content: center;
                                 align-items: center;
                                 padding: 15px;
-                                img{
-                                    width:28px;
-                                    height:28px;
+
+                                img {
+                                    width: 28px;
+                                    height: 28px;
                                     margin-right: 10px;
                                 }
                             }
                         }
-                        .art-list{
+
+                        .art-list {
                             display: flex;
                             justify-content: space-between;
-                            .item{
+
+                            .item {
                                 cursor: pointer;
-                                width:340px;
-                                .img{
-                                    width:100%;
-                                    height:160px;
+                                width: 340px;
+
+                                .img {
+                                    width: 100%;
+                                    height: 160px;
                                     @include back-img-center;
                                 }
-                                .info{
+
+                                .info {
                                     display: flex;
                                     margin: 15px 0;
-                                    .button{
-                                        width:70px;
-                                        height:40px;
-                                        background:rgba(51,51,51,1);
+
+                                    .button {
+                                        width: 70px;
+                                        height: 40px;
+                                        background: rgba(51, 51, 51, 1);
 
                                         padding: 0 10px;
-                                        font-size:16px;
-                                        font-weight:400;
-                                        color:rgba(255,255,255,1);
+                                        font-size: 16px;
+                                        font-weight: 400;
+                                        color: rgba(255, 255, 255, 1);
                                         display: flex;
                                         justify-content: center;
                                         align-items: center;
                                     }
-                                    .title{
+
+                                    .title {
                                         @include line-hidden(2);
                                         padding-left: 10px;
                                         box-sizing: border-box;
-                                        font-size:16px;
-                                        font-weight:400;
-                                        color:rgba(51,51,51,1);
+                                        font-size: 16px;
+                                        font-weight: 400;
+                                        color: rgba(51, 51, 51, 1);
                                     }
                                 }
 
@@ -757,14 +817,16 @@
 
                         }
                     }
-                    .guess{
+
+                    .guess {
                         margin-bottom: 20px;
                         width: 800px;
-                        background:rgba(255,255,255,1);
-                        box-shadow:0px 0px 10px 0px rgba(179, 179, 179, 0.35);
-                        border-radius:10px;
+                        background: rgba(255, 255, 255, 1);
+                        box-shadow: 0px 0px 10px 0px rgba(179, 179, 179, 0.35);
+                        border-radius: 10px;
                         padding: 30px;
                         box-sizing: border-box;
+
                         .title {
                             width: 100%;
                             border-left: 4px solid $theme-color;
@@ -777,37 +839,42 @@
                             color: rgba(51, 51, 51, 1);
                         }
 
-                        .art-list{
+                        .art-list {
                             display: flex;
                             justify-content: space-between;
-                            .item{
+
+                            .item {
                                 cursor: pointer;
                                 width: 240px;
                                 display: flex;
                                 flex-direction: column;
-                                .img{
+
+                                .img {
                                     width: 100%;
                                     height: 180px;
                                     @include back-img-center;
                                     margin: 15px 0;
                                 }
-                                .art-title{
-                                    font-size:16px;
-                                    font-weight:400;
-                                    color:rgba(51,51,51,1);
+
+                                .art-title {
+                                    font-size: 16px;
+                                    font-weight: 400;
+                                    color: rgba(51, 51, 51, 1);
                                     @include line-hidden(2);
                                 }
                             }
                         }
                     }
-                    .comment{
+
+                    .comment {
                         margin-bottom: 20px;
                         width: 800px;
-                        background:rgba(255,255,255,1);
-                        box-shadow:0px 0px 10px 0px rgba(179, 179, 179, 0.35);
-                        border-radius:10px;
+                        background: rgba(255, 255, 255, 1);
+                        box-shadow: 0px 0px 10px 0px rgba(179, 179, 179, 0.35);
+                        border-radius: 10px;
                         padding: 30px;
                         box-sizing: border-box;
+
                         .title {
                             width: 100%;
                             border-left: 4px solid $theme-color;
@@ -819,12 +886,78 @@
                             font-weight: 400;
                             color: rgba(51, 51, 51, 1);
                         }
-                        /deep/.el-textarea{
+
+                        /deep/ .el-textarea {
                             margin: 20px 0;
-                            .el-textarea__inner{
-                                background-color: rgba(246,246,246,1);
+
+                            .el-textarea__inner {
+                                background-color: rgba(246, 246, 246, 1);
                             }
                         }
+                        .opration {
+                            width: 522px;
+                            display: flex;
+                            justify-content: space-between;
+                            position: relative;
+                            .emoji-panel-btn {
+                                &:hover {
+                                    cursor: pointer;
+                                    opacity: 0.8;
+                                }
+                                img {
+                                    height: 24px;
+                                    width: 24px;
+                                }
+                            }
+                            .comment-send-btn {
+                                width: 80px;
+                                height: 30px;
+                                line-height: 30px;
+                                text-align: center;
+                                border: 1px solid #1da1f2;
+                                border-radius: 100px;
+                                box-sizing: border-box;
+                                font-weight: bold;
+                                font-size: 13px;
+                                color: #ffffff;
+                                background-color: #4ab3f4;
+                                &:hover {
+                                    cursor: pointer;
+                                }
+                            }
+                            .comment-send-btn-bounce {
+                                position: relative;
+                            }
+                            .comment-send-btn-bounce:focus {
+                                outline: none;
+                            }
+                            .comment-send-btn-bounce:after {
+                                content: "";
+                                display: block;
+                                position: absolute;
+                                top: 0px;
+                                left: 0px;
+                                right: 0px;
+                                bottom: 0px;
+                                border-radius: 100px;
+                                border: 0px solid #1da1f2;
+                                opacity: 0.7;
+                                transition: all 0.1s;
+                            }
+                            .comment-send-btn-bounce:active:after {
+                                //.bounce active时 伪元素:after的样式
+                                opacity: 1;
+                                top: -5px;
+                                left: -5px;
+                                right: -5px;
+                                bottom: -5px;
+                                border-radius: 100px;
+                                border: 2px solid #1da1f2;
+                                transition: all 0.2s;
+                            }
+                        }
+
+
                     }
 
                 }
@@ -854,23 +987,28 @@
                             font-weight: 400;
                             color: rgba(51, 51, 51, 1);
                         }
+
                         .block-content {
                             width: 100%;
-                            .el-select{
+
+                            .el-select {
                                 margin-top: 20px;
                                 width: 100%;
                             }
+
                             .block-swiper-container {
                                 margin: 20px 0;
                                 width: 100%;
                                 height: 200px;
                                 overflow: hidden;
+
                                 .block-img {
                                     cursor: pointer;
                                     width: 100%;
                                     height: 100%;
                                     @include back-img-center;
                                 }
+
                                 /deep/ .swiper-pagination-bullet {
                                     width: 10px;
                                     height: 10px;
@@ -885,7 +1023,8 @@
                                     background: $theme-color;
                                     border-radius: 50%;
                                 }
-                                .swiper-pagination2{
+
+                                .swiper-pagination2 {
                                     position: relative;
                                     top: -20px;
                                     z-index: 999;
@@ -893,52 +1032,60 @@
                                     justify-content: center;
                                 }
                             }
-                            .block-content-title{
+
+                            .block-content-title {
                                 cursor: pointer;
-                                font-size:16px;
-                                font-weight:400;
-                                color:rgba(51,51,51,1);
+                                font-size: 16px;
+                                font-weight: 400;
+                                color: rgba(51, 51, 51, 1);
                                 @include line-hidden(1)
                             }
 
-                            .article{
+                            .article {
                                 cursor: pointer;
                                 margin: 10px 0;
                                 width: 100%;
                                 display: flex;
-                                .left{
+
+                                .left {
                                     width: 120px;
-                                    .img{
+
+                                    .img {
                                         width: 120px;
                                         height: 100px;
                                         @include back-img-center
                                     }
                                 }
-                                .right{
+
+                                .right {
                                     padding-left: 20px;
                                     box-sizing: border-box;
                                     width: calc(100% - 120px);
                                     display: flex;
                                     flex-direction: column;
                                     justify-content: space-around;
-                                    .right-title{
-                                        font-size:18px;
-                                        font-weight:400;
-                                        color:rgba(51,51,51,1);
+
+                                    .right-title {
+                                        font-size: 18px;
+                                        font-weight: 400;
+                                        color: rgba(51, 51, 51, 1);
                                         @include line-hidden(2)
                                     }
-                                    .right-info{
+
+                                    .right-info {
                                         width: 100%;
-                                        font-size:16px;
-                                        font-weight:400;
-                                        color:rgba(128,128,128,1);
+                                        font-size: 16px;
+                                        font-weight: 400;
+                                        color: rgba(128, 128, 128, 1);
                                         display: flex;
                                         align-items: center;
                                         justify-content: space-between;
-                                        .view{
+
+                                        .view {
                                             display: flex;
                                             align-items: center;
-                                            img{
+
+                                            img {
                                                 margin-right: 5px;
                                                 width: 20px;
                                                 height: 16px;
@@ -949,36 +1096,39 @@
                                 }
                             }
 
-                            .block-items{
+                            .block-items {
                                 margin-top: 20px;
                                 width: 100%;
                                 display: flex;
                                 flex-direction: row;
                                 flex-wrap: wrap;
                                 justify-content: space-between;
-                                .block-item{
+
+                                .block-item {
                                     margin-bottom: 20px;
                                     cursor: pointer;
                                     width: 150px;
                                     display: flex;
                                     flex-direction: column;
 
-                                    .line1{
+                                    .line1 {
                                         @include back-img-center;
                                         width: 150px;
                                         height: 120px;
                                     }
-                                    .line2{
+
+                                    .line2 {
                                         margin-top: 5px;
                                         margin-bottom: 7px;
-                                        font-size:16px;
-                                        font-weight:400;
-                                        color:rgba(128,128,128,1);
+                                        font-size: 16px;
+                                        font-weight: 400;
+                                        color: rgba(128, 128, 128, 1);
                                     }
-                                    .line3{
-                                        font-size:16px;
-                                        font-weight:400;
-                                        color:rgba(51,51,51,1);
+
+                                    .line3 {
+                                        font-size: 16px;
+                                        font-weight: 400;
+                                        color: rgba(51, 51, 51, 1);
                                         @include line-hidden(2)
                                     }
                                 }
@@ -989,5 +1139,66 @@
             }
         }
     }
+    .comment-wrap {
+        width: 522px;
+        margin-bottom: 180px;
+        .emoji-item-common {
+            background: url("../../assets/img/emoji_sprite.png");
+            display: inline-block;
+            &:hover {
+                cursor: pointer;
+            }
+        }
+        .emoji-size-small {
+            // 表情大小
+            zoom: 0.3;
+        }
+        .emoji-size-large {
+            zoom: 0.5; // emojipanel表情大小
+            margin: 4px;
+        }
+        .comments-list {
+            margin-top: 20px;
+            .comments-list-item {
+                margin-bottom: 20px;
+                .comments-list-item-heading {
+                    display: inline-block;
+                    img {
+                        height: 32px;
+                        width: 32px;
+                        border-radius: 50%;
+                        vertical-align: middle;
+                    }
+                    .comments-list-item-username {
+                        margin-left: 5px;
+                        font-weight: bold;
+                    }
+                }
+                .comments-list-item-content {
+                    margin: 10px 0px;
+                    border-bottom: 1px solid #cccccc;
+                    &:last-child {
+                        border-bottom: 0;
+                    }
+                    span {
+                        vertical-align: top;
+                    }
+                }
+            }
+        }
+        .comment-input {
+            height: 100px;
+            width: 500px;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            padding: 10px;
+            resize: none;
+            &:focus {
+                outline: none;
+            }
+        }
+
+    }
+
 
 </style>

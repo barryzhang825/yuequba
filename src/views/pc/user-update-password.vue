@@ -71,7 +71,7 @@
 
 <style scoped lang="scss">
 
-    .page {
+    .page {min-width:1200px;
         width: 100%;
 
         .header {

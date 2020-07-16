@@ -69,7 +69,7 @@
 </script>
 
 <style scoped lang="scss">
-    .page {
+    .page {min-width:1200px;
         width: 100%;
         height: 100%;
         min-height: 700px;
