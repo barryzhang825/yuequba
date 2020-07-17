@@ -80,7 +80,51 @@ const routes = [
         name: 'MobileRegister',
         component: () => import( '../views/mobile/register')
     },
-
+    {
+        path: '/mobile/login',
+        name: 'MobileLogin',
+        component: () => import( '../views/mobile/login')
+    },
+    {
+        path: '/mobile/home',
+        name: 'MobileHome',
+        component: () => import( '../views/mobile/home')
+    },
+    {
+        path: '/mobile/user-vip',
+        name: 'UserVip',
+        component: () => import( '../views/mobile/user-vip')
+    },
+    {
+        path: '/mobile/user-download',
+        name: 'UserDownload',
+        component: () => import( '../views/mobile/user-download')
+    },
+    {
+        path: '/mobile/user-password',
+        name: 'UserPassword',
+        component: () => import( '../views/mobile/user-password')
+    },
+    {
+        path: '/mobile/purchase',
+        name: 'UserPassword',
+        component: () => import( '../views/mobile/purchase')
+    },
+    {
+        path: '/mobile/result',
+        name: 'MobileResult',
+        component: () => import( '../views/mobile/result')
+    },
+    {
+        path: '/mobile/category',
+        name: 'MobileCategory',
+        component: () => import( '../views/mobile/category')
+    },
+    {
+        path: '/mobile/user',
+        name: 'MobileUser',
+        component: () => import( '../views/mobile/user')
+    },
 ]
 
 const router = new VueRouter({

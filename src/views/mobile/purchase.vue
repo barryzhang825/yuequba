@@ -1,12 +1,8 @@
 <template>
     <div class="page">
-        <Header :menu="6"></Header>
+        <MobileTitle title="购买专区"></MobileTitle>
         <div class="container">
-            <div class="user-info">
-                <div class="img" :style="'background-image: url('+imgUrl+')'"></div>
-                <span>踢出个未来，请选择VIP会员服务</span>
-            </div>
-            <div class="select-box">
+            <div class="white">
                 <div class="item" :class="selectedIndex==0?'selected':''" @click="selectedIndex=0">
                     <div class="line1">包月VIP</div>
                     <div class="line2">
@@ -43,129 +39,111 @@
                     <img class="check" v-if="selectedIndex==3" src="../../../public/images/check.png" alt="">
                     <div class="tag" v-if="true">包年精选福利</div>
                 </div>
+                <div class="button-box">
+                    <el-button type="primary">立即购买</el-button>
+                </div>
+            </div>
 
-            </div>
-            <div class="button-box">
-                <el-button type="primary">立即购买</el-button>
-            </div>
         </div>
-        <Footer></Footer>
     </div>
 </template>
 
 <script>
-    import Header from '@/components/pc/Header'
-    import Footer from '@/components/pc/Footer'
+    import MobileTitle from '@/components/mobile/Title'
+    import { Notify } from 'vant';
     export default {
-        name: "Purchase",
+        name: "MobilePurchase",
         components: {
-            Header: Header,
-            Footer: Footer,
+            MobileTitle
         },
-        data(){
-            return{
-                imgUrl: require('../../../public/images/avatar.gif'),
+        data() {
+            return {
                 selectedIndex:0
             }
         },
         methods:{
 
+        },
+        mounted() {
+            // Notify('通知内容');
+            // this.$message.error('这是一个消息')
+            let clientWidth = document.documentElement.clientWidth;
+            document.documentElement.style.fontSize = clientWidth / 10 + 'px';
         }
     }
 </script>
 
 <style scoped lang="scss">
-    .page{
-        min-width:1200px;
-        background-color: $page-back-color;
+    .page {
+        @include full-page;
+        background-color: rgba(246, 246, 246, 1);
         .container{
-            width: 1200px;
-            margin: 30px auto;
-            padding: 30px;
+            width: 100%;
+            padding: 0.267rem;
             box-sizing: border-box;
-            background-color: #ffffff;
-            box-shadow:0px 0px 10px 0px rgba(204,204,204,0.5);
-            border-radius:10px;
-
-            .user-info{
+            .white{
                 width: 100%;
+                background:rgba(255,255,255,1);
+                border-radius:0.133rem;
+                padding: 0.267rem 0;
                 display: flex;
+                flex-direction: column;
                 align-items: center;
-                .img{
-                    width:80px;
-                    height:80px;
-                    border-radius:50%;
-                    @include back-img-center;
-                    margin-right: 20px;
-                }
-                .user-info{
-                    font-size:16px;
-                    font-weight:400;
-                    color:rgba(51,51,51,1);
-                }
-            }
-            .select-box{
-                width: 100%;
-                display: flex;
-                flex-direction: row;
-                flex-wrap: wrap;
-                margin: 30px 0;
-                padding: 0 150px;
-                box-sizing: border-box;
-                justify-content: space-between;
+
                 .item{
-                    margin-bottom: 50px;
+                    margin-bottom: 0.4rem;
                     cursor: pointer;
-                    width:360px;
-                    height:240px;
+                    width:7.467rem;
+                    height:3.2rem;
                     border:1px solid rgba(230,230,230,1);
-                    border-radius:15px;
+                    border-radius:0.25rem;
                     display: flex;
                     flex-direction: column;
                     justify-content: space-around;
-                    padding: 10px 30px;
+                    padding: 0.133rem 0.4rem;
                     box-sizing: border-box;
                     position: relative;
                     .line1{
-                        font-size:24px;
+                        font-size:0.32rem;
                         font-weight:400;
                         color:rgba(51,51,51,1);
                         text-align: center;
                     }
                     .line2{
-                        font-size:16px;
+                        font-size:0.213rem;
                         font-weight:400;
                         color: #333333;
                         text-align: center;
                         span{
                             color:rgba(255,49,88,1);
-                            font-size:48px;
+                            font-size:0.64rem;
                         }
                     }
                     .line3{
                         border-top: 1px solid rgba(232,232,232,1);
-                        font-size:18px;
+                        font-size:0.24rem;
                         font-weight:400;
                         color:rgba(51,51,51,1);
                         text-align: center;
-                        padding-top: 20px;
+                        padding-top: 0.267rem;
                         box-sizing: border-box;
                     }
                     .check{
                         position: absolute;
                         right: 0;
                         bottom: 0;
+                        width: 0.669rem;
                     }
                     .tag{
-                        padding: 0 15px;
-                        height:42px;
+                        padding: 0 0.133rem;
+                        height:0.56rem;
                         background:rgba(255,49,88,1);
-                        border-radius:20px 0px 20px 0px;
+                        border-radius:0.267rem 0rem 0.267rem 0rem;
                         position: absolute;
-                        top: -10px;
+                        top: -0.133rem;
                         left: 0;
 
-                        font-size:18px;
+                        font-size:0.24rem;
                         font-weight:400;
                         color:rgba(255,255,255,1);
                         display: flex;
@@ -174,30 +152,36 @@
                     }
                 }
                 .selected{
-                    width:360px;
-                    height:240px;
+                    width:7.467rem;
+                    height:3.2rem;
                     border:2px solid rgba(255,49,88,1);
-                    border-radius:15px;
+                    border-radius:0.25rem;
 
                 }
-            }
-            .button-box{
-                display: flex;
-                justify-content: center;
-                margin-bottom: 50px;
+                .button-box{
+                    width: 100%;
+                    display: flex;
+                    justify-content: center;
 
-                .el-button{
-                    width:240px;
-                    height:72px;
-                    background:rgba(255,194,49,1);
-                    border-radius:10px;
+                    .el-button{
+                        width:3.2rem;
+                        height:0.96rem;
+                        background:rgba(255,194,49,1);
+                        border-radius:0.133rem;
 
-                    font-size:18px;
-                    font-weight:400;
-                    color:rgba(255,255,255,1);
+                        font-size:0.24rem;
+                        font-weight:400;
+                        color:rgba(255,255,255,1);
+                    }
                 }
+
             }
         }
+
+
     }
 
 </style>
+
+
+

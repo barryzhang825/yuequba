@@ -3,27 +3,27 @@
         <div class="gray">
             <img class="logo" src="../../../public/images/logo.png" alt="">
             <div class="login-box">
-                <el-form label-position="left" :rules="rules" ref="ruleForm" label-width="2.5rem" :model="formData">
+                <el-form label-position="left" :rules="rules" ref="ruleForm" label-width="80px" :model="formData">
                     <el-form-item label="用户名：" prop="username">
                         <el-input v-model="formData.username"></el-input>
                     </el-form-item>
                     <el-form-item label="密 码：" prop="password">
                         <el-input type="password" show-password v-model="formData.password"></el-input>
                     </el-form-item>
-                    <el-form-item label="确认密码：" prop="rePassword">
-                        <el-input type="password" show-password v-model="formData.rePassword"></el-input>
-                    </el-form-item>
+                    <div class="set">
+                        <el-checkbox v-model="rememberPassword">记住密码</el-checkbox>
+                        <a class="forget" href="/forget">忘记密码?</a>
+                    </div>
                     <el-form-item>
                         <div class="center-box">
-                            <el-button type="primary" @click="submitForm('ruleForm')">注册</el-button>
+                            <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
                         </div>
                     </el-form-item>
-                </el-form>
 
-            </div>
-            <div class="center-box2">
-                <img src="../../../public/images/back.png" alt="">
-                <a class="register" href="/home">返回首页</a>
+                </el-form>
+                <div class="center-box2">
+                    <a class="register" href="/register">还没有账号，去注册>></a>
+                </div>
             </div>
         </div>
     </div>
@@ -31,17 +31,8 @@
 
 <script>
     export default {
-        name: "MobileRegister",
+        name: "MobileLogin",
         data() {
-            var validateRePassword = (rule, value, callback) => {
-                if (value === '') {
-                    callback(new Error('请输入确认密码'));
-                } else if (value !== this.formData.password) {
-                    callback(new Error('两次输入密码不一致!'));
-                } else {
-                    callback();
-                }
-            };
             return {
                 rememberPassword:false,
                 formData: {
@@ -50,15 +41,10 @@
                 },
                 rules: {
                     username: [
-                        {required: true, message: '请输入用户名', trigger: 'blur'},
-                        { min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }
+                        {required: true, message: '请输入用户名', trigger: 'blur'}
                     ],
                     password: [
-                        {required: true, message: '请输入密码', trigger: 'blur'},
-                        { min: 6, max: 18, message: '长度在 6 到 18 个字符', trigger: 'blur' }
-                    ],
-                    rePassword: [
-                        {required: true, validator: validateRePassword, trigger: 'blur'}
+                        {required: true, message: '请输入密码', trigger: 'blur'}
                     ],
                 }
             }
@@ -77,7 +63,6 @@
         },
         mounted() {
             // this.$message('这是一条消息提示');
-
             let clientWidth = document.documentElement.clientWidth;
             document.documentElement.style.fontSize = clientWidth/10+'px';
         }
@@ -110,19 +95,29 @@
                 background: rgba(255, 255, 255, 1);
                 opacity: 0.9;
                 border-radius: 0.133rem;
-
                 padding: 0.667rem 0.7rem;
                 padding-bottom: 0.3rem;
                 box-sizing: border-box;
 
                 .el-form-item{
-                    margin: 0.47rem 0;
+                    margin: 30px 0;
+                }
+                .set{
+                    margin-left: 80px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    .forget{
+                        cursor: pointer;
+                        font-size:15px;
+                        color:rgba(255,194,49,1);
+                    }
+
                 }
                 .center-box{
                     width: 100%;
                     display: flex;
                     justify-content: flex-start;
-                    margin-top: 0.267rem;
                     .register{
                         cursor: pointer;
                         font-size:15px;
@@ -130,6 +125,9 @@
                     }
                     /deep/.el-button{
                         margin-left: 30px;
+                        width:2.667rem;
+                        background:rgba(255,194,49,1);
+                        height:1.067rem;
                         span{
                             font-size:0.32rem;
                             font-weight:400;
@@ -137,25 +135,16 @@
                         }
                     }
                 }
-            }
-            .center-box2{
-                width: 100%;
-                display: flex;
-                flex-direction: row;
-                justify-content: center;
-                margin-top: 20px;
-                align-items: center;
-                img{
-                    width:18px;
-                    height:17px;
-                }
-                a{
-                    margin-left: 10px;
-                    display: block;
-                    font-size:16px;
-                    font-weight:400;
-                    color:rgba(255,194,49,1);
-                    text-decoration: none;
+                .center-box2{
+                    width: 100%;
+                    display: flex;
+                    justify-content: center;
+                    a{
+                        font-size:0.32rem;
+                        font-weight:400;
+                        color:rgba(153,153,153,1);
+                        text-decoration: none;
+                    }
                 }
             }
         }
