@@ -437,7 +437,8 @@
 </script>
 
 <style scoped lang="scss">
-    .page {min-width:1200px;
+    .page {
+        min-width:1200px;
         background-color: $page-back-color;
 
         .center-box {

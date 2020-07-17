@@ -30,6 +30,11 @@ const routes = [
         component: () => import( '../views/pc/detail')
     },
     {
+        path: '/purchase',
+        name: 'Purchase',
+        component: () => import( '../views/pc/purchase')
+    },
+    {
         path: '/login',
         name: 'Login',
         component: () => import( '../views/pc/login')
