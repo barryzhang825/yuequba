@@ -31,7 +31,7 @@
 
 <script>
     export default {
-        name: "Register",
+        name: "MobileRegister",
         data() {
             var validateRePassword = (rule, value, callback) => {
                 if (value === '') {
@@ -82,32 +82,28 @@
 </script>
 
 <style scoped lang="scss">
-    .page {min-width:1200px;
+    .page {
         width: 100%;
         height: 100%;
-        min-height: 700px;
         position: absolute;
-        background-image: url("../../../public/images/login-back.png");
-        background-size: cover;
-        background-position: center center;
         z-index: -1;
+        background-color: rgba(246,246,246,1);
 
         .gray {
             width: 100%;
             height: 100%;
             position: absolute;
-            background-color: rgba(0, 0, 0, 0.5);
             z-index: 0;
 
             .logo {
-                margin: 80px auto;
+                margin: 10vh auto;
                 display: block;
+                width: 21vw;
             }
 
             .login-box {
                 margin:0 auto;
-                width: 640px;
-                height: 420px;
+                width: 100vw;
                 background: rgba(255, 255, 255, 1);
                 opacity: 0.9;
                 border-radius: 10px;

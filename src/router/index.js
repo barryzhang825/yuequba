@@ -74,14 +74,13 @@ const routes = [
             component:() => import( '../views/pc/user-recommend'),
         }]
     },
-    // {
-    //   path: '/about',
-    //   name: 'About',
-    //   // route level code-splitting
-    //   // this generates a separate chunk (about.[hash].js) for this route
-    //   // which is lazy-loaded when the route is visited.
-    //   component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-    // }
+
+    {
+        path: '/mobile/register',
+        name: 'MobileRegister',
+        component: () => import( '../views/mobile/register')
+    },
+
 ]
 
 const router = new VueRouter({
@@ -90,4 +89,36 @@ const router = new VueRouter({
     routes
 })
 
+
+/**
+ * start
+ * 导航守卫配置
+ * **/
+const whiteList = ['/login', '/register', '/forget'] // 路由白名单
+router.beforeEach(function(to,from,next){
+    const hasToken = '123'
+    console.log("进入守卫");
+    console.log(to.path);
+
+    let isMobile=navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
+
+
+
+    if (whiteList.indexOf(to.path) !== -1) {
+        next()
+    } else {
+        if(hasToken){
+            next()
+        }else {
+            next('/login')
+        }
+    }
+
+
+    //跳转失败页面
+    //next({ path: '/error', replace: true, query: { noGoBack: true }})
+})
+/**
+ * end
+**/
 export default router
