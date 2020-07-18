@@ -21,6 +21,7 @@
 <!--                    </el-badge>-->
 <!--                </div>-->
                 <div class="link"><a href="/login">登录</a> | <a href="/register">注册</a></div>
+<!--                <div class="userinfo"><a href="/user">正尚网络科技</a> | <a href="">退出</a></div>-->
             </div>
         </div>
         <van-overlay :show="searchShow" >
@@ -201,6 +202,12 @@
                         font-size: 16px;
                         font-weight: 400;
                         color: $theme-color;
+                    }
+                }
+                .userinfo{
+                    a{
+                        color: #666666;
+                        text-decoration: none;
                     }
                 }
             }
