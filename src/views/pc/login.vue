@@ -31,6 +31,7 @@
 </template>
 
 <script>
+    import {userLogin} from '@/api/pc/api'
     export default {
         name: "Login",
         data() {
@@ -52,9 +53,15 @@
         },
         methods:{
             submitForm(formName) {
+                let that = this
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        alert('submit!');
+                        let formData=new FormData()
+                        formData.append('user_login',that.formData.username)
+                        formData.append('user_pass',that.formData.password)
+                        userLogin(formData).then(res=>{
+                            console.log(res,888)
+                        })
                     } else {
                         console.log('error submit!!');
                         return false;
@@ -63,7 +70,7 @@
             },
         },
         mounted() {
-            this.$message('这是一条消息提示');
+            // this.$message('这是一条消息提示');
         }
     }
 </script>

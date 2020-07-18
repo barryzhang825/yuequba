@@ -30,6 +30,8 @@
 </template>
 
 <script>
+    import {userRegister} from "../../api/pc/api";
+
     export default {
         name: "Register",
         data() {
@@ -45,8 +47,9 @@
             return {
                 rememberPassword:false,
                 formData: {
-                    username: '',
-                    password: ''
+                    username: 'user123',
+                    password: '123123',
+                    rePassword:'123123'
                 },
                 rules: {
                     username: [
@@ -65,9 +68,12 @@
         },
         methods:{
             submitForm(formName) {
+                let that = this
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        alert('submit!');
+                        userRegister(that.formData).then(res=>{
+                            console.log(res,123)
+                        })
                     } else {
                         console.log('error submit!!');
                         return false;
@@ -76,7 +82,7 @@
             },
         },
         mounted() {
-            this.$message('这是一条消息提示');
+            // this.$message('这是一条消息提示');
         }
     }
 </script>

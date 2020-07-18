@@ -13,5 +13,20 @@ module.exports = {
                 })
                 .end()
         })
-    }
+    },
+
+
+    // devServer: {
+    //     proxy: {
+    //         '/api': {
+    //             target: 'http://yuequba.zhengshangwl.com',
+    //             // ws: true,
+    //             changeOrigin: true,
+    //             pathRewrite:{
+    //                 '^/api':''
+    //             }
+    //         }
+    //     }
+    // }
+
 }
