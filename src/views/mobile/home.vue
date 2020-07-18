@@ -1,16 +1,17 @@
 <template>
     <div class="page">
         <MobileHeader></MobileHeader>
-        <van-overlay class-name="van-overlay-tag" :show="ifTagShow" @click="ifTagShow = false" >
+        <van-overlay class-name="van-overlay-tag" :show="ifTagShow" @click="ifTagShow = false">
             <div class="wrapper" @click.stop>
                 <div class="wrapper-title">
-                    <div> </div>
+                    <div></div>
                     <span>热门标签</span>
                     <img class="close" @click="ifTagShow = false" src="../../../public/images/close3.png" alt="">
                 </div>
 
                 <div class="block-content">
-                    <el-select v-model="tagValue" placeholder="请选择" popper-class="select-popper"  :popper-append-to-body="false">
+                    <el-select v-model="tagValue" placeholder="请选择" popper-class="select-popper"
+                               :popper-append-to-body="false">
                         <el-option
                                 v-for="item in tagOptions"
                                 :key="item.value"
@@ -35,18 +36,18 @@
             </div>
             <div class="hotMenu">
                 <div class="hotMenu-item">
-                    <img class="img1" src="../../../public/images/m1.png" alt="">
+                    <img class="img1" src="../../../public/images/m1.png" @click="$router.push('/mobile/register')">
                     <span>注册会员</span>
                 </div>
                 <div class="hotMenu-item">
-                    <img class="img2" src="../../../public/images/m2.png" alt="">
+                    <img class="img2" src="../../../public/images/m2.png" @click="$router.push('/mobile/purchase')">
                     <span>购买专区</span>
                 </div>
                 <div class="hotMenu-item" @click="ifTagShow=true">
                     <img class="img3" src="../../../public/images/m3.png" alt="">
                     <span>热门标签</span>
                 </div>
-                <div class="hotMenu-item">
+                <div class="hotMenu-item" @click="$router.push('/mobile/user')">
                     <img class="img4" src="../../../public/images/m4.png" alt="">
                     <span>用户中心</span>
                 </div>
@@ -56,10 +57,25 @@
                 <div class="border"></div>
             </div>
             <div class="pics">
-                <div class="swiper-container2">
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide" v-for="(item,index) in imagesUrl">
-                            <div class="img" :style="'background-image: url('+item+')'"></div>
+                <div class="pics-box">
+                    <div class="pics-item" :style="'background-image: url('+imgUrl+')'">
+                        <div class="gray">
+                            <div class="text">漂亮网红女主播线上卖货，一天净收入10万元</div>
+                        </div>
+                    </div>
+                    <div class="pics-item" :style="'background-image: url('+imgUrl+')'">
+                        <div class="gray">
+                            <div class="text">漂亮网红女主播线上卖货，一天净收入10万元</div>
+                        </div>
+                    </div>
+                    <div class="pics-item" :style="'background-image: url('+imgUrl+')'">
+                        <div class="gray">
+                            <div class="text">漂亮网红女主播线上卖货，一天净收入10万元</div>
+                        </div>
+                    </div>
+                    <div class="pics-item" :style="'background-image: url('+imgUrl+')'">
+                        <div class="gray">
+                            <div class="text">漂亮网红女主播线上卖货，一天净收入10万元</div>
                         </div>
                     </div>
                 </div>
@@ -269,6 +285,7 @@
             </div>
         </div>
         <MobileFooter></MobileFooter>
+        <MobileToTop></MobileToTop>
     </div>
 </template>
 
@@ -277,12 +294,15 @@
     import 'swiper/dist/css/swiper.min.css';
     import MobileHeader from '@/components/mobile/Header'
     import MobileFooter from '@/components/mobile/Footer'
+    import MobileToTop from '@/components/mobile/ToTop'
+
     export default {
         name: "MobileHome",
         components: {
             Swiper,
             MobileHeader,
             MobileFooter,
+            MobileToTop
         },
         data() {
             return {
@@ -294,7 +314,7 @@
                     require('../../../public/images/avatar.gif'),
                 ],
                 currentPage: 5,
-                ifTagShow:false,
+                ifTagShow: false,
                 tagOptions: [{
                     value: '选项1',
                     label: '女神主播'
@@ -305,7 +325,7 @@
                     value: '选项3',
                     label: '女神主播'
                 }],
-                tagValue:'',
+                tagValue: '',
             }
         },
         methods: {
@@ -321,14 +341,9 @@
             let swiper = new Swiper('.swiper-container', {
                 pagination: '.swiper-pagination',
                 loop: true,
-                autoplay : 3000,
+                autoplay: 3000,
                 paginationClickable: true
             })
-            let swiper2 = new Swiper('.swiper-container2', {
-                loop: true,
-                autoplay : 3000
-            })
-
         }
     }
 </script>
@@ -339,34 +354,38 @@
         background-color: $page-back-color;
         padding-bottom: 1.32rem;
 
-        .van-overlay-tag{
+        .van-overlay-tag {
             z-index: 999999;
-            .wrapper{
+
+            .wrapper {
                 margin: 5.333rem auto;
-                width:8rem;
-                height:3.2rem;
-                background:rgba(255,255,255,1);
-                border-radius:10px;
+                width: 8rem;
+                height: 3.2rem;
+                background: rgba(255, 255, 255, 1);
+                border-radius: 10px;
                 padding: 0.4rem;
                 box-sizing: border-box;
-                .wrapper-title{
+
+                .wrapper-title {
                     width: 100%;
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
-                    span{
-                        font-size:0.32rem;
-                        font-weight:400;
-                        color:rgba(51,51,51,1);
+
+                    span {
+                        font-size: 0.32rem;
+                        font-weight: 400;
+                        color: rgba(51, 51, 51, 1);
                         position: relative;
                         left: 0.267rem;
                     }
-                    .close{
-                        width:0.56rem;
-                        height:0.56rem;
+
+                    .close {
+                        width: 0.56rem;
+                        height: 0.56rem;
                         border-radius: 50%;
                         justify-self: flex-end;
-                        
+
                     }
                 }
 
@@ -374,10 +393,12 @@
                     width: 100%;
                     display: flex;
                     align-items: center;
-                    /deep/.select-popper{
+
+                    /deep/ .select-popper {
                         z-index: 8888 !important;
                     }
-                    .el-select{
+
+                    .el-select {
                         margin: 0.267rem auto;
                         width: 80%;
                         z-index: 999;
@@ -389,7 +410,7 @@
 
         .center-box {
             margin: 0 auto;
-            width:100%;
+            width: 100%;
 
             .swiper {
                 width: 100%;
@@ -438,129 +459,134 @@
                     }
                 }
             }
-            .hotMenu{
+
+            .hotMenu {
                 position: relative;
                 top: -0.267rem;
                 z-index: 1;
                 margin: 0 auto;
-                width:9.467rem;
-                height:2.133rem;
-                background:rgba(255,255,255,1);
-                box-shadow:-4px 4px 10px 0px rgba(204,204,204,0.3);
-                border-radius:10px;
+                width: 9.467rem;
+                height: 2.133rem;
+                background: rgba(255, 255, 255, 1);
+                box-shadow: -4px 4px 10px 0px rgba(204, 204, 204, 0.3);
+                border-radius: 10px;
                 display: flex;
                 flex-direction: row;
                 align-items: center;
-                .hotMenu-item{
+
+                .hotMenu-item {
                     width: 25%;
                     display: flex;
                     flex-direction: column;
                     align-items: center;
-                    .img1{
-                        width:0.747rem;
-                        height:0.68rem;
+
+                    .img1 {
+                        width: 0.747rem;
+                        height: 0.68rem;
                     }
-                    .img2{
-                        width:0.8rem;
-                        height:0.8rem;
+
+                    .img2 {
+                        width: 0.8rem;
+                        height: 0.8rem;
                     }
-                    .img3{
-                        width:0.827rem;
-                        height:0.707rem;
+
+                    .img3 {
+                        width: 0.827rem;
+                        height: 0.707rem;
                     }
-                    .img4{
-                        width:0.8rem;
-                        height:0.8rem;
+
+                    .img4 {
+                        width: 0.8rem;
+                        height: 0.8rem;
                     }
-                    span{
+
+                    span {
                         margin-top: 0.133rem;
-                        font-size:0.32rem;
-                        font-weight:400;
-                        color:rgba(51,51,51,1);
+                        font-size: 0.32rem;
+                        font-weight: 400;
+                        color: rgba(51, 51, 51, 1);
                     }
                 }
             }
-            .content-title{
+
+            .content-title {
                 margin: 0.267rem 0;
                 width: 100%;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                span{
-                    font-size:0.4rem;
-                    font-weight:400;
-                    color:rgba(51,51,51,1);
+
+                span {
+                    font-size: 0.4rem;
+                    font-weight: 400;
+                    color: rgba(51, 51, 51, 1);
                 }
-                .border{
+
+                .border {
                     margin: 0.133rem 0;
-                    width:0.667rem;
-                    height:0.08rem;
-                    background:rgba(255,194,49,1);
-                    border-radius:0.04rem;
+                    width: 0.667rem;
+                    height: 0.08rem;
+                    background: rgba(255, 194, 49, 1);
+                    border-radius: 0.04rem;
                 }
             }
-            .pics{
+
+            .pics {
                 width: 100%;
                 box-sizing: border-box;
-
-
-                .swiper-container2 {
-                    width: 100%;
-                    height: 4.267rem;
-                    overflow: hidden;
-                    .img {
-                        cursor: pointer;
-                        width: 100%;
-                        height: 100%;
+                .pics-box {
+                    overflow-x: scroll;
+                    display: flex;
+                    box-sizing: border-box;
+                    .pics-item {
+                        flex-shrink: 0;
+                        width: 3.733rem;
+                        height: 3.067rem;
+                        border-radius: 0.133rem;
                         @include back-img-center;
-                    }
+                        margin: 0 0.267rem;
 
-                    /deep/ .swiper-pagination-bullet {
-                        width: 0.187rem;
-                        height: 0.187rem;
-                        opacity: 1;
-                        background: rgba(255, 255, 255, 1);
-                        border-radius: 50%;
-                    }
+                        .gray {
+                            width: 100%;
+                            height: 100%;
+                            background: rgba(20, 20, 20, .5);
+                            border-radius: 0.133rem;
+                            position: relative;
+                            box-sizing: border-box;
+                            display: flex;
+                            justify-content: center;
 
-                    /deep/ .swiper-pagination-bullet-active {
-                        width: 0.187rem;
-                        height: 0.187rem;
-                        background: $theme-color;
-                        border-radius: 50%;
-                    }
-
-                    /deep/ .swiper-button-next {
-                        right: 20px;
-                        width: 45px;
-                        height: 45px;
-                        background-size: 100% 100%;
-                        background-image: url("../../../public/images/right.png");
-                    }
-
-                    /deep/ .swiper-button-prev {
-                        left: 20px;
-                        width: 45px;
-                        height: 45px;
-                        background-size: 100% 100%;
-                        background-image: url("../../../public/images/left.png");
+                            .text {
+                                text-align: justify;
+                                font-size: 0.213rem;
+                                font-weight: 400;
+                                color: rgba(255, 255, 255, 1);
+                                position: absolute;
+                                bottom: 0;
+                                margin: 0.267rem;
+                                @include line-hidden(2);
+                            }
+                        }
                     }
                 }
             }
+
             .content {
                 margin-top: 0.267rem;
                 width: 100%;
+
                 .left {
-                    width:100%;
+                    width: 100%;
                     padding: 0 0.267rem;
                     display: flex;
                     flex-direction: column;
                     box-sizing: border-box;
+
                     .item {
                         margin-bottom: 0.267rem;
                         background-color: #ffffff;
-                        box-shadow:0px 0px 10px 0px rgba(179, 179, 179, 0.35);
-                        border-radius:0.133rem;
+                        box-shadow: 0px 0px 10px 0px rgba(179, 179, 179, 0.35);
+                        border-radius: 0.133rem;
                         padding: 0.333rem;
                         box-sizing: border-box;
 
@@ -609,8 +635,8 @@
 
                         .line2 {
                             cursor: pointer;
-                            font-size:0.36rem;
-                            font-weight:400;
+                            font-size: 0.36rem;
+                            font-weight: 400;
                             color: rgba(51, 51, 51, 1);
                             @include line-hidden(2);
                             margin: 0.133rem 0;
@@ -695,9 +721,9 @@
                                     width: 100%;
                                     height: 100%;
                                     background: rgba(20, 20, 20, 0.6);
-                                    font-size:0.64rem;
-                                    font-weight:400;
-                                    color:rgba(255,255,255,1);
+                                    font-size: 0.64rem;
+                                    font-weight: 400;
+                                    color: rgba(255, 255, 255, 1);
                                     display: flex;
                                     justify-content: center;
                                     align-items: center;
@@ -711,6 +737,7 @@
                         display: flex;
                         justify-content: center;
                         overflow: hidden;
+
                         /deep/ .el-pagination {
                             .btn-prev, .btn-next, .el-pager li {
                                 background-color: #f6f6f6;
@@ -720,15 +747,16 @@
                 }
 
             }
-            .device{
+
+            .device {
                 white-space: pre-wrap;
                 padding-bottom: 0.4rem;
                 width: 100%;
                 display: flex;
                 justify-content: center;
-                font-size:0.32rem;
-                font-weight:400;
-                color:rgba(51,51,51,1);
+                font-size: 0.32rem;
+                font-weight: 400;
+                color: rgba(51, 51, 51, 1);
             }
         }
     }

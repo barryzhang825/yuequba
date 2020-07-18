@@ -58,7 +58,7 @@ const routes = [
             path:'info',
             component:() => import( '../views/pc/user-info'),
         },{
-            path:'vip',
+            path:'user-vip',
             component:() => import( '../views/pc/user-vip'),
         },{
             path:'download',
@@ -90,21 +90,7 @@ const routes = [
         name: 'MobileHome',
         component: () => import( '../views/mobile/home')
     },
-    {
-        path: '/mobile/user-vip',
-        name: 'UserVip',
-        component: () => import( '../views/mobile/user-vip')
-    },
-    {
-        path: '/mobile/user-download',
-        name: 'UserDownload',
-        component: () => import( '../views/mobile/user-download')
-    },
-    {
-        path: '/mobile/user-password',
-        name: 'UserPassword',
-        component: () => import( '../views/mobile/user-password')
-    },
+
     {
         path: '/mobile/purchase',
         name: 'UserPassword',
@@ -125,6 +111,47 @@ const routes = [
         name: 'MobileUser',
         component: () => import( '../views/mobile/user')
     },
+    {
+        path: '/mobile/user-info',
+        name: 'MobileUserInfo',
+        component: () => import( '../views/mobile/user-info')
+    },
+    {
+        path: '/mobile/user-vip',
+        name: 'UserVip',
+        component: () => import( '../views/mobile/user-vip')
+    },
+    {
+        path: '/mobile/user-download',
+        name: 'UserDownload',
+        component: () => import( '../views/mobile/user-download')
+    },
+    {
+        path: '/mobile/user-password',
+        name: 'UserPassword',
+        component: () => import( '../views/mobile/user-password')
+    },
+    {
+        path: '/mobile/recommend-vip',
+        name: 'MobileUserRecommendVip',
+        component: () => import( '../views/mobile/user-recommend-vip')
+    },
+    {
+        path: '/mobile/recommend-register',
+        name: 'MobileUserRecommendRegister',
+        component: () => import( '../views/mobile/user-recommend-register')
+    },
+    {
+        path: '/mobile/notification',
+        name: 'MobileNotification',
+        component: () => import( '../views/mobile/notification')
+    },
+    {
+        path: '/mobile/detail',
+        name: 'MobileDetail',
+        component: () => import( '../views/mobile/detail')
+    },
+
 ]
 
 const router = new VueRouter({

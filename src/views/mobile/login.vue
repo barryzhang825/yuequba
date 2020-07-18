@@ -1,7 +1,7 @@
 <template>
     <div class="page">
         <div class="gray">
-            <img class="logo" src="../../../public/images/logo.png" alt="">
+            <img class="logo" @click="$router.push('/mobile/home')" src="../../../public/images/logo.png" alt="">
             <div class="login-box">
                 <el-form label-position="left" :rules="rules" ref="ruleForm" label-width="80px" :model="formData">
                     <el-form-item label="用户名：" prop="username">

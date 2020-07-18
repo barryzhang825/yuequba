@@ -10,7 +10,7 @@
                 </div>
                 <div class="menus">
                     <router-link class="menu" to="/user/info" :class="$route.path==='/user/info'?'selected':''">个人信息</router-link>
-                    <router-link class="menu" to="/user/vip" :class="$route.path==='/user/vip'?'selected':''">我的VIP</router-link>
+                    <router-link class="menu" to="/user/user-vip" :class="$route.path==='/user/user-vip'?'selected':''">我的VIP</router-link>
                     <router-link class="menu" to="/user/download" :class="$route.path==='/user/download'?'selected':''">下载清单</router-link>
                     <router-link class="menu" to="/user/recommend" :class="$route.path==='/user/recommend'?'selected':''">推广注册</router-link>
                     <router-link class="menu" to="/user/recommend-vip" :class="$route.path==='/user/recommend-vip'?'selected':''">推广VIP</router-link>

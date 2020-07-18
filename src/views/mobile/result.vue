@@ -212,6 +212,7 @@
             </div>
         </div>
         <MobileFooter></MobileFooter>
+        <MobileToTop></MobileToTop>
     </div>
 </template>
 
@@ -219,11 +220,13 @@
     import 'swiper/dist/css/swiper.min.css';
     import MobileTitle from '@/components/mobile/Title'
     import MobileFooter from '@/components/mobile/Footer'
+    import MobileToTop from '@/components/mobile/ToTop'
     export default {
         name: "MobileResult",
         components: {
             MobileTitle,
             MobileFooter,
+            MobileToTop
         },
         data() {
             return {

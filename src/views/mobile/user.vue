@@ -2,7 +2,7 @@
     <div class="page">
         <MobileHeader></MobileHeader>
         <div class="container">
-            <div class="info" :style="'background-image: url('+backImg+')'">
+            <div class="info" @click="$router.push('/mobile/user-info')" :style="'background-image: url('+backImg+')'">
                 <div class="left">
                     <div class="avatar"  :style="'background-image: url('+avatar+')'"></div>
                     <div class="user-info">
@@ -15,7 +15,7 @@
                 </div>
             </div>
             <div class="items">
-                <div class="item">
+                <div class="item" @click="$router.push('/mobile/user-vip')">
                     <div class="left">
                         <img class="img1"  src="../../../public/images/n1.png" alt="">
                         <span>我的VIP</span>
@@ -24,7 +24,7 @@
                         <img src="../../../public/images/more2.png" alt="">
                     </div>
                 </div>
-                <div class="item">
+                <div class="item" @click="$router.push('/mobile/user-download')">
                     <div class="left">
                         <img class="img2"  src="../../../public/images/n2.png" alt="">
                         <span>下载清单</span>
@@ -33,7 +33,7 @@
                         <img src="../../../public/images/more2.png" alt="">
                     </div>
                 </div>
-                <div class="item">
+                <div class="item" @click="$router.push('/mobile/recommend-register')">
                     <div class="left">
                         <img class="img3"  src="../../../public/images/n3.png" alt="">
                         <span>推广注册</span>
@@ -42,7 +42,7 @@
                         <img src="../../../public/images/more2.png" alt="">
                     </div>
                 </div>
-                <div class="item">
+                <div class="item" @click="$router.push('/mobile/recommend-vip')">
                     <div class="left">
                         <img class="img4"  src="../../../public/images/n4.png" alt="">
                         <span>推广VIP</span>
@@ -51,7 +51,7 @@
                         <img src="../../../public/images/more2.png" alt="">
                     </div>
                 </div>
-                <div class="item">
+                <div class="item" @click="$router.push('/mobile/user-password')">
                     <div class="left">
                         <img class="img5"  src="../../../public/images/n5.png" alt="">
                         <span>修改密码</span>

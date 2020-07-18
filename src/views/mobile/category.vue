@@ -7,7 +7,7 @@
                 <div class="left">
                     <div class="resultTip">
                         <img src="../../../public/images/home.png" alt="">
-                        首页 ><span>&nbsp;{{category==1?'主播区':category==2?'美图区':category==3?'视频区':category==4?'包年精选区':''}}</span>
+                        首页 <span class="normal">&nbsp;> {{category==1?'主播区':category==2?'美图区':category==3?'视频区':category==4?'包年精选区':''}}</span>
                     </div>
 
                     <div class="item">
@@ -213,6 +213,7 @@
             </div>
         </div>
         <MobileFooter :menu="menu"></MobileFooter>
+        <MobileToTop></MobileToTop>
     </div>
 </template>
 
@@ -220,11 +221,13 @@
     import 'swiper/dist/css/swiper.min.css';
     import MobileHeader from '@/components/mobile/Header'
     import MobileFooter from '@/components/mobile/Footer'
+    import MobileToTop from '@/components/mobile/ToTop'
     export default {
         name: "MobileCategory",
         components: {
             MobileHeader,
             MobileFooter,
+            MobileToTop
         },
         data() {
             return {
@@ -276,6 +279,7 @@
                     flex-direction: column;
                     box-sizing: border-box;
                     .resultTip{
+
                         margin-bottom: 0.267rem;
                         background-color: #ffffff;
                         box-shadow: 0px 0px 10px 0px rgba(179, 179, 179, 0.35);
@@ -295,6 +299,9 @@
                             margin-right: 0.133rem;
                             width:0.32rem;
                             height:0.32rem;
+                        }
+                        .normal{
+                            color: #666666;
                         }
 
                     }

@@ -1,7 +1,7 @@
 <template>
     <div class="page">
         <div class="gray">
-            <img class="logo" src="../../../public/images/logo.png" alt="">
+            <img class="logo" @click="$router.push('/mobile/home')"  src="../../../public/images/logo.png" alt="">
             <div class="login-box">
                 <el-form label-position="left" :rules="rules" ref="ruleForm" label-width="2.5rem" :model="formData">
                     <el-form-item label="用户名：" prop="username">
@@ -23,7 +23,7 @@
             </div>
             <div class="center-box2">
                 <img src="../../../public/images/back.png" alt="">
-                <a class="register" href="/home">返回首页</a>
+                <a class="register" href="/mobile/home">返回首页</a>
             </div>
         </div>
     </div>

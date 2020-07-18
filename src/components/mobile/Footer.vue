@@ -1,6 +1,6 @@
 <template>
     <div class="mobile-footer-page">
-        <van-tabbar v-model="menu"  active-color="#FFC231" inactive-color="#333333">
+        <van-tabbar v-model="menuIndex"  active-color="#FFC231" inactive-color="#333333">
             <van-tabbar-item replace to="/mobile/home">
                 <span>首页</span>
                 <template #icon="props">
@@ -44,6 +44,11 @@
                 default:0
             }
         },
+        watch:{
+            menu(value){
+                this.menuIndex=value
+            }
+        },
         data(){
             return{
                 icon1: {
@@ -66,6 +71,7 @@
                     inactive:  require('../../../public/images/h50.png'),
                     active:  require('../../../public/images/h55.png'),
                 },
+                menuIndex:0
             }
         },
         methods: {
