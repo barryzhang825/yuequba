@@ -5,8 +5,8 @@
             <div class="swiper">
                 <div class="swiper-container">
                     <div class="swiper-wrapper">
-                        <div class="swiper-slide" v-for="(item,index) in imagesUrl">
-                            <div class="img" :style="'background-image: url('+item+')'"></div>
+                        <div class="swiper-slide" v-for="item in bannerList">
+                            <div class="img" :style="'background-image: url('+baseUrl+item.image+')'"></div>
                         </div>
                     </div>
                     <!-- 如果需要分页器 -->
@@ -44,7 +44,7 @@
             </div>
             <div class="content">
                 <div class="left">
-                    <div class="item">
+                    <div class="item" v-for="item in artList">
                         <div class="line1">
                             <div class="tag tag1">主播</div>
                             <div class="tag tag2">美女</div>
@@ -63,17 +63,17 @@
                                 <!--                                <img class="img-img" src="../../../public/images/img.png" alt="">美图区-->
                             </div>
                             <div class="time">
-                                <img class="img-time" src="../../../public/images/time.png" alt="">2020-05-24
+                                <img class="img-time" src="../../../public/images/time.png" alt="">{{item.create_time|timeFormat}}
                             </div>
                             <div class="like">
-                                <img class="img-like" src="../../../public/images/heart.png" alt="">2
+                                <img class="img-like" src="../../../public/images/heart.png" alt="">{{item.post_like}}
                             </div>
                         </div>
                         <div class="line4">
-                            <div class="line4-item" :style="'background-image: url('+imgUrl+')'"></div>
-                            <div class="line4-item" :style="'background-image: url('+imgUrl+')'"></div>
-                            <div class="line4-item" :style="'background-image: url('+imgUrl+')'">
-                                <div class="more">+5</div>
+                            <div class="line4-item" :style="'background-image: url('+baseUrl+item.more.photos[0].url+')'"></div>
+                            <div class="line4-item" :style="'background-image: url('+baseUrl+item.more.photos[1].url+')'"></div>
+                            <div class="line4-item" :style="'background-image: url('+baseUrl+item.more.photos[2].url+')'">
+                                <div class="more" v-if="item.surplusimgnum">+{{item.surplusimgnum}}</div>
                             </div>
                         </div>
                     </div>
@@ -233,10 +233,10 @@
                                 :background="false"
                                 @size-change="handleSizeChange"
                                 @current-change="handleCurrentChange"
-                                :current-page.sync="currentPage"
-                                :page-size="100"
+                                :current-page.sync="pageNum"
+                                :page-size="pageSize"
                                 layout="prev, pager, next, jumper"
-                                :total="1000">
+                                :total="totalNum">
                         </el-pagination>
                     </div>
                 </div>
@@ -244,12 +244,12 @@
                     <div class="block-box">
                         <div class="title">热门标签</div>
                         <div class="block-content">
-                            <el-select v-model="tagValue" placeholder="请选择">
+                            <el-select v-model="tagValue" placeholder="请选择" @change="tagChange">
                                 <el-option
-                                        v-for="item in tagOptions"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value">
+                                        v-for="item in tagList"
+                                        :key="item.name"
+                                        :label="item.name"
+                                        :value="item.id">
                                 </el-option>
                             </el-select>
                         </div>
@@ -401,6 +401,8 @@
     import Header from '@/components/pc/Header'
     import Footer from '@/components/pc/Footer'
     import ToTop from '@/components/pc/ToTop'
+    import {getArticleList, getBannerList, getTagList} from "../../api/pc/api";
+    import {formatTime} from "../../utils/utils";
 
     export default {
         name: "Home",
@@ -410,8 +412,14 @@
             Footer,
             Swiper
         },
+        filters:{
+            timeFormat(val){
+                return formatTime(val)
+            }
+        },
         data() {
             return {
+                baseUrl: this.$baseUrl,
                 imgUrl: require('../../../public/images/avatar.gif'),
                 imagesUrl: [
                     require('../../../public/images/avatar.gif'),
@@ -430,7 +438,13 @@
                     value: '选项3',
                     label: '女神主播'
                 }],
-                tagValue:'',
+                pageSize:10,
+                pageNum:1,
+                totalNum:0,
+                tagValue: '',
+                bannerList: [],
+                tagList: [],
+                artList: [],
 
             }
         },
@@ -440,21 +454,43 @@
             },
             handleCurrentChange(val) {
                 console.log(`当前页: ${val}`);
+            },
+            async fetchData() {
+                let that = this
+                let bannerList = await getBannerList()
+                this.bannerList = bannerList.data
+                let tagList = await getTagList()
+                this.tagList = tagList.data
+            },
+            async fetchArticle(pageNum=1,append=false){
+                let that = this
+                let artList=await getArticleList({
+                    page:pageNum,
+                    limit:that.pageSize
+                })
+                that.totalNum=artList.data.count
+                that.artList=artList.data.list
+                console.log(that.artList)
+            },
+            tagChange(){
+                this.$router.push('/result?keyword='+this.tagValue)
             }
         },
         mounted() {
+            this.fetchData()
+            this.fetchArticle()
             let swiper = new Swiper('.swiper-container', {
                 pagination: '.swiper-pagination',
                 nextButton: '.swiper-button-next',
                 prevButton: '.swiper-button-prev',
                 loop: true,
-                autoplay : 3000,
+                autoplay: 3000,
                 paginationClickable: true
             })
             let swiper2 = new Swiper('.block-swiper-container', {
                 pagination: '.swiper-pagination2',
                 loop: true,
-                autoplay : 3000,
+                autoplay: 3000,
                 paginationClickable: true
             })
         }
@@ -462,7 +498,8 @@
 </script>
 
 <style scoped lang="scss">
-    .page {min-width:1200px;
+    .page {
+        min-width: 1200px;
         background-color: $page-back-color;
 
         .center-box {
@@ -764,23 +801,28 @@
                             font-weight: 400;
                             color: rgba(51, 51, 51, 1);
                         }
+
                         .block-content {
                             width: 100%;
-                            .el-select{
+
+                            .el-select {
                                 margin-top: 20px;
                                 width: 100%;
                             }
+
                             .block-swiper-container {
                                 margin: 20px 0;
                                 width: 100%;
                                 height: 200px;
                                 overflow: hidden;
+
                                 .block-img {
                                     cursor: pointer;
                                     width: 100%;
                                     height: 100%;
                                     @include back-img-center;
                                 }
+
                                 /deep/ .swiper-pagination-bullet {
                                     width: 10px;
                                     height: 10px;
@@ -795,7 +837,8 @@
                                     background: $theme-color;
                                     border-radius: 50%;
                                 }
-                                .swiper-pagination2{
+
+                                .swiper-pagination2 {
                                     position: relative;
                                     top: -20px;
                                     z-index: 999;
@@ -803,52 +846,60 @@
                                     justify-content: center;
                                 }
                             }
-                            .block-content-title{
+
+                            .block-content-title {
                                 cursor: pointer;
-                                font-size:16px;
-                                font-weight:400;
-                                color:rgba(51,51,51,1);
+                                font-size: 16px;
+                                font-weight: 400;
+                                color: rgba(51, 51, 51, 1);
                                 @include line-hidden(1)
                             }
 
-                            .article{
+                            .article {
                                 cursor: pointer;
                                 margin: 10px 0;
                                 width: 100%;
                                 display: flex;
-                                .left{
+
+                                .left {
                                     width: 120px;
-                                    .img{
+
+                                    .img {
                                         width: 120px;
                                         height: 100px;
                                         @include back-img-center
                                     }
                                 }
-                                .right{
+
+                                .right {
                                     padding-left: 20px;
                                     box-sizing: border-box;
                                     width: calc(100% - 120px);
                                     display: flex;
                                     flex-direction: column;
                                     justify-content: space-around;
-                                    .right-title{
-                                        font-size:18px;
-                                        font-weight:400;
-                                        color:rgba(51,51,51,1);
+
+                                    .right-title {
+                                        font-size: 18px;
+                                        font-weight: 400;
+                                        color: rgba(51, 51, 51, 1);
                                         @include line-hidden(2)
                                     }
-                                    .right-info{
+
+                                    .right-info {
                                         width: 100%;
-                                        font-size:16px;
-                                        font-weight:400;
-                                        color:rgba(128,128,128,1);
+                                        font-size: 16px;
+                                        font-weight: 400;
+                                        color: rgba(128, 128, 128, 1);
                                         display: flex;
                                         align-items: center;
                                         justify-content: space-between;
-                                        .view{
+
+                                        .view {
                                             display: flex;
                                             align-items: center;
-                                            img{
+
+                                            img {
                                                 margin-right: 5px;
                                                 width: 20px;
                                                 height: 16px;
@@ -859,36 +910,39 @@
                                 }
                             }
 
-                            .block-items{
+                            .block-items {
                                 margin-top: 20px;
                                 width: 100%;
                                 display: flex;
                                 flex-direction: row;
                                 flex-wrap: wrap;
                                 justify-content: space-between;
-                                .block-item{
+
+                                .block-item {
                                     margin-bottom: 20px;
                                     cursor: pointer;
                                     width: 150px;
                                     display: flex;
                                     flex-direction: column;
 
-                                    .line1{
+                                    .line1 {
                                         @include back-img-center;
                                         width: 150px;
                                         height: 120px;
                                     }
-                                    .line2{
+
+                                    .line2 {
                                         margin-top: 5px;
                                         margin-bottom: 7px;
-                                        font-size:16px;
-                                        font-weight:400;
-                                        color:rgba(128,128,128,1);
+                                        font-size: 16px;
+                                        font-weight: 400;
+                                        color: rgba(128, 128, 128, 1);
                                     }
-                                    .line3{
-                                        font-size:16px;
-                                        font-weight:400;
-                                        color:rgba(51,51,51,1);
+
+                                    .line3 {
+                                        font-size: 16px;
+                                        font-weight: 400;
+                                        color: rgba(51, 51, 51, 1);
                                         @include line-hidden(2)
                                     }
                                 }

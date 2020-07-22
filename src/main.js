@@ -14,6 +14,8 @@ import Vant from 'vant';
 import 'vant/lib/index.css';
 Vue.use(Vant)
 
+Vue.prototype.$baseUrl = 'http://yuequba.zhengshangwl.com/upload/'
+
 new Vue({
   router,
   store,

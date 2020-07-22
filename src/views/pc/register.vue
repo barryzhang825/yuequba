@@ -71,8 +71,16 @@
                 let that = this
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        userRegister(that.formData).then(res=>{
-                            console.log(res,123)
+                        userRegister({
+                            user_login:that.formData.username,
+                            user_pass:that.formData.password,
+                            repassword:that.formData.rePassword,
+                        }).then(res=>{
+                            this.$message({
+                                message: '注册成功！',
+                                type: 'success'
+                            });
+                            that.$router.push('/login')
                         })
                     } else {
                         console.log('error submit!!');

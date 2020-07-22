@@ -20,8 +20,8 @@
 <!--                        <img class="alert" src="../../../public/images/alert.png" alt="">-->
 <!--                    </el-badge>-->
 <!--                </div>-->
-                <div class="link"><a href="/login">登录</a> | <a href="/register">注册</a></div>
-<!--                <div class="userinfo"><a href="/user">正尚网络科技</a> | <a href="">退出</a></div>-->
+                <div class="link" v-if="!user_login"><router-link to="/login">登录</router-link> | <router-link to="/register">注册</router-link></div>
+                <div class="userinfo" v-if="user_login"><router-link to="/user">{{user_login}}</router-link> | <a @click="loginOut">退出</a></div>
             </div>
         </div>
         <van-overlay :show="searchShow" >
@@ -50,7 +50,8 @@
         data(){
             return{
                 searchShow:false,
-                searchWord:""
+                searchWord:"",
+                user_login:''
             }
         },
         methods: {
@@ -99,7 +100,15 @@
                         path:'/result?keyword='+this.searchWord
                     })
                 }
+            },
+            loginOut(){
+                localStorage.clear()
+                this.$router.push('/login')
             }
+        },
+        mounted() {
+            this.user_login=localStorage.getItem('user_login')
+            console.log(localStorage.getItem('user_login'))
         }
     }
 </script>

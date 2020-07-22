@@ -10,20 +10,19 @@ const instance = axios.create({
     timeout:5000,
     headers: {
         "accept": "application/json",
-        'Content-Type': 'application/json',
+        "Content-Type": "application/x-www-form-urlencoded"
     }
 })
 // 在发送请求之前做些什么("请求拦截器")
 instance.interceptors.request.use(config => {
-    //假设接口需要对接token，可以用store保存token,在拦截器中设置到header中
 
-    // if(hasToken()){
-    //     config.headers['X-Token'] = getToken()
-    // }
+    config.params = {
+        token: hasToken()?getToken():'',
+        ...config.params
+    }
     config.data=qs.stringify(config.data)
-    console.log(config)
-
     return config;
+
 }, error => {
     // 对请求错误做些什么
     //console.log(error)
@@ -31,8 +30,8 @@ instance.interceptors.request.use(config => {
 
 instance.interceptors.response.use(
     response => {  //成功请求到数据
-        if(response.data.code==1){
-            return response
+        if(response.data.code==200){
+            return response.data
         }else{
             Message({
                 message: response.data.msg || 'Error',

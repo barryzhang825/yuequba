@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import {hasToken} from "../utils/auth";
 
 Vue.use(VueRouter)
 
@@ -167,18 +168,13 @@ const router = new VueRouter({
  * **/
 const whiteList = ['/login', '/register', '/forget'] // 路由白名单
 router.beforeEach(function(to,from,next){
-    const hasToken = '123'
-    console.log("进入守卫");
-    console.log(to.path);
-
     let isMobile=navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
 
-
-
+    console.log(hasToken(),'hasToken()')
     if (whiteList.indexOf(to.path) !== -1) {
         next()
     } else {
-        if(hasToken){
+        if(hasToken()){
             next()
         }else {
             next('/login')

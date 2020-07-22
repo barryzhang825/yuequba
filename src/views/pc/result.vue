@@ -419,6 +419,9 @@
                 autoplay : 3000,
                 paginationClickable: true
             })
+        },
+        beforeCreate() {
+            window,scrollTo(0,0)
         }
     }
 </script>

@@ -8,7 +8,8 @@
                         <el-input v-model="formData.username"></el-input>
                     </el-form-item>
                     <el-form-item label="密 码：" prop="password">
-                        <el-input type="password" show-password v-model="formData.password"></el-input>
+                        <el-input type="password" show-password v-model="formData.password"
+                                  @keyup.enter.native="submitForm('ruleForm')"></el-input>
                     </el-form-item>
                     <div class="set">
                         <el-checkbox v-model="rememberPassword">记住密码</el-checkbox>
@@ -59,8 +60,17 @@
                         let formData=new FormData()
                         formData.append('user_login',that.formData.username)
                         formData.append('user_pass',that.formData.password)
-                        userLogin(formData).then(res=>{
-                            console.log(res,888)
+                        userLogin({
+                            user_login:that.formData.username,
+                            user_pass:that.formData.password,
+                        }).then(res=>{
+                            this.$message({
+                                message: '登录成功！',
+                                type: 'success'
+                            });
+                            localStorage.setItem('token',res.data.token)
+                            localStorage.setItem('user_login',res.data.userinfo.user_login)
+                            that.$router.push('/home')
                         })
                     } else {
                         console.log('error submit!!');

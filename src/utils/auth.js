@@ -4,12 +4,15 @@
 const token='123'
 
 export function hasToken() {
-
-  return false
+  if(localStorage.getItem('token')){
+    return true
+  }else {
+    return false
+  }
 }
 export function getToken() {
   // return Cookies.get(TokenKey)
-  return token
+  return localStorage.getItem('token')
 }
 
 export function setToken(token) {
