@@ -29,9 +29,9 @@
                             </div>
                         </div>
                         <div class="line4">
-                            <div @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)" class="line4-item" :style="'background-image: url('+baseUrl+item.more.photos[0].url+')'"></div>
-                            <div @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)" class="line4-item" :style="'background-image: url('+baseUrl+item.more.photos[1].url+')'"></div>
-                            <div @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)" class="line4-item" :style="'background-image: url('+baseUrl+item.more.photos[2].url+')'">
+                            <div v-if="item.more.photos.length>0" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)" class="line4-item" :style="'background-image: url('+baseUrl+item.more.photos[0].url+')'"></div>
+                            <div v-if="item.more.photos.length>1" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)" class="line4-item" :style="'background-image: url('+baseUrl+item.more.photos[1].url+')'"></div>
+                            <div v-if="item.more.photos.length>2" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)" class="line4-item" :style="'background-image: url('+baseUrl+item.more.photos[2].url+')'">
                                 <div class="more" v-if="item.surplusimgnum">+{{item.surplusimgnum}}</div>
                             </div>
                         </div>
@@ -105,8 +105,8 @@
                         <div class="block-content">
                             <div class="block-swiper-container">
                                 <div class="swiper-wrapper">
-                                    <div class="swiper-slide" v-for="(item,index) in imagesUrl">
-                                        <div class="block-img" :style="'background-image: url('+item+')'"></div>
+                                    <div class="swiper-slide" v-for="(item,index) in specialList">
+                                        <div class="block-img" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)" :style="'background-image: url('+baseUrl+item.more.thumbnail+')'"></div>
                                     </div>
                                 </div>
                                 <!-- 如果需要分页器 -->
@@ -114,32 +114,11 @@
                             </div>
                             <!--                            <div class="block-content-title">新增超高颜值萌妹82W粉丝奔跑晶骡子大尺</div>-->
                             <div class="block-items">
-                                <div class="block-item">
-                                    <div class="line1" :style="'background-image: url('+imgUrl+')'"></div>
-                                    <div class="line2">2020-06-18</div>
-                                    <div class="line3">
-                                        《苦瓜电竞》--让你体验不一样的电竞主播...
-                                    </div>
-                                </div>
-                                <div class="block-item">
-                                    <div class="line1" :style="'background-image: url('+imgUrl+')'"></div>
-                                    <div class="line2">2020-06-18</div>
-                                    <div class="line3">
-                                        《苦瓜电竞》--让你体验不一样的电竞主播...
-                                    </div>
-                                </div>
-                                <div class="block-item">
-                                    <div class="line1" :style="'background-image: url('+imgUrl+')'"></div>
-                                    <div class="line2">2020-06-18</div>
-                                    <div class="line3">
-                                        《苦瓜电竞》--让你体验不一样的电竞主播...
-                                    </div>
-                                </div>
-                                <div class="block-item">
-                                    <div class="line1" :style="'background-image: url('+imgUrl+')'"></div>
-                                    <div class="line2">2020-06-18</div>
-                                    <div class="line3">
-                                        《苦瓜电竞》--让你体验不一样的电竞主播...
+                                <div class="block-item" v-for="(item,index) in specialList" v-if="index<4">
+                                    <div class="line1" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)" :style="'background-image: url('+baseUrl+item.more.thumbnail+')'"></div>
+                                    <div class="line2">{{item.create_time|timeFormatTwo}}</div>
+                                    <div class="line3" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)">
+                                        {{item.post_title}}
                                     </div>
                                 </div>
                             </div>
@@ -160,7 +139,7 @@
     import Footer from '@/components/pc/Footer'
     import ToTop from "@/components/pc/ToTop";
     import {getArticleList, getBannerList, getTagList} from "../../api/pc/api";
-    import {formatTime} from "../../utils/utils";
+    import {formatTime, formatTimeThree} from "../../utils/utils";
 
     export default {
         name: "Category",
@@ -173,7 +152,10 @@
         filters:{
             timeFormat(val){
                 return formatTime(val)
-            }
+            },
+            timeFormatTwo(val){
+                return formatTimeThree(val)
+            },
         },
         data() {
             return {
@@ -208,6 +190,7 @@
                 artList: [],
                 hotList: [],//热门文章
                 yearList: [],//包年精选文章
+                specialList: [],//包年精选文章
             }
         },
         methods: {
@@ -241,6 +224,12 @@
                     category:4
                 })
                 this.yearList=yearList.data.list
+                let specialList=await getArticleList({
+                    page:1,
+                    limit:4,
+                    boutique:1
+                })
+                this.specialList=specialList.data.list
             },
             async fetchArticle(pageNum=1){
                 this.artLoading=true
@@ -540,8 +529,11 @@
 
                         .line4 {
                             display: flex;
-                            justify-content: space-between;
+                            justify-content: flex-start;
 
+                            .line4-item:nth-child(2){
+                                margin: 0 20px;
+                            }
                             .line4-item {
                                 cursor: pointer;
                                 width: 240px;

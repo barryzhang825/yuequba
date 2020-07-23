@@ -11,7 +11,7 @@ const formatTime = date => {
 }
 
 const formatTimeTwo = date => {
-    date = new Date(date)
+    date = new Date(date*1000)
     const year = date.getFullYear()
     const month = date.getMonth() + 1
     const day = date.getDate()
@@ -21,7 +21,17 @@ const formatTimeTwo = date => {
 
     return [hour, minute].map(formatNumber).join(':')
 }
+const formatTimeThree = date => {
+    date = new Date(date*1000)
+    const year = date.getFullYear()
+    const month = date.getMonth() + 1
+    const day = date.getDate()
+    const hour = date.getHours()
+    const minute = date.getMinutes()
+    const second = date.getSeconds()
 
+    return [year, month, day].map(formatNumber).join('-')
+}
 const saveOneDecimal = (x) => {
     var f_x = parseFloat(x);
     if (isNaN(f_x)) {
@@ -82,6 +92,7 @@ function checkEmail(email){
 module.exports = {
     formatTime: formatTime,
     formatTimeTwo: formatTimeTwo, //时分
+    formatTimeThree: formatTimeThree, //日期
     saveOneDecimal: saveOneDecimal,
     saveTwoDecimal: saveTwoDecimal,
     checkPhone: checkPhone,

@@ -13,7 +13,7 @@
                             <div  :class="'tag'+' tag'+item2.color_id" v-for="item2 in articleDetail.taglist">{{item2.name}}</div>
                         </div>
                         <div class="line2">
-                            [抖音福利]新增超高颜值萌妹82W粉丝奔跑晶骡子大尺度福利[9V]
+                            {{articleDetail.post_title}}
                         </div>
                         <div class="line3">
                             <div class="type">
@@ -28,19 +28,19 @@
                                 <img class="img-like" src="../../../public/images/heart1.png" alt="">{{articleDetail.post_like}}
                             </div>
                             <div class="com">
-                                <img class="img-comment" src="../../../public/images/comment.png" alt="">2
+                                <img class="img-comment" src="../../../public/images/comment.png" alt="">{{articleDetail.comment_count}}
                             </div>
                             <div class="download">
-                                下载资源：2
+                                下载资源：{{articleDetail.down_num}}
                             </div>
                         </div>
                         <div class="introduction">
                             <img src="../../../public/images/tag.png" alt="">
                             <span style="color:rgba(255,194,49,1);">摘要：</span>
-                            [抖音福利]新增超高颜值萌妹82W粉丝奔跑晶骡子福利新增超高颜值萌妹82W粉丝奔跑晶骡子福利新增超高颜值萌妹82W粉丝奔跑晶骡子福利[9V]
+                            {{articleDetail.post_excerpt}}
                         </div>
                         <div class="images">
-                            <img v-for="item in 3" src="../../../public/images/avatar.gif" alt="">
+                            <img v-for="item in articleDetail.more.photos" :src="baseUrl+item.url" alt="">
                         </div>
                         <div class="download-box">
                             <div class="download-box-line1">
@@ -57,9 +57,9 @@
                             </div>
                         </div>
                         <div class="set">
-                            <div class="set-like">
+                            <div class="set-like" @click="likeArt">
                                 <img src="../../../public/images/like0.png" alt="">
-                                喜欢（2）
+                                喜欢（{{articleDetail.post_like}}）
                             </div>
                             <div class="set-share">
                                 <img src="../../../public/images/share0.png" alt="">
@@ -90,10 +90,10 @@
                     <div class="guess">
                         <div class="title">猜你喜欢</div>
                         <div class="art-list">
-                            <div class="item" v-for="item in 3">
-                                <div class="img" :style="'background-image: url('+imgUrl+')'"></div>
+                            <div class="item" v-for="(item,index) in recommendList" v-if="index<3">
+                                <div class="img" :style="'background-image: url('+baseUrl+item.more.thumbnail+')'"></div>
                                 <div class="art-title">
-                                    冯提莫:主播不低俗却励志,不当网红一姐,却当佛系少女
+                                    {{item.post_title}}
                                 </div>
                             </div>
                         </div>
@@ -302,12 +302,12 @@
                     <div class="block-box">
                         <div class="title">热门标签</div>
                         <div class="block-content">
-                            <el-select v-model="tagValue" placeholder="请选择">
+                            <el-select v-model="tagValue" placeholder="请选择" @change="tagChange">
                                 <el-option
-                                        v-for="item in tagOptions"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value">
+                                        v-for="item in tagList"
+                                        :key="item.name"
+                                        :label="item.name"
+                                        :value="item.id">
                                 </el-option>
                             </el-select>
                         </div>
@@ -317,83 +317,32 @@
                         <div class="block-content">
                             <div class="block-swiper-container">
                                 <div class="swiper-wrapper">
-                                    <div class="swiper-slide" v-for="(item,index) in imagesUrl">
-                                        <div class="block-img" :style="'background-image: url('+item+')'"></div>
+                                    <div class="swiper-slide" v-for="(item,index) in yearList">
+                                        <div @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)" class="block-img" :style="'background-image: url('+baseUrl+item.more.thumbnail+')'"></div>
                                     </div>
                                 </div>
                                 <!-- 如果需要分页器 -->
                                 <div class="swiper-pagination2"></div>
                             </div>
-                            <div class="block-content-title">新增超高颜值萌妹82W粉丝奔跑晶骡子大尺</div>
+                            <!--                            <div class="block-content-title">新增超高颜值萌妹82W粉丝奔跑晶骡子大尺</div>-->
                         </div>
                     </div>
                     <div class="block-box">
                         <div class="title">热门文章</div>
                         <div class="block-content">
-                            <div class="article">
+                            <div class="article" v-for="item in hotList" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)">
                                 <div class="left">
-                                    <div class="img" :style="'background-image: url('+imgUrl+')'"></div>
+                                    <div class="img" :style="'background-image: url('+baseUrl+item.more.thumbnail+')'"></div>
                                 </div>
                                 <div class="right">
                                     <div class="right-title">
-                                        《我不是药神》引大家对版权深思,主播冯提主播冯提主播冯提
+                                        {{item.post_title}}
                                     </div>
                                     <div class="right-info">
-                                        <div>2020-05-23</div>
+                                        <div>{{item.create_time|timeFormat}}</div>
                                         <div class="view">
                                             <img src="../../../public/images/view.png" alt="">
-                                            250
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="article">
-                                <div class="left">
-                                    <div class="img" :style="'background-image: url('+imgUrl+')'"></div>
-                                </div>
-                                <div class="right">
-                                    <div class="right-title">
-                                        《我不是药神》引大家对版权深思,主播冯提主播冯提主播冯提
-                                    </div>
-                                    <div class="right-info">
-                                        <div>2020-05-23</div>
-                                        <div class="view">
-                                            <img src="../../../public/images/view.png" alt="">
-                                            250
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="article">
-                                <div class="left">
-                                    <div class="img" :style="'background-image: url('+imgUrl+')'"></div>
-                                </div>
-                                <div class="right">
-                                    <div class="right-title">
-                                        《我不是药神》引大家对版权深思,主播冯提主播冯提主播冯提
-                                    </div>
-                                    <div class="right-info">
-                                        <div>2020-05-23</div>
-                                        <div class="view">
-                                            <img src="../../../public/images/view.png" alt="">
-                                            250
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="article">
-                                <div class="left">
-                                    <div class="img" :style="'background-image: url('+imgUrl+')'"></div>
-                                </div>
-                                <div class="right">
-                                    <div class="right-title">
-                                        《我不是药神》引大家对版权深思,主播冯提主播冯提主播冯提
-                                    </div>
-                                    <div class="right-info">
-                                        <div>2020-05-23</div>
-                                        <div class="view">
-                                            <img src="../../../public/images/view.png" alt="">
-                                            250
+                                            {{item.post_hits}}
                                         </div>
                                     </div>
                                 </div>
@@ -405,41 +354,20 @@
                         <div class="block-content">
                             <div class="block-swiper-container">
                                 <div class="swiper-wrapper">
-                                    <div class="swiper-slide" v-for="(item,index) in imagesUrl">
-                                        <div class="block-img" :style="'background-image: url('+item+')'"></div>
+                                    <div class="swiper-slide" v-for="(item,index) in specialList">
+                                        <div class="block-img" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)" :style="'background-image: url('+baseUrl+item.more.thumbnail+')'"></div>
                                     </div>
                                 </div>
                                 <!-- 如果需要分页器 -->
                                 <div class="swiper-pagination2"></div>
                             </div>
-                            <div class="block-content-title">新增超高颜值萌妹82W粉丝奔跑晶骡子大尺</div>
+                            <!--                            <div class="block-content-title">新增超高颜值萌妹82W粉丝奔跑晶骡子大尺</div>-->
                             <div class="block-items">
-                                <div class="block-item">
-                                    <div class="line1" :style="'background-image: url('+imgUrl+')'"></div>
-                                    <div class="line2">2020-06-18</div>
-                                    <div class="line3">
-                                        《苦瓜电竞》--让你体验不一样的电竞主播...
-                                    </div>
-                                </div>
-                                <div class="block-item">
-                                    <div class="line1" :style="'background-image: url('+imgUrl+')'"></div>
-                                    <div class="line2">2020-06-18</div>
-                                    <div class="line3">
-                                        《苦瓜电竞》--让你体验不一样的电竞主播...
-                                    </div>
-                                </div>
-                                <div class="block-item">
-                                    <div class="line1" :style="'background-image: url('+imgUrl+')'"></div>
-                                    <div class="line2">2020-06-18</div>
-                                    <div class="line3">
-                                        《苦瓜电竞》--让你体验不一样的电竞主播...
-                                    </div>
-                                </div>
-                                <div class="block-item">
-                                    <div class="line1" :style="'background-image: url('+imgUrl+')'"></div>
-                                    <div class="line2">2020-06-18</div>
-                                    <div class="line3">
-                                        《苦瓜电竞》--让你体验不一样的电竞主播...
+                                <div class="block-item" v-for="(item,index) in specialList" v-if="index<4">
+                                    <div class="line1" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)" :style="'background-image: url('+baseUrl+item.more.thumbnail+')'"></div>
+                                    <div class="line2">{{item.create_time|timeFormatTwo}}</div>
+                                    <div class="line3" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)">
+                                        {{item.post_title}}
                                     </div>
                                 </div>
                             </div>
@@ -459,8 +387,8 @@
     import Header from '@/components/pc/Header'
     import Footer from '@/components/pc/Footer'
     import ToTop from "../../components/pc/ToTop";
-    import {getArticleDetail} from "../../api/pc/api";
-    import {formatTime} from "../../utils/utils";
+    import {getArticleDetail, getArticleList, getBannerList, getTagList, likeArticle} from "../../api/pc/api";
+    import {formatTime, formatTimeThree} from "../../utils/utils";
 
     export default {
         name: "Detail",
@@ -473,10 +401,14 @@
         filters:{
             timeFormat(val){
                 return formatTime(val)
-            }
+            },
+            timeFormatTwo(val){
+                return formatTimeThree(val)
+            },
         },
         data() {
             return {
+                baseUrl: this.$baseUrl,
                 imgUrl: require('../../../public/images/avatar.gif'),
                 imagesUrl: [
                     require('../../../public/images/avatar.gif'),
@@ -496,12 +428,20 @@
                     label: '女神主播'
                 }],
                 tagValue:'',
-                keyword:'',
                 category:0,
                 menu:0,
                 commentContent:'',
                 id:'',
-                articleDetail:{}
+                tagList: [],
+                hotList: [],//热门文章
+                yearList: [],//包年精选文章
+                specialList: [],//精选文章
+                recommendList: [],//推荐文章
+                articleDetail:{
+                    more:{
+                        photos:[]
+                    }
+                }
             }
         },
         methods: {
@@ -510,6 +450,18 @@
             },
             handleCurrentChange(val) {
                 console.log(`当前页: ${val}`);
+            },
+            async likeArt(){
+                let that = this
+                let res =  await likeArticle({
+                    id:that.id
+                })
+                if(res.msg=='赞好啦！'){
+                    this.$set(that.articleDetail, 'post_like', that.articleDetail.post_like+1);
+                }else if(res.msg=='您已赞过啦！'){
+                    this.$message.info('您已赞过啦！')
+                }
+                console.log(res,'res')
             },
             async fetchData(){
                 let that = this
@@ -521,6 +473,38 @@
                 })
                 that.articleDetail=articleDetail.data
                 console.log(that.articleDetail)
+                let bannerList = await getBannerList()
+                this.bannerList = bannerList.data
+                let tagList = await getTagList()
+                this.tagList = tagList.data
+                let hotList=await getArticleList({
+                    page:1,
+                    limit:4,
+                    hot:1
+                })
+                this.hotList=hotList.data.list
+
+                let yearList=await getArticleList({
+                    page:1,
+                    limit:4,
+                    category:4
+                })
+                this.yearList=yearList.data.list
+                let recommendList=await getArticleList({
+                    page:1,
+                    limit:3,
+                    ttd:1
+                })
+                this.recommendList=recommendList.data.list
+                let specialList=await getArticleList({
+                    page:1,
+                    limit:4,
+                    boutique:1
+                })
+                this.specialList=specialList.data.list
+            },
+            tagChange(){
+                this.$router.push('/result?tagId='+this.tagValue)
             }
         },
         watch:{
@@ -528,20 +512,23 @@
         },
         mounted() {
             this.fetchData()
-            this.keyword = this.$route.query.keyword;
             let swiper = new Swiper('.swiper-container', {
                 pagination: '.swiper-pagination',
                 nextButton: '.swiper-button-next',
                 prevButton: '.swiper-button-prev',
                 loop: true,
                 autoplay : 3000,
-                paginationClickable: true
+                paginationClickable: true,
+                observer:true,
+                observeParents:true,
             })
             let swiper2 = new Swiper('.block-swiper-container', {
                 pagination: '.swiper-pagination2',
                 loop: true,
                 autoplay : 3000,
-                paginationClickable: true
+                paginationClickable: true,
+                observer:true,
+                observeParents:true,
             })
         },
         beforeCreate() {

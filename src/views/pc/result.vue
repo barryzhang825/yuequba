@@ -5,189 +5,34 @@
             <div class="content">
                 <div class="left">
                     <div class="resultTip">
-                        搜索到 278 篇相关的文章
+                        搜索到 {{totalNum}} 篇相关的文章
                     </div>
-                    <div class="item">
+                    <div class="item" v-loading="artLoading" v-for="item in artList">
                         <div class="line1">
-                            <div class="tag tag1">主播</div>
-                            <div class="tag tag2">美女</div>
-                            <div class="tag tag3">颜值萌妹</div>
-                            <div class="tag tag4">福利</div>
-                            <div class="tag tag5">粉丝</div>
+                            <div  :class="'tag'+' tag'+item2.color_id" v-for="item2 in item.taglist">{{item2.name}}</div>
                         </div>
                         <div class="line2">
-                            [抖音福利]新增超高颜值萌妹82W粉丝奔跑晶骡子大尺度福利[9V]
+                            {{item.post_title}}
                         </div>
                         <div class="line3">
                             <div class="type">
-                                <img class="img-upper" src="../../../public/images/upper.png" alt="">主播区
-                                <!--                                <img class="img-year" src="../../../public/images/year.png" alt="">包年精选区-->
-                                <!--                                <img class="img-video" src="../../../public/images/video.png" alt="">视频区-->
-                                <!--                                <img class="img-img" src="../../../public/images/img.png" alt="">美图区-->
+                                <img :class="item.category_id==1?'img-upper':item.category_id==2?'img-img':item.category_id==3?'img-video':item.category_id==4?'img-year':''"
+                                     :src="item.category_id==1?require('../../../public/images/upper.png'):item.category_id==2?require('../../../public/images/img.png'):item.category_id==3?require('../../../public/images/video.png'):item.category_id==4?require('../../../public/images/year.png'):''" alt="">
+                                {{item.category_id==1?'主播区':item.category_id==2?'美图区':item.category_id==3?'视频区':item.category_id==4?'包年精选区':''}}
                             </div>
                             <div class="time">
-                                <img class="img-time" src="../../../public/images/time.png" alt="">2020-05-24
+                                <img class="img-time" src="../../../public/images/time.png" alt="">{{item.create_time|timeFormat}}
                             </div>
                             <div class="like">
-                                <img class="img-like" src="../../../public/images/heart.png" alt="">2
+                                <img class="img-like" src="../../../public/images/heart.png" alt="">{{item.post_like}}
                             </div>
                         </div>
                         <div class="line4">
-                            <div class="line4-item" :style="'background-image: url('+imgUrl+')'"></div>
-                            <div class="line4-item" :style="'background-image: url('+imgUrl+')'"></div>
-                            <div class="line4-item" :style="'background-image: url('+imgUrl+')'">
-                                <div class="more">+5</div>
+                            <div v-if="item.more.photos.length>0" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)" class="line4-item" :style="'background-image: url('+baseUrl+item.more.photos[0].url+')'"></div>
+                            <div v-if="item.more.photos.length>1" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)" class="line4-item" :style="'background-image: url('+baseUrl+item.more.photos[1].url+')'"></div>
+                            <div v-if="item.more.photos.length>2" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)" class="line4-item" :style="'background-image: url('+baseUrl+item.more.photos[2].url+')'">
+                                <div class="more" v-if="item.surplusimgnum">+{{item.surplusimgnum}}</div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="line1">
-                            <div class="tag tag1">主播</div>
-                            <div class="tag tag2">美女</div>
-                            <div class="tag tag3">颜值萌妹</div>
-                            <div class="tag tag4">福利</div>
-                            <div class="tag tag5">粉丝</div>
-                        </div>
-                        <div class="line2">
-                            [抖音福利]新增超高颜值萌妹82W粉丝奔跑晶骡子大尺度福利[9V]
-                        </div>
-                        <div class="line3">
-                            <div class="type">
-                                <!--                                <img class="img-upper" src="../../../public/images/upper.png" alt="">主播区-->
-                                <img class="img-year" src="../../../public/images/year.png" alt="">包年精选区
-                                <!--                                <img class="img-video" src="../../../public/images/video.png" alt="">视频区-->
-                                <!--                                <img class="img-img" src="../../../public/images/img.png" alt="">美图区-->
-                            </div>
-                            <div class="time">
-                                <img class="img-time" src="../../../public/images/time.png" alt="">2020-05-24
-                            </div>
-                            <div class="like">
-                                <img class="img-like" src="../../../public/images/heart.png" alt="">2
-                            </div>
-                        </div>
-                        <div class="line4">
-                            <div class="line4-item" v-for="item in 3"
-                                 :style="'background-image: url('+imgUrl+')'"></div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="line1">
-                            <div class="tag tag1">主播</div>
-                            <div class="tag tag2">美女</div>
-                            <div class="tag tag3">颜值萌妹</div>
-                            <div class="tag tag4">福利</div>
-                            <div class="tag tag5">粉丝</div>
-                        </div>
-                        <div class="line2">
-                            [抖音福利]新增超高颜值萌妹82W粉丝奔跑晶骡子大尺度福利[9V]
-                        </div>
-                        <div class="line3">
-                            <div class="type">
-                                <!--                                <img class="img-upper" src="../../../public/images/upper.png" alt="">主播区-->
-                                <!--                                <img class="img-year" src="../../../public/images/year.png" alt="">包年精选区-->
-                                <img class="img-video" src="../../../public/images/video.png" alt="">视频区
-                                <!--                                <img class="img-img" src="../../../public/images/img.png" alt="">美图区-->
-                            </div>
-                            <div class="time">
-                                <img class="img-time" src="../../../public/images/time.png" alt="">2020-05-24
-                            </div>
-                            <div class="like">
-                                <img class="img-like" src="../../../public/images/heart.png" alt="">2
-                            </div>
-                        </div>
-                        <div class="line4">
-                            <div class="line4-item" v-for="item in 3"
-                                 :style="'background-image: url('+imgUrl+')'"></div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="line1">
-                            <div class="tag tag1">主播</div>
-                            <div class="tag tag2">美女</div>
-                            <div class="tag tag3">颜值萌妹</div>
-                            <div class="tag tag4">福利</div>
-                            <div class="tag tag5">粉丝</div>
-                        </div>
-                        <div class="line2">
-                            [抖音福利]新增超高颜值萌妹82W粉丝奔跑晶骡子大尺度福利[9V]
-                        </div>
-                        <div class="line3">
-                            <div class="type">
-                                <!--                                <img class="img-upper" src="../../../public/images/upper.png" alt="">主播区-->
-                                <!--                                <img class="img-year" src="../../../public/images/year.png" alt="">包年精选区-->
-                                <!--                                <img class="img-video" src="../../../public/images/video.png" alt="">视频区-->
-                                <img class="img-img" src="../../../public/images/img.png" alt="">美图区
-                            </div>
-                            <div class="time">
-                                <img class="img-time" src="../../../public/images/time.png" alt="">2020-05-24
-                            </div>
-                            <div class="like">
-                                <img class="img-like" src="../../../public/images/heart.png" alt="">2
-                            </div>
-                        </div>
-                        <div class="line4">
-                            <div class="line4-item" v-for="item in 3"
-                                 :style="'background-image: url('+imgUrl+')'"></div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="line1">
-                            <div class="tag tag1">主播</div>
-                            <div class="tag tag2">美女</div>
-                            <div class="tag tag3">颜值萌妹</div>
-                            <div class="tag tag4">福利</div>
-                            <div class="tag tag5">粉丝</div>
-                        </div>
-                        <div class="line2">
-                            [抖音福利]新增超高颜值萌妹82W粉丝奔跑晶骡子大尺度福利[9V]
-                        </div>
-                        <div class="line3">
-                            <div class="type">
-                                <!--                                <img class="img-upper" src="../../../public/images/upper.png" alt="">主播区-->
-                                <!--                                <img class="img-year" src="../../../public/images/year.png" alt="">包年精选区-->
-                                <!--                                <img class="img-video" src="../../../public/images/video.png" alt="">视频区-->
-                                <img class="img-img" src="../../../public/images/img.png" alt="">美图区
-                            </div>
-                            <div class="time">
-                                <img class="img-time" src="../../../public/images/time.png" alt="">2020-05-24
-                            </div>
-                            <div class="like">
-                                <img class="img-like" src="../../../public/images/heart.png" alt="">2
-                            </div>
-                        </div>
-                        <div class="line4">
-                            <div class="line4-item" v-for="item in 3"
-                                 :style="'background-image: url('+imgUrl+')'"></div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="line1">
-                            <div class="tag tag1">主播</div>
-                            <div class="tag tag2">美女</div>
-                            <div class="tag tag3">颜值萌妹</div>
-                            <div class="tag tag4">福利</div>
-                            <div class="tag tag5">粉丝</div>
-                        </div>
-                        <div class="line2">
-                            [抖音福利]新增超高颜值萌妹82W粉丝奔跑晶骡子大尺度福利[9V]
-                        </div>
-                        <div class="line3">
-                            <div class="type">
-                                <!--                                <img class="img-upper" src="../../../public/images/upper.png" alt="">主播区-->
-                                <!--                                <img class="img-year" src="../../../public/images/year.png" alt="">包年精选区-->
-                                <!--                                <img class="img-video" src="../../../public/images/video.png" alt="">视频区-->
-                                <img class="img-img" src="../../../public/images/img.png" alt="">美图区
-                            </div>
-                            <div class="time">
-                                <img class="img-time" src="../../../public/images/time.png" alt="">2020-05-24
-                            </div>
-                            <div class="like">
-                                <img class="img-like" src="../../../public/images/heart.png" alt="">2
-                            </div>
-                        </div>
-                        <div class="line4">
-                            <div class="line4-item" v-for="item in 3"
-                                 :style="'background-image: url('+imgUrl+')'"></div>
                         </div>
                     </div>
 
@@ -196,10 +41,10 @@
                                 :background="false"
                                 @size-change="handleSizeChange"
                                 @current-change="handleCurrentChange"
-                                :current-page.sync="currentPage"
-                                :page-size="100"
+                                :current-page.sync="pageNum"
+                                :page-size="pageSize"
                                 layout="prev, pager, next, jumper"
-                                :total="1000">
+                                :total="totalNum">
                         </el-pagination>
                     </div>
                 </div>
@@ -207,12 +52,12 @@
                     <div class="block-box">
                         <div class="title">热门标签</div>
                         <div class="block-content">
-                            <el-select v-model="tagValue" placeholder="请选择">
+                            <el-select v-model="tagValue" placeholder="请选择" @change="tagChange">
                                 <el-option
-                                        v-for="item in tagOptions"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value">
+                                        v-for="item in tagList"
+                                        :key="item.id"
+                                        :label="item.name"
+                                        :value="item.id">
                                 </el-option>
                             </el-select>
                         </div>
@@ -222,83 +67,32 @@
                         <div class="block-content">
                             <div class="block-swiper-container">
                                 <div class="swiper-wrapper">
-                                    <div class="swiper-slide" v-for="(item,index) in imagesUrl">
-                                        <div class="block-img" :style="'background-image: url('+item+')'"></div>
+                                    <div class="swiper-slide" v-for="(item,index) in yearList">
+                                        <div @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)" class="block-img" :style="'background-image: url('+baseUrl+item.more.thumbnail+')'"></div>
                                     </div>
                                 </div>
                                 <!-- 如果需要分页器 -->
                                 <div class="swiper-pagination2"></div>
                             </div>
-                            <div class="block-content-title">新增超高颜值萌妹82W粉丝奔跑晶骡子大尺</div>
+                            <!--                            <div class="block-content-title">新增超高颜值萌妹82W粉丝奔跑晶骡子大尺</div>-->
                         </div>
                     </div>
                     <div class="block-box">
                         <div class="title">热门文章</div>
                         <div class="block-content">
-                            <div class="article">
+                            <div class="article" v-for="item in hotList" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)">
                                 <div class="left">
-                                    <div class="img" :style="'background-image: url('+imgUrl+')'"></div>
+                                    <div class="img" :style="'background-image: url('+baseUrl+item.more.thumbnail+')'"></div>
                                 </div>
                                 <div class="right">
                                     <div class="right-title">
-                                        《我不是药神》引大家对版权深思,主播冯提主播冯提主播冯提
+                                        {{item.post_title}}
                                     </div>
                                     <div class="right-info">
-                                        <div>2020-05-23</div>
+                                        <div>{{item.create_time|timeFormat}}</div>
                                         <div class="view">
                                             <img src="../../../public/images/view.png" alt="">
-                                            250
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="article">
-                                <div class="left">
-                                    <div class="img" :style="'background-image: url('+imgUrl+')'"></div>
-                                </div>
-                                <div class="right">
-                                    <div class="right-title">
-                                        《我不是药神》引大家对版权深思,主播冯提主播冯提主播冯提
-                                    </div>
-                                    <div class="right-info">
-                                        <div>2020-05-23</div>
-                                        <div class="view">
-                                            <img src="../../../public/images/view.png" alt="">
-                                            250
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="article">
-                                <div class="left">
-                                    <div class="img" :style="'background-image: url('+imgUrl+')'"></div>
-                                </div>
-                                <div class="right">
-                                    <div class="right-title">
-                                        《我不是药神》引大家对版权深思,主播冯提主播冯提主播冯提
-                                    </div>
-                                    <div class="right-info">
-                                        <div>2020-05-23</div>
-                                        <div class="view">
-                                            <img src="../../../public/images/view.png" alt="">
-                                            250
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="article">
-                                <div class="left">
-                                    <div class="img" :style="'background-image: url('+imgUrl+')'"></div>
-                                </div>
-                                <div class="right">
-                                    <div class="right-title">
-                                        《我不是药神》引大家对版权深思,主播冯提主播冯提主播冯提
-                                    </div>
-                                    <div class="right-info">
-                                        <div>2020-05-23</div>
-                                        <div class="view">
-                                            <img src="../../../public/images/view.png" alt="">
-                                            250
+                                            {{item.post_hits}}
                                         </div>
                                     </div>
                                 </div>
@@ -310,41 +104,20 @@
                         <div class="block-content">
                             <div class="block-swiper-container">
                                 <div class="swiper-wrapper">
-                                    <div class="swiper-slide" v-for="(item,index) in imagesUrl">
-                                        <div class="block-img" :style="'background-image: url('+item+')'"></div>
+                                    <div class="swiper-slide" v-for="(item,index) in specialList">
+                                        <div class="block-img" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)" :style="'background-image: url('+baseUrl+item.more.thumbnail+')'"></div>
                                     </div>
                                 </div>
                                 <!-- 如果需要分页器 -->
                                 <div class="swiper-pagination2"></div>
                             </div>
-                            <div class="block-content-title">新增超高颜值萌妹82W粉丝奔跑晶骡子大尺</div>
+                            <!--                            <div class="block-content-title">新增超高颜值萌妹82W粉丝奔跑晶骡子大尺</div>-->
                             <div class="block-items">
-                                <div class="block-item">
-                                    <div class="line1" :style="'background-image: url('+imgUrl+')'"></div>
-                                    <div class="line2">2020-06-18</div>
-                                    <div class="line3">
-                                        《苦瓜电竞》--让你体验不一样的电竞主播...
-                                    </div>
-                                </div>
-                                <div class="block-item">
-                                    <div class="line1" :style="'background-image: url('+imgUrl+')'"></div>
-                                    <div class="line2">2020-06-18</div>
-                                    <div class="line3">
-                                        《苦瓜电竞》--让你体验不一样的电竞主播...
-                                    </div>
-                                </div>
-                                <div class="block-item">
-                                    <div class="line1" :style="'background-image: url('+imgUrl+')'"></div>
-                                    <div class="line2">2020-06-18</div>
-                                    <div class="line3">
-                                        《苦瓜电竞》--让你体验不一样的电竞主播...
-                                    </div>
-                                </div>
-                                <div class="block-item">
-                                    <div class="line1" :style="'background-image: url('+imgUrl+')'"></div>
-                                    <div class="line2">2020-06-18</div>
-                                    <div class="line3">
-                                        《苦瓜电竞》--让你体验不一样的电竞主播...
+                                <div class="block-item" v-for="(item,index) in specialList" v-if="index<4">
+                                    <div class="line1" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)" :style="'background-image: url('+baseUrl+item.more.thumbnail+')'"></div>
+                                    <div class="line2">{{item.create_time|timeFormatTwo}}</div>
+                                    <div class="line3" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)">
+                                        {{item.post_title}}
                                     </div>
                                 </div>
                             </div>
@@ -362,6 +135,8 @@
     import 'swiper/dist/css/swiper.min.css';
     import Header from '@/components/pc/Header'
     import Footer from '@/components/pc/Footer'
+    import {getArticleList, getBannerList, getTagList} from "../../api/pc/api";
+    import {formatTime, formatTimeThree} from "../../utils/utils";
 
     export default {
         name: "Result",
@@ -370,8 +145,17 @@
             Footer: Footer,
             Swiper
         },
+        filters:{
+            timeFormat(val){
+                return formatTime(val)
+            },
+            timeFormatTwo(val){
+                return formatTimeThree(val)
+            },
+        },
         data() {
             return {
+                baseUrl: this.$baseUrl,
                 imgUrl: require('../../../public/images/avatar.gif'),
                 imagesUrl: [
                     require('../../../public/images/avatar.gif'),
@@ -390,44 +174,136 @@
                     value: '选项3',
                     label: '女神主播'
                 }],
-                tagValue:'',
-                keyword:'',
-
+                artLoading:false,
+                tagId: '',//热门标签
+                keyword: '',//关键词
+                tagValue: '',
+                pageSize: 5,
+                pageNum: 1,
+                totalNum: 0,
+                tagList: [],
+                artList: [],
+                hotList: [],//热门文章
+                yearList: [],//包年精选文章
+                recommendList: [],//推荐文章
+                specialList: [],//精选文章
             }
         },
+        watch:{
+            '$route':'fetchData'
+        },
         methods: {
+            tagChange(){
+                this.$router.push('/result?tagId='+this.tagValue)
+            },
             handleSizeChange(val) {
                 console.log(`每页 ${val} 条`);
             },
             handleCurrentChange(val) {
                 console.log(`当前页: ${val}`);
-            }
+                this.fetchArticle(val)
+            },
+            async fetchData() {
+                if (this.$route.query.keyword) {
+                    this.tagId = '';
+                    this.tagValue = '';
+                    this.keyword = this.$route.query.keyword;
+                } else if (this.$route.query.tagId) {
+                    this.keyword=''
+                    this.tagId = this.$route.query.tagId;
+                    this.tagValue=parseInt (this.$route.query.tagId);
+                }
+                this.fetchArticle()
+                let that = this
+                let bannerList = await getBannerList()
+                this.bannerList = bannerList.data
+                let tagList = await getTagList()
+                this.tagList = tagList.data
+                let hotList = await getArticleList({
+                    page: 1,
+                    limit: 4,
+                    hot: 1
+                })
+                this.hotList = hotList.data.list
+
+                let yearList = await getArticleList({
+                    page: 1,
+                    limit: 4,
+                    category: 4
+                })
+                this.yearList = yearList.data.list
+                let recommendList = await getArticleList({
+                    page: 1,
+                    limit: 4,
+                    ttd: 1
+                })
+                this.recommendList = recommendList.data.list
+                let specialList = await getArticleList({
+                    page: 1,
+                    limit: 4,
+                    boutique: 1
+                })
+                this.specialList = specialList.data.list
+            },
+            async fetchArticle(pageNum = 1) {
+                this.artLoading = true
+                let that = this
+                let formData = {}
+                if (that.tagId) {
+                    formData = {
+                        page: pageNum,
+                        limit: that.pageSize,
+                        tag_id: that.tagId
+                    }
+                } else if (that.keyword) {
+                    formData = {
+                        page: pageNum,
+                        limit: that.pageSize,
+                        keyword: that.keyword
+                    }
+                }
+                let artList = await getArticleList(formData)
+                setTimeout(() => {
+                    this.artLoading = false
+                }, 500)
+                console.log(artList, 'artList')
+                that.totalNum = artList.data.count
+                that.artList = artList.data.list
+            },
         },
         mounted() {
-            this.keyword = this.$route.query.keyword;
+
+            this.fetchData()
+
+
             let swiper = new Swiper('.swiper-container', {
                 pagination: '.swiper-pagination',
                 nextButton: '.swiper-button-next',
                 prevButton: '.swiper-button-prev',
                 loop: true,
-                autoplay : 3000,
-                paginationClickable: true
+                autoplay: 3000,
+                paginationClickable: true,
+                observer: true,
+                observeParents: true,
             })
             let swiper2 = new Swiper('.block-swiper-container', {
                 pagination: '.swiper-pagination2',
                 loop: true,
-                autoplay : 3000,
-                paginationClickable: true
+                autoplay: 3000,
+                paginationClickable: true,
+                observer: true,
+                observeParents: true,
             })
         },
         beforeCreate() {
-            window,scrollTo(0,0)
+            window, scrollTo(0, 0)
         }
     }
 </script>
 
 <style scoped lang="scss">
-    .page {min-width:1200px;
+    .page {
+        min-width: 1200px;
         background-color: $page-back-color;
 
         .center-box {
@@ -540,7 +416,7 @@
                     display: flex;
                     flex-direction: column;
 
-                    .resultTip{
+                    .resultTip {
                         margin-bottom: 20px;
                         background-color: #ffffff;
                         box-shadow: 0px 0px 10px 0px rgba(179, 179, 179, 0.35);
@@ -549,10 +425,11 @@
                         box-sizing: border-box;
 
 
-                        font-size:18px;
-                        font-weight:400;
-                        color:rgba(51,51,51,1);
+                        font-size: 18px;
+                        font-weight: 400;
+                        color: rgba(51, 51, 51, 1);
                     }
+
                     .item {
                         margin-bottom: 20px;
                         background-color: #ffffff;
@@ -678,8 +555,11 @@
 
                         .line4 {
                             display: flex;
-                            justify-content: space-between;
+                            justify-content: flex-start;
 
+                            .line4-item:nth-child(2){
+                                margin: 0 20px;
+                            }
                             .line4-item {
                                 cursor: pointer;
                                 width: 240px;
@@ -742,23 +622,28 @@
                             font-weight: 400;
                             color: rgba(51, 51, 51, 1);
                         }
+
                         .block-content {
                             width: 100%;
-                            .el-select{
+
+                            .el-select {
                                 margin-top: 20px;
                                 width: 100%;
                             }
+
                             .block-swiper-container {
                                 margin: 20px 0;
                                 width: 100%;
                                 height: 200px;
                                 overflow: hidden;
+
                                 .block-img {
                                     cursor: pointer;
                                     width: 100%;
                                     height: 100%;
                                     @include back-img-center;
                                 }
+
                                 /deep/ .swiper-pagination-bullet {
                                     width: 10px;
                                     height: 10px;
@@ -773,7 +658,8 @@
                                     background: $theme-color;
                                     border-radius: 50%;
                                 }
-                                .swiper-pagination2{
+
+                                .swiper-pagination2 {
                                     position: relative;
                                     top: -20px;
                                     z-index: 999;
@@ -781,52 +667,60 @@
                                     justify-content: center;
                                 }
                             }
-                            .block-content-title{
+
+                            .block-content-title {
                                 cursor: pointer;
-                                font-size:16px;
-                                font-weight:400;
-                                color:rgba(51,51,51,1);
+                                font-size: 16px;
+                                font-weight: 400;
+                                color: rgba(51, 51, 51, 1);
                                 @include line-hidden(1)
                             }
 
-                            .article{
+                            .article {
                                 cursor: pointer;
                                 margin: 10px 0;
                                 width: 100%;
                                 display: flex;
-                                .left{
+
+                                .left {
                                     width: 120px;
-                                    .img{
+
+                                    .img {
                                         width: 120px;
                                         height: 100px;
                                         @include back-img-center
                                     }
                                 }
-                                .right{
+
+                                .right {
                                     padding-left: 20px;
                                     box-sizing: border-box;
                                     width: calc(100% - 120px);
                                     display: flex;
                                     flex-direction: column;
                                     justify-content: space-around;
-                                    .right-title{
-                                        font-size:18px;
-                                        font-weight:400;
-                                        color:rgba(51,51,51,1);
+
+                                    .right-title {
+                                        font-size: 18px;
+                                        font-weight: 400;
+                                        color: rgba(51, 51, 51, 1);
                                         @include line-hidden(2)
                                     }
-                                    .right-info{
+
+                                    .right-info {
                                         width: 100%;
-                                        font-size:16px;
-                                        font-weight:400;
-                                        color:rgba(128,128,128,1);
+                                        font-size: 16px;
+                                        font-weight: 400;
+                                        color: rgba(128, 128, 128, 1);
                                         display: flex;
                                         align-items: center;
                                         justify-content: space-between;
-                                        .view{
+
+                                        .view {
                                             display: flex;
                                             align-items: center;
-                                            img{
+
+                                            img {
                                                 margin-right: 5px;
                                                 width: 20px;
                                                 height: 16px;
@@ -837,36 +731,39 @@
                                 }
                             }
 
-                            .block-items{
+                            .block-items {
                                 margin-top: 20px;
                                 width: 100%;
                                 display: flex;
                                 flex-direction: row;
                                 flex-wrap: wrap;
                                 justify-content: space-between;
-                                .block-item{
+
+                                .block-item {
                                     margin-bottom: 20px;
                                     cursor: pointer;
                                     width: 150px;
                                     display: flex;
                                     flex-direction: column;
 
-                                    .line1{
+                                    .line1 {
                                         @include back-img-center;
                                         width: 150px;
                                         height: 120px;
                                     }
-                                    .line2{
+
+                                    .line2 {
                                         margin-top: 5px;
                                         margin-bottom: 7px;
-                                        font-size:16px;
-                                        font-weight:400;
-                                        color:rgba(128,128,128,1);
+                                        font-size: 16px;
+                                        font-weight: 400;
+                                        color: rgba(128, 128, 128, 1);
                                     }
-                                    .line3{
-                                        font-size:16px;
-                                        font-weight:400;
-                                        color:rgba(51,51,51,1);
+
+                                    .line3 {
+                                        font-size: 16px;
+                                        font-weight: 400;
+                                        color: rgba(51, 51, 51, 1);
                                         @include line-hidden(2)
                                     }
                                 }

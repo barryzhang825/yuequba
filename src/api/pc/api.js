@@ -15,6 +15,13 @@ export function userRegister(data) {
         data
     })
 }
+export function forgetPassword(data) {
+    return request({
+        url: '/home/login/passwordReset',
+        method: 'post',
+        data
+    })
+}
 export function getBannerList(data) {
     return request({
         url: '/home/slide/index',
@@ -43,7 +50,13 @@ export function getArticleDetail(data) {
         params:data
     })
 }
-
+export function likeArticle(data) {
+    return request({
+        url: '/home/article/doLike',
+        method: 'post',
+        data
+    })
+}
 
 
 

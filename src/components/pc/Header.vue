@@ -30,7 +30,7 @@
                     <img src="../../../public/images/close2.png" alt="">
                 </div>
                 <div class="input">
-                        <el-input v-model="searchWord" placeholder="请输入内容"></el-input>
+                        <el-input v-model="searchWord" placeholder="请输入内容"  @keyup.enter.native="toSearch"></el-input>
                         <img src="../../../public/images/search.png" alt="" @click="toSearch">
                 </div>
             </div>
@@ -95,10 +95,11 @@
             toSearch(){
                 if(this.searchWord!=''){
                     this.searchShow=false
-                    this.searchWord=''
+                    console.log(this.searchWord)
                     this.$router.push({
                         path:'/result?keyword='+this.searchWord
                     })
+                    this.searchWord=''
                 }
             },
             loginOut(){
@@ -108,7 +109,7 @@
         },
         mounted() {
             this.user_login=localStorage.getItem('user_login')
-            console.log(localStorage.getItem('user_login'))
+            // console.log(localStorage.getItem('user_login'))
         }
     }
 </script>

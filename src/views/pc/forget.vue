@@ -30,6 +30,8 @@
 </template>
 
 <script>
+    import {forgetPassword} from "../../api/pc/api";
+
     export default {
         name: "Forget",
         data() {
@@ -46,7 +48,8 @@
                 rememberPassword:false,
                 formData: {
                     username: '',
-                    password: ''
+                    password: '',
+                    rePassword: '',
                 },
                 rules: {
                     username: [
@@ -65,9 +68,16 @@
         },
         methods:{
             submitForm(formName) {
+                let that = this
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        alert('submit!');
+                        forgetPassword({
+                            user_login:that.username,
+                            user_pass:that.password,
+                            repassword:that.rePassword,
+                        }).then(res=>{
+                            that.$message.success('修改成功！')
+                        })
                     } else {
                         console.log('error submit!!');
                         return false;
@@ -76,7 +86,7 @@
             },
         },
         mounted() {
-            this.$message('这是一条消息提示');
+
         }
     }
 </script>
