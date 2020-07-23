@@ -10,27 +10,22 @@
                             首页 ><span>&nbsp;{{category==1?'主播区':category==2?'美图区':category==3?'视频区':category==4?'包年精选区':''}}</span> > <span style="color:#646464;">正文</span>
                         </div>
                         <div class="line1">
-                            <div class="tag tag1">主播</div>
-                            <div class="tag tag2">美女</div>
-                            <div class="tag tag3">颜值萌妹</div>
-                            <div class="tag tag4">福利</div>
-                            <div class="tag tag5">粉丝</div>
+                            <div  :class="'tag'+' tag'+item2.color_id" v-for="item2 in articleDetail.taglist">{{item2.name}}</div>
                         </div>
                         <div class="line2">
                             [抖音福利]新增超高颜值萌妹82W粉丝奔跑晶骡子大尺度福利[9V]
                         </div>
                         <div class="line3">
                             <div class="type">
-                                <img class="img-upper" src="../../../public/images/upper.png" alt="">主播区
-                                <!--                                <img class="img-year" src="../../../public/images/year.png" alt="">包年精选区-->
-                                <!--                                <img class="img-video" src="../../../public/images/video.png" alt="">视频区-->
-                                <!--                                <img class="img-img" src="../../../public/images/img.png" alt="">美图区-->
+                                <img :class="articleDetail.category_id==1?'img-upper':articleDetail.category_id==2?'img-img':articleDetail.category_id==3?'img-video':articleDetail.category_id==4?'img-year':''"
+                                     :src="articleDetail.category_id==1?require('../../../public/images/upper.png'):articleDetail.category_id==2?require('../../../public/images/img.png'):articleDetail.category_id==3?require('../../../public/images/video.png'):articleDetail.category_id==4?require('../../../public/images/year.png'):''" alt="">
+                                {{articleDetail.category_id==1?'主播区':articleDetail.category_id==2?'美图区':articleDetail.category_id==3?'视频区':articleDetail.category_id==4?'包年精选区':''}}
                             </div>
                             <div class="time">
-                                <img class="img-time" src="../../../public/images/time1.png" alt="">2020-05-24
+                                <img class="img-time" src="../../../public/images/time1.png" alt="">{{articleDetail.create_time|timeFormat}}
                             </div>
                             <div class="like">
-                                <img class="img-like" src="../../../public/images/heart1.png" alt="">2
+                                <img class="img-like" src="../../../public/images/heart1.png" alt="">{{articleDetail.post_like}}
                             </div>
                             <div class="com">
                                 <img class="img-comment" src="../../../public/images/comment.png" alt="">2
@@ -464,6 +459,8 @@
     import Header from '@/components/pc/Header'
     import Footer from '@/components/pc/Footer'
     import ToTop from "../../components/pc/ToTop";
+    import {getArticleDetail} from "../../api/pc/api";
+    import {formatTime} from "../../utils/utils";
 
     export default {
         name: "Detail",
@@ -472,6 +469,11 @@
             Header: Header,
             Footer: Footer,
             Swiper
+        },
+        filters:{
+            timeFormat(val){
+                return formatTime(val)
+            }
         },
         data() {
             return {
@@ -498,10 +500,8 @@
                 category:0,
                 menu:0,
                 commentContent:'',
-                // faceList: [
-                //     {value: '\ud83d\ude00', url: require('../assets/imgs/emoji/grinning-face_1f600.png')},  // value为表情对应的unicode码，url为路径
-                //     {value: '\ud83d\ude01', url: require('../assets/imgs/emoji/grinning-face-with-smiling-eyes_1f601.png')}
-                //     ]
+                id:'',
+                articleDetail:{}
             }
         },
         methods: {
@@ -511,9 +511,16 @@
             handleCurrentChange(val) {
                 console.log(`当前页: ${val}`);
             },
-            fetchData(){
+            async fetchData(){
+                let that = this
                 this.category=this.$route.query.type;
+                this.id=this.$route.query.id;
                 this.menu=Number(this.$route.query.type)+1;
+                let articleDetail = await  getArticleDetail({
+                    id:that.id
+                })
+                that.articleDetail=articleDetail.data
+                console.log(that.articleDetail)
             }
         },
         watch:{
@@ -536,6 +543,9 @@
                 autoplay : 3000,
                 paginationClickable: true
             })
+        },
+        beforeCreate() {
+            window.scroll(0,0)
         }
     }
 </script>

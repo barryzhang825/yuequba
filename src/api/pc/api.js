@@ -36,6 +36,13 @@ export function getArticleList(data) {
         params:data
     })
 }
+export function getArticleDetail(data) {
+    return request({
+        url: '/home/article/detail',
+        method: 'get',
+        params:data
+    })
+}
 
 
 

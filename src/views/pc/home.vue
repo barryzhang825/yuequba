@@ -17,50 +17,27 @@
                 </div>
             </div>
             <div class="class">
-                <div class="item" :style="'background-image: url('+imgUrl+')'">
+                <div class="item" :style="'background-image: url('+baseUrl+item.more.thumbnail+')'" v-for="item in recommendList">
                     <div class="text">
-                        <a>漂亮网红女主播线上卖货，一天净收入10万元漂亮网红女主播线上卖货，一天净收入10万元漂亮网红女主播线上卖货，一天净收入10万元</a>
-                    </div>
-                    <div class="gray"></div>
-                </div>
-                <div class="item" :style="'background-image: url('+imgUrl+')'">
-                    <div class="text">
-                        <a>漂亮网红女主播线上卖货，一天净收入10万元漂亮网红女主播线上卖货，一天净收入10万元漂亮网红女主播线上卖货，一天净收入10万元</a>
-                    </div>
-                    <div class="gray"></div>
-                </div>
-                <div class="item" :style="'background-image: url('+imgUrl+')'">
-                    <div class="text">
-                        <a>漂亮网红女主播线上卖货，一天净收入10万元漂亮网红女主播线上卖货，一天净收入10万元漂亮网红女主播线上卖货，一天净收入10万元</a>
-                    </div>
-                    <div class="gray"></div>
-                </div>
-                <div class="item" :style="'background-image: url('+imgUrl+')'">
-                    <div class="text">
-                        <a>漂亮网红女主播线上卖货，一天净收入10万元漂亮网红女主播线上卖货，一天净收入10万元漂亮网红女主播线上卖货，一天净收入10万元</a>
+                        <a>{{item.post_excerpt}}</a>
                     </div>
                     <div class="gray"></div>
                 </div>
             </div>
-            <div class="content">
+            <div class="content" >
                 <div class="left">
-                    <div class="item" v-for="item in artList">
+                    <div class="item" v-loading="artLoading" v-for="item in artList">
                         <div class="line1">
-                            <div class="tag tag1">主播</div>
-                            <div class="tag tag2">美女</div>
-                            <div class="tag tag3">颜值萌妹</div>
-                            <div class="tag tag4">福利</div>
-                            <div class="tag tag5">粉丝</div>
+                            <div  :class="'tag'+' tag'+item2.color_id" v-for="item2 in item.taglist">{{item2.name}}</div>
                         </div>
-                        <div class="line2">
-                            [抖音福利]新增超高颜值萌妹82W粉丝奔跑晶骡子大尺度福利[9V]
+                        <div class="line2" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)">
+                            {{item.post_title}}
                         </div>
                         <div class="line3">
                             <div class="type">
-                                <img class="img-upper" src="../../../public/images/upper.png" alt="">主播区
-                                <!--                                <img class="img-year" src="../../../public/images/year.png" alt="">包年精选区-->
-                                <!--                                <img class="img-video" src="../../../public/images/video.png" alt="">视频区-->
-                                <!--                                <img class="img-img" src="../../../public/images/img.png" alt="">美图区-->
+                                <img :class="item.category_id==1?'img-upper':item.category_id==2?'img-img':item.category_id==3?'img-video':item.category_id==4?'img-year':''"
+                                     :src="item.category_id==1?require('../../../public/images/upper.png'):item.category_id==2?require('../../../public/images/img.png'):item.category_id==3?require('../../../public/images/video.png'):item.category_id==4?require('../../../public/images/year.png'):''" alt="">
+                                {{item.category_id==1?'主播区':item.category_id==2?'美图区':item.category_id==3?'视频区':item.category_id==4?'包年精选区':''}}
                             </div>
                             <div class="time">
                                 <img class="img-time" src="../../../public/images/time.png" alt="">{{item.create_time|timeFormat}}
@@ -70,164 +47,13 @@
                             </div>
                         </div>
                         <div class="line4">
-                            <div class="line4-item" :style="'background-image: url('+baseUrl+item.more.photos[0].url+')'"></div>
-                            <div class="line4-item" :style="'background-image: url('+baseUrl+item.more.photos[1].url+')'"></div>
-                            <div class="line4-item" :style="'background-image: url('+baseUrl+item.more.photos[2].url+')'">
+                            <div @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)" class="line4-item" :style="'background-image: url('+baseUrl+item.more.photos[0].url+')'"></div>
+                            <div @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)" class="line4-item" :style="'background-image: url('+baseUrl+item.more.photos[1].url+')'"></div>
+                            <div @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)" class="line4-item" :style="'background-image: url('+baseUrl+item.more.photos[2].url+')'">
                                 <div class="more" v-if="item.surplusimgnum">+{{item.surplusimgnum}}</div>
                             </div>
                         </div>
                     </div>
-                    <div class="item">
-                        <div class="line1">
-                            <div class="tag tag1">主播</div>
-                            <div class="tag tag2">美女</div>
-                            <div class="tag tag3">颜值萌妹</div>
-                            <div class="tag tag4">福利</div>
-                            <div class="tag tag5">粉丝</div>
-                        </div>
-                        <div class="line2">
-                            [抖音福利]新增超高颜值萌妹82W粉丝奔跑晶骡子大尺度福利[9V]
-                        </div>
-                        <div class="line3">
-                            <div class="type">
-                                <!--                                <img class="img-upper" src="../../../public/images/upper.png" alt="">主播区-->
-                                <img class="img-year" src="../../../public/images/year.png" alt="">包年精选区
-                                <!--                                <img class="img-video" src="../../../public/images/video.png" alt="">视频区-->
-                                <!--                                <img class="img-img" src="../../../public/images/img.png" alt="">美图区-->
-                            </div>
-                            <div class="time">
-                                <img class="img-time" src="../../../public/images/time.png" alt="">2020-05-24
-                            </div>
-                            <div class="like">
-                                <img class="img-like" src="../../../public/images/heart.png" alt="">2
-                            </div>
-                        </div>
-                        <div class="line4">
-                            <div class="line4-item" v-for="item in 3"
-                                 :style="'background-image: url('+imgUrl+')'"></div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="line1">
-                            <div class="tag tag1">主播</div>
-                            <div class="tag tag2">美女</div>
-                            <div class="tag tag3">颜值萌妹</div>
-                            <div class="tag tag4">福利</div>
-                            <div class="tag tag5">粉丝</div>
-                        </div>
-                        <div class="line2">
-                            [抖音福利]新增超高颜值萌妹82W粉丝奔跑晶骡子大尺度福利[9V]
-                        </div>
-                        <div class="line3">
-                            <div class="type">
-                                <!--                                <img class="img-upper" src="../../../public/images/upper.png" alt="">主播区-->
-                                <!--                                <img class="img-year" src="../../../public/images/year.png" alt="">包年精选区-->
-                                <img class="img-video" src="../../../public/images/video.png" alt="">视频区
-                                <!--                                <img class="img-img" src="../../../public/images/img.png" alt="">美图区-->
-                            </div>
-                            <div class="time">
-                                <img class="img-time" src="../../../public/images/time.png" alt="">2020-05-24
-                            </div>
-                            <div class="like">
-                                <img class="img-like" src="../../../public/images/heart.png" alt="">2
-                            </div>
-                        </div>
-                        <div class="line4">
-                            <div class="line4-item" v-for="item in 3"
-                                 :style="'background-image: url('+imgUrl+')'"></div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="line1">
-                            <div class="tag tag1">主播</div>
-                            <div class="tag tag2">美女</div>
-                            <div class="tag tag3">颜值萌妹</div>
-                            <div class="tag tag4">福利</div>
-                            <div class="tag tag5">粉丝</div>
-                        </div>
-                        <div class="line2">
-                            [抖音福利]新增超高颜值萌妹82W粉丝奔跑晶骡子大尺度福利[9V]
-                        </div>
-                        <div class="line3">
-                            <div class="type">
-                                <!--                                <img class="img-upper" src="../../../public/images/upper.png" alt="">主播区-->
-                                <!--                                <img class="img-year" src="../../../public/images/year.png" alt="">包年精选区-->
-                                <!--                                <img class="img-video" src="../../../public/images/video.png" alt="">视频区-->
-                                <img class="img-img" src="../../../public/images/img.png" alt="">美图区
-                            </div>
-                            <div class="time">
-                                <img class="img-time" src="../../../public/images/time.png" alt="">2020-05-24
-                            </div>
-                            <div class="like">
-                                <img class="img-like" src="../../../public/images/heart.png" alt="">2
-                            </div>
-                        </div>
-                        <div class="line4">
-                            <div class="line4-item" v-for="item in 3"
-                                 :style="'background-image: url('+imgUrl+')'"></div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="line1">
-                            <div class="tag tag1">主播</div>
-                            <div class="tag tag2">美女</div>
-                            <div class="tag tag3">颜值萌妹</div>
-                            <div class="tag tag4">福利</div>
-                            <div class="tag tag5">粉丝</div>
-                        </div>
-                        <div class="line2">
-                            [抖音福利]新增超高颜值萌妹82W粉丝奔跑晶骡子大尺度福利[9V]
-                        </div>
-                        <div class="line3">
-                            <div class="type">
-                                <!--                                <img class="img-upper" src="../../../public/images/upper.png" alt="">主播区-->
-                                <!--                                <img class="img-year" src="../../../public/images/year.png" alt="">包年精选区-->
-                                <!--                                <img class="img-video" src="../../../public/images/video.png" alt="">视频区-->
-                                <img class="img-img" src="../../../public/images/img.png" alt="">美图区
-                            </div>
-                            <div class="time">
-                                <img class="img-time" src="../../../public/images/time.png" alt="">2020-05-24
-                            </div>
-                            <div class="like">
-                                <img class="img-like" src="../../../public/images/heart.png" alt="">2
-                            </div>
-                        </div>
-                        <div class="line4">
-                            <div class="line4-item" v-for="item in 3"
-                                 :style="'background-image: url('+imgUrl+')'"></div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="line1">
-                            <div class="tag tag1">主播</div>
-                            <div class="tag tag2">美女</div>
-                            <div class="tag tag3">颜值萌妹</div>
-                            <div class="tag tag4">福利</div>
-                            <div class="tag tag5">粉丝</div>
-                        </div>
-                        <div class="line2">
-                            [抖音福利]新增超高颜值萌妹82W粉丝奔跑晶骡子大尺度福利[9V]
-                        </div>
-                        <div class="line3">
-                            <div class="type">
-                                <!--                                <img class="img-upper" src="../../../public/images/upper.png" alt="">主播区-->
-                                <!--                                <img class="img-year" src="../../../public/images/year.png" alt="">包年精选区-->
-                                <!--                                <img class="img-video" src="../../../public/images/video.png" alt="">视频区-->
-                                <img class="img-img" src="../../../public/images/img.png" alt="">美图区
-                            </div>
-                            <div class="time">
-                                <img class="img-time" src="../../../public/images/time.png" alt="">2020-05-24
-                            </div>
-                            <div class="like">
-                                <img class="img-like" src="../../../public/images/heart.png" alt="">2
-                            </div>
-                        </div>
-                        <div class="line4">
-                            <div class="line4-item" v-for="item in 3"
-                                 :style="'background-image: url('+imgUrl+')'"></div>
-                        </div>
-                    </div>
-
                     <div class="pagination">
                         <el-pagination
                                 :background="false"
@@ -259,83 +85,32 @@
                         <div class="block-content">
                             <div class="block-swiper-container">
                                 <div class="swiper-wrapper">
-                                    <div class="swiper-slide" v-for="(item,index) in imagesUrl">
-                                        <div class="block-img" :style="'background-image: url('+item+')'"></div>
+                                    <div class="swiper-slide" v-for="(item,index) in yearList">
+                                        <div @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)" class="block-img" :style="'background-image: url('+baseUrl+item.more.thumbnail+')'"></div>
                                     </div>
                                 </div>
                                 <!-- 如果需要分页器 -->
                                 <div class="swiper-pagination2"></div>
                             </div>
-                            <div class="block-content-title">新增超高颜值萌妹82W粉丝奔跑晶骡子大尺</div>
+<!--                            <div class="block-content-title">新增超高颜值萌妹82W粉丝奔跑晶骡子大尺</div>-->
                         </div>
                     </div>
                     <div class="block-box">
                         <div class="title">热门文章</div>
                         <div class="block-content">
-                            <div class="article">
+                            <div class="article" v-for="item in hotList" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)">
                                 <div class="left">
-                                    <div class="img" :style="'background-image: url('+imgUrl+')'"></div>
+                                    <div class="img" :style="'background-image: url('+baseUrl+item.more.thumbnail+')'"></div>
                                 </div>
                                 <div class="right">
                                     <div class="right-title">
-                                        《我不是药神》引大家对版权深思,主播冯提主播冯提主播冯提
+                                        {{item.post_title}}
                                     </div>
                                     <div class="right-info">
-                                        <div>2020-05-23</div>
+                                        <div>{{item.create_time|timeFormat}}</div>
                                         <div class="view">
                                             <img src="../../../public/images/view.png" alt="">
-                                            250
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="article">
-                                <div class="left">
-                                    <div class="img" :style="'background-image: url('+imgUrl+')'"></div>
-                                </div>
-                                <div class="right">
-                                    <div class="right-title">
-                                        《我不是药神》引大家对版权深思,主播冯提主播冯提主播冯提
-                                    </div>
-                                    <div class="right-info">
-                                        <div>2020-05-23</div>
-                                        <div class="view">
-                                            <img src="../../../public/images/view.png" alt="">
-                                            250
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="article">
-                                <div class="left">
-                                    <div class="img" :style="'background-image: url('+imgUrl+')'"></div>
-                                </div>
-                                <div class="right">
-                                    <div class="right-title">
-                                        《我不是药神》引大家对版权深思,主播冯提主播冯提主播冯提
-                                    </div>
-                                    <div class="right-info">
-                                        <div>2020-05-23</div>
-                                        <div class="view">
-                                            <img src="../../../public/images/view.png" alt="">
-                                            250
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="article">
-                                <div class="left">
-                                    <div class="img" :style="'background-image: url('+imgUrl+')'"></div>
-                                </div>
-                                <div class="right">
-                                    <div class="right-title">
-                                        《我不是药神》引大家对版权深思,主播冯提主播冯提主播冯提
-                                    </div>
-                                    <div class="right-info">
-                                        <div>2020-05-23</div>
-                                        <div class="view">
-                                            <img src="../../../public/images/view.png" alt="">
-                                            250
+                                            {{item.post_hits}}
                                         </div>
                                     </div>
                                 </div>
@@ -354,7 +129,7 @@
                                 <!-- 如果需要分页器 -->
                                 <div class="swiper-pagination2"></div>
                             </div>
-                            <div class="block-content-title">新增超高颜值萌妹82W粉丝奔跑晶骡子大尺</div>
+<!--                            <div class="block-content-title">新增超高颜值萌妹82W粉丝奔跑晶骡子大尺</div>-->
                             <div class="block-items">
                                 <div class="block-item">
                                     <div class="line1" :style="'background-image: url('+imgUrl+')'"></div>
@@ -427,7 +202,7 @@
                     require('../../../public/images/avatar.gif'),
                     require('../../../public/images/avatar.gif'),
                 ],
-                currentPage: 5,
+                artLoading:false,
                 tagOptions: [{
                     value: '选项1',
                     label: '女神主播'
@@ -438,13 +213,17 @@
                     value: '选项3',
                     label: '女神主播'
                 }],
-                pageSize:10,
+                swiperActiveIndex2:0,
+                pageSize:5,
                 pageNum:1,
                 totalNum:0,
                 tagValue: '',
                 bannerList: [],
                 tagList: [],
                 artList: [],
+                hotList: [],//热门文章
+                yearList: [],//包年精选文章
+                recommendList: [],//推荐文章
 
             }
         },
@@ -454,6 +233,8 @@
             },
             handleCurrentChange(val) {
                 console.log(`当前页: ${val}`);
+                this.fetchArticle(val)
+
             },
             async fetchData() {
                 let that = this
@@ -461,22 +242,46 @@
                 this.bannerList = bannerList.data
                 let tagList = await getTagList()
                 this.tagList = tagList.data
+                let hotList=await getArticleList({
+                    page:1,
+                    limit:4,
+                    hot:1
+                })
+                this.hotList=hotList.data.list
+
+                let yearList=await getArticleList({
+                    page:1,
+                    limit:4,
+                    category:4
+                })
+                this.yearList=yearList.data.list
+                let recommendList=await getArticleList({
+                    page:1,
+                    limit:4,
+                    ttd:1
+                })
+                this.recommendList=recommendList.data.list
+                console.log(recommendList,'recommendList')
             },
-            async fetchArticle(pageNum=1,append=false){
+            async fetchArticle(pageNum=1){
+                this.artLoading=true
                 let that = this
                 let artList=await getArticleList({
                     page:pageNum,
                     limit:that.pageSize
                 })
+                setTimeout(()=>{
+                    this.artLoading=false
+                },500)
                 that.totalNum=artList.data.count
                 that.artList=artList.data.list
-                console.log(that.artList)
             },
             tagChange(){
                 this.$router.push('/result?keyword='+this.tagValue)
             }
         },
         mounted() {
+            let that = this
             this.fetchData()
             this.fetchArticle()
             let swiper = new Swiper('.swiper-container', {
@@ -485,13 +290,19 @@
                 prevButton: '.swiper-button-prev',
                 loop: true,
                 autoplay: 3000,
-                paginationClickable: true
+                paginationClickable: true,
+                observer:true,
+                observeParents:true,
             })
             let swiper2 = new Swiper('.block-swiper-container', {
                 pagination: '.swiper-pagination2',
                 loop: true,
                 autoplay: 3000,
-                paginationClickable: true
+                paginationClickable: true,
+                observer:true,
+                onSlideChangeStart: function(swiper){
+                    that.swiperActiveIndex2=swiper.activeIndex
+                }
             })
         }
     }
@@ -589,6 +400,7 @@
                     }
 
                     .gray {
+                        transition: all 0.4s;
                         width: 100%;
                         height: 100%;
                         position: absolute;
@@ -596,6 +408,10 @@
                         opacity: 0.5;
                         border-radius: 10px;
                     }
+                }
+                .item:hover>.gray{
+                    background: none;
+                    opacity: 1;
                 }
             }
 
