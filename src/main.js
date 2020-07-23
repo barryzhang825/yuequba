@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
+
 Vue.config.productionTip = false
 
 import ElementUI from 'element-ui';
@@ -13,6 +14,9 @@ import '../theme/index.css'
 import Vant from 'vant';
 import 'vant/lib/index.css';
 Vue.use(Vant)
+
+import { emoji } from './assets/emoji/emoji.js'
+Vue.prototype.emoji = emoji
 
 Vue.prototype.$baseUrl = 'http://yuequba.zhengshangwl.com/upload/'
 

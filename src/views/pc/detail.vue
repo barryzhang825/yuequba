@@ -103,6 +103,7 @@
                     <div class="comment">
                         <div class="title">发表评论</div>
                         <el-input
+                                @focus="showEmoji=false"
                                 type="textarea"
                                 :rows="5"
                                 resize="none"
@@ -110,17 +111,21 @@
                                 v-model="commentContent">
                         </el-input>
                         <div class="comment-button">
-                            <div class="comment-button-left">
+                            <div class="comment-button-left" @click="showEmoji=!showEmoji">
                                 <img src="../../../public/images/emoji.png" alt="">
                                 <span>添加表情</span>
+                                <vue-emoji
+                                        v-if="showEmoji"
+                                        @select="selectEmoji">
+                                </vue-emoji>
                             </div>
                             <div class="comment-button-right">
-                                <el-button type="primary">评论</el-button>
+                                <el-button type="primary" @click="doComment">评论</el-button>
                             </div>
                         </div>
                         <div class="all-comment">
                             <div class="all-comment-title">全部评论（2）</div>
-                            <div class="comment-item">
+                            <div class="comment-item" v-for="item in commentList">
                                 <div class="comment-item-left">
                                     <div class="img" :style="'background-image: url('+imgUrl+')'"></div>
                                 </div>
@@ -129,150 +134,11 @@
                                         <div class="username">sk02330</div>
                                         <div class="time">2020-06-12</div>
                                     </div>
-                                    <div class="line2">
-                                        为啥我是老会员，怎么到这里了变成了新会员？以前买过的啥都没有了？
-                                    </div>
+                                    <span class="line2" v-html="emoji(item)">
+
+                                    </span>
                                     <div class="line3">
                                         <span>回复</span>
-                                    </div>
-                                    <div class="reply">
-                                        <div class="reply-left">
-                                            <div class="img" :style="'background-image: url('+imgUrl+')'"></div>
-                                        </div>
-                                        <div class="reply-right">
-                                            <div class="reply-right-line1">
-                                                <div class="reply-line1-left">
-                                                    admin <div class="tag">官方</div>
-                                                </div>
-                                                <div class="reply-line1-right">
-                                                    2020-06-20
-                                                </div>
-                                            </div>
-                                            <div class="reply-right-line2">
-                                                已经处理了
-                                            </div>
-                                            <div class="reply-right-line3">
-                                                <span>回复</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="reply">
-                                        <div class="reply-left">
-                                            <div class="img" :style="'background-image: url('+imgUrl+')'"></div>
-                                        </div>
-                                        <div class="reply-right">
-                                            <div class="reply-right-line1">
-                                                <div class="reply-line1-left">
-                                                    admin <div class="tag">官方</div>
-                                                </div>
-                                                <div class="reply-line1-right">
-                                                    2020-06-20
-                                                </div>
-                                            </div>
-                                            <div class="reply-right-line2">
-                                                已经处理了
-                                            </div>
-                                            <div class="reply-right-line3">
-                                                <span>回复</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="comment-item">
-                                <div class="comment-item-left">
-                                    <div class="img" :style="'background-image: url('+imgUrl+')'"></div>
-                                </div>
-                                <div class="comment-item-right">
-                                    <div class="line1">
-                                        <div class="username">sk02330</div>
-                                        <div class="time">2020-06-12</div>
-                                    </div>
-                                    <div class="line2">
-                                        为啥我是老会员，怎么到这里了变成了新会员？以前买过的啥都没有了？
-                                    </div>
-                                    <div class="line3">
-                                        <span>回复</span>
-                                    </div>
-                                    <div class="reply">
-                                        <div class="reply-left">
-                                            <div class="img" :style="'background-image: url('+imgUrl+')'"></div>
-                                        </div>
-                                        <div class="reply-right">
-                                            <div class="reply-right-line1">
-                                                <div class="reply-line1-left">
-                                                    admin <div class="tag">官方</div>
-                                                </div>
-                                                <div class="reply-line1-right">
-                                                    2020-06-20
-                                                </div>
-                                            </div>
-                                            <div class="reply-right-line2">
-                                                已经处理了
-                                            </div>
-                                            <div class="reply-right-line3">
-                                                <span>回复</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="reply">
-                                        <div class="reply-left">
-                                            <div class="img" :style="'background-image: url('+imgUrl+')'"></div>
-                                        </div>
-                                        <div class="reply-right">
-                                            <div class="reply-right-line1">
-                                                <div class="reply-line1-left">
-                                                    admin <div class="tag">官方</div>
-                                                </div>
-                                                <div class="reply-line1-right">
-                                                    2020-06-20
-                                                </div>
-                                            </div>
-                                            <div class="reply-right-line2">
-                                                已经处理了
-                                            </div>
-                                            <div class="reply-right-line3">
-                                                <span>回复</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="comment-item">
-                                <div class="comment-item-left">
-                                    <div class="img" :style="'background-image: url('+imgUrl+')'"></div>
-                                </div>
-                                <div class="comment-item-right">
-                                    <div class="line1">
-                                        <div class="username">sk02330</div>
-                                        <div class="time">2020-06-12</div>
-                                    </div>
-                                    <div class="line2">
-                                        为啥我是老会员，怎么到这里了变成了新会员？以前买过的啥都没有了？
-                                    </div>
-                                    <div class="line3">
-                                        <span>回复</span>
-                                    </div>
-                                    <div class="reply">
-                                        <div class="reply-left">
-                                            <div class="img" :style="'background-image: url('+imgUrl+')'"></div>
-                                        </div>
-                                        <div class="reply-right">
-                                            <div class="reply-right-line1">
-                                                <div class="reply-line1-left">
-                                                    admin <div class="tag">官方</div>
-                                                </div>
-                                                <div class="reply-line1-right">
-                                                    2020-06-20
-                                                </div>
-                                            </div>
-                                            <div class="reply-right-line2">
-                                                已经处理了
-                                            </div>
-                                            <div class="reply-right-line3">
-                                                <span>回复</span>
-                                            </div>
-                                        </div>
                                     </div>
                                     <div class="reply">
                                         <div class="reply-left">
@@ -391,6 +257,8 @@
     import ToTop from "../../components/pc/ToTop";
     import {getArticleDetail, getArticleList, getBannerList, getTagList, likeArticle} from "../../api/pc/api";
     import {formatTime, formatTimeThree} from "../../utils/utils";
+    import vueEmoji from '../../components/pc/emoji'
+
 
     export default {
         name: "Detail",
@@ -398,7 +266,8 @@
             ToTop,
             Header: Header,
             Footer: Footer,
-            Swiper
+            Swiper,
+            vueEmoji
         },
         filters:{
             timeFormat(val){
@@ -443,7 +312,11 @@
                     more:{
                         photos:[]
                     }
-                }
+                },
+                commentList:[],
+
+
+                showEmoji: false,
             }
         },
         methods: {
@@ -507,7 +380,20 @@
             },
             tagChange(){
                 this.$router.push('/result?tagId='+this.tagValue)
-            }
+            },
+
+
+            doComment(){
+                if(this.commentContent!=''){
+                    this.commentList.push(this.commentContent)
+                    this.commentContent=''
+                }
+                this.showEmoji=false
+            },
+            selectEmoji (code) {
+                this.showEmoji = false
+                this.commentContent += code
+            },
         },
         watch:{
             '$route':'fetchData'
@@ -534,9 +420,6 @@
             })
         },
         beforeCreate() {
-            window.scroll(0,0)
-        },
-        updated() {
             window.scroll(0,0)
         }
     }
@@ -1028,6 +911,7 @@
                                 cursor: pointer;
                                 display: flex;
                                 align-items: center;
+                                position: relative;
                                 span{
                                     font-size:18px;
                                     font-weight:400;
