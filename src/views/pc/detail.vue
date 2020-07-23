@@ -67,20 +67,22 @@
                             </div>
                         </div>
                         <div class="art-list">
-                            <div class="item">
-                                <div class="img" :style="'background-image: url('+imgUrl+')'"></div>
+                            <div class="item" @click="articleDetail.prev_article?$router.push('/detail?type='+category+'&id='+articleDetail.prev_article.id):''">
+                                <div v-if="articleDetail.prev_article" class="img" :style="'background-image: url('+baseUrl+articleDetail.prev_article.more.thumbnail+')'"></div>
+                                <div v-if="!articleDetail.prev_article" class="img" :style="'background-image: url('+imgUrl+')'"></div>
                                 <div class="info">
                                     <div class="button">上一篇</div>
                                     <div class="title">
-                                        冯提莫:主播不低俗却励志,不当网红一姐,却当佛系少女
+                                        {{articleDetail.prev_article?articleDetail.prev_article.post_title:'暂无'}}
                                     </div>
                                 </div>
                             </div>
-                            <div class="item">
-                                <div class="img" :style="'background-image: url('+imgUrl+')'" ></div>
+                            <div class="item" @click="articleDetail.next_article?$router.push('/detail?type='+category+'&id='+articleDetail.next_article.id):''">
+                                <div v-if="articleDetail.next_article" class="img" :style="'background-image: url('+baseUrl+articleDetail.next_article.more.thumbnail+')'" ></div>
+                                <div v-if="!articleDetail.next_article" class="img" :style="'background-image: url('+imgUrl+')'" ></div>
                                 <div class="info">
                                     <div class="title">
-                                        冯提莫:主播不低俗却励志,不当网红一姐,却当佛系少女
+                                        {{articleDetail.next_article?articleDetail.next_article.post_title:'暂无'}}
                                     </div>
                                     <div class="button">下一篇</div>
                                 </div>
@@ -90,7 +92,7 @@
                     <div class="guess">
                         <div class="title">猜你喜欢</div>
                         <div class="art-list">
-                            <div class="item" v-for="(item,index) in recommendList" v-if="index<3">
+                            <div class="item" v-for="(item,index) in recommendList" v-if="index<3" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)">
                                 <div class="img" :style="'background-image: url('+baseUrl+item.more.thumbnail+')'"></div>
                                 <div class="art-title">
                                     {{item.post_title}}
@@ -409,7 +411,7 @@
         data() {
             return {
                 baseUrl: this.$baseUrl,
-                imgUrl: require('../../../public/images/avatar.gif'),
+                imgUrl: require('../../../public/images/default.png'),
                 imagesUrl: [
                     require('../../../public/images/avatar.gif'),
                     require('../../../public/images/avatar.gif'),
@@ -532,6 +534,9 @@
             })
         },
         beforeCreate() {
+            window.scroll(0,0)
+        },
+        updated() {
             window.scroll(0,0)
         }
     }
@@ -930,6 +935,8 @@
                                         align-items: center;
                                     }
                                     .title{
+                                        margin: auto 0;
+                                        width: calc(100% - 70px);
                                         @include line-hidden(2);
                                         padding-left: 10px;
                                         box-sizing: border-box;
