@@ -58,7 +58,13 @@ export function likeArticle(data) {
     })
 }
 
-
+export function getVipList(data) {
+    return request({
+        url: '/home/viprule/index',
+        method: 'get',
+        params:data
+    })
+}
 
 
 

@@ -21,7 +21,8 @@
 <!--                    </el-badge>-->
 <!--                </div>-->
                 <div class="link" v-if="!user_login"><router-link to="/login">登录</router-link> | <router-link to="/register">注册</router-link></div>
-                <div class="userinfo" v-if="user_login"><router-link to="/user">{{user_login}}</router-link> | <a @click="loginOut" style="cursor:pointer;">退出</a></div>
+                <div class="userinfo" v-if="user_login"><router-link to="/user">{{user_login}}</router-link> </div>
+<!--                | <a @click="loginOut" style="cursor:pointer;">退出</a>-->
             </div>
         </div>
         <van-overlay :show="searchShow" >

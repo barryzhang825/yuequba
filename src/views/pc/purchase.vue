@@ -7,41 +7,14 @@
                 <span>踢出个未来，请选择VIP会员服务</span>
             </div>
             <div class="select-box">
-                <div class="item" :class="selectedIndex==0?'selected':''" @click="selectedIndex=0">
-                    <div class="line1">包月VIP</div>
+                <div class="item" :class="selectedIndex==index?'selected':''" @click="selectedIndex=index" v-for="(item,index) in vipList">
+                    <div class="line1">{{item.name}}</div>
                     <div class="line2">
-                        <span>￥49</span>/月
+                        <span>￥{{item.money}}</span>/月
                     </div>
                     <div class="line3">全站资源无限下载</div>
-                    <img class="check" v-if="selectedIndex==0" src="../../../public/images/check.png" alt="">
-                    <div class="tag" v-if="false">包年精选福利</div>
-                </div>
-                <div class="item" :class="selectedIndex==1?'selected':''" @click="selectedIndex=1">
-                    <div class="line1">包月VIP</div>
-                    <div class="line2">
-                        <span>￥49</span>/月
-                    </div>
-                    <div class="line3">全站资源无限下载</div>
-                    <img class="check" v-if="selectedIndex==1" src="../../../public/images/check.png" alt="">
-                    <div class="tag" v-if="false">包年精选福利</div>
-                </div>
-                <div class="item" :class="selectedIndex==2?'selected':''" @click="selectedIndex=2">
-                    <div class="line1">包月VIP</div>
-                    <div class="line2">
-                        <span>￥49</span>/月
-                    </div>
-                    <div class="line3">全站资源无限下载</div>
-                    <img class="check" v-if="selectedIndex==2" src="../../../public/images/check.png" alt="">
-                    <div class="tag" v-if="false">包年精选福利</div>
-                </div>
-                <div class="item" :class="selectedIndex==3?'selected':''" @click="selectedIndex=3">
-                    <div class="line1">包月VIP</div>
-                    <div class="line2">
-                        <span>￥49</span>/月
-                    </div>
-                    <div class="line3">全站资源无限下载</div>
-                    <img class="check" v-if="selectedIndex==3" src="../../../public/images/check.png" alt="">
-                    <div class="tag" v-if="true">包年精选福利</div>
+                    <img class="check" v-if="selectedIndex==index" src="../../../public/images/check.png" alt="">
+                    <div class="tag" v-if="index==3">包年精选福利</div>
                 </div>
 
             </div>
@@ -56,6 +29,7 @@
 <script>
     import Header from '@/components/pc/Header'
     import Footer from '@/components/pc/Footer'
+    import {getVipList} from "../../api/pc/api";
     export default {
         name: "Purchase",
         components: {
@@ -65,11 +39,20 @@
         data(){
             return{
                 imgUrl: require('../../../public/images/avatar.gif'),
-                selectedIndex:0
+                selectedIndex:0,
+                vipList:[]
             }
         },
         methods:{
-
+            fetchData(){
+                getVipList().then(res=>{
+                    console.log(res)
+                    this.vipList=res.data.reverse()
+                })
+            }
+        },
+        mounted() {
+            this.fetchData()
         }
     }
 </script>
