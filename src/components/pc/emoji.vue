@@ -1,7 +1,7 @@
 <template>
   <div class="emoji">
     <ul class="emoji-controller">
-      <li 
+      <li
         v-for="(pannel,index) in pannels" 
         @click="changeActive(index)"
         :class="{'active': index === activeIndex}">{{ pannel }}</li>
@@ -13,7 +13,7 @@
         :key="index"
         v-if="index === activeIndex">
         <a 
-          href="javascript:;" 
+
           v-for="(emoji, index) in emojiGroup"  
           :key="index" @click="selectItem(emoji)">
            <span 
@@ -39,6 +39,7 @@ export default {
   },
   methods: {
     changeActive (index) {
+      console.log(index,111)
       this.activeIndex = index
     },
     getPureName (name) {
@@ -62,7 +63,7 @@ export default {
 @import '../../assets/emoji/emoji-sprite.scss';
 
 .emoji {
-  border: 1px solid red;
+  border: 1px solid gainsboro;
   position: absolute;
   width: 380px;
   height: 186px;

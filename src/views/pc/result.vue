@@ -127,6 +127,7 @@
             </div>
         </div>
         <Footer></Footer>
+        <ToTop></ToTop>
     </div>
 </template>
 
@@ -137,13 +138,15 @@
     import Footer from '@/components/pc/Footer'
     import {getArticleList, getBannerList, getTagList} from "../../api/pc/api";
     import {formatTime, formatTimeThree} from "../../utils/utils";
+    import ToTop from "../../components/pc/ToTop";
 
     export default {
         name: "Result",
         components: {
             Header: Header,
             Footer: Footer,
-            Swiper
+            Swiper,
+            ToTop
         },
         filters:{
             timeFormat(val){

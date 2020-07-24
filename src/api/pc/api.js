@@ -50,6 +50,13 @@ export function getArticleDetail(data) {
         params:data
     })
 }
+export function getCommentList(data) {
+    return request({
+        url: '/home/postcomment/getPostCommentList',
+        method: 'get',
+        params:data
+    })
+}
 export function likeArticle(data) {
     return request({
         url: '/home/article/doLike',
@@ -65,7 +72,13 @@ export function getVipList(data) {
         params:data
     })
 }
-
+export function doComment(data) {
+    return request({
+        url: '/home/postcomment/addComment',
+        method: 'post',
+        data
+    })
+}
 
 
 

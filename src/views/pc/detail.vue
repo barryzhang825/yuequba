@@ -39,7 +39,7 @@
                             <span style="color:rgba(255,194,49,1);">摘要：</span>
                             {{articleDetail.post_excerpt}}
                         </div>
-                        <div class="images">
+                        <div class="images" v-loading="loading1">
                             <img v-for="item in articleDetail.more.photos" :src="baseUrl+item.url" alt="">
                         </div>
                         <div class="download-box">
@@ -103,15 +103,16 @@
                     <div class="comment">
                         <div class="title">发表评论</div>
                         <el-input
+                                ref="commentIpnut"
                                 @focus="showEmoji=false"
                                 type="textarea"
                                 :rows="5"
                                 resize="none"
-                                placeholder="说点什么..."
+                                :placeholder="placeholder"
                                 v-model="commentContent">
                         </el-input>
                         <div class="comment-button">
-                            <div class="comment-button-left" @click="showEmoji=!showEmoji">
+                            <div class="comment-button-left" @click="showEmoji=true">
                                 <img src="../../../public/images/emoji.png" alt="">
                                 <span>添加表情</span>
                                 <vue-emoji
@@ -123,41 +124,43 @@
                                 <el-button type="primary" @click="doComment">评论</el-button>
                             </div>
                         </div>
-                        <div class="all-comment">
-                            <div class="all-comment-title">全部评论（2）</div>
+                        <div class="all-comment" v-loading="loading2">
+                            <div class="all-comment-title">全部评论（{{articleDetail.comment_count}}）</div>
                             <div class="comment-item" v-for="item in commentList">
                                 <div class="comment-item-left">
-                                    <div class="img" :style="'background-image: url('+imgUrl+')'"></div>
+                                    <div v-if="item.user_avatar" class="img" :style="'background-image: url('+baseUrl+item.user_avatar+')'"></div>
+                                    <div v-if="!item.user_avatar" class="img" :style="'background-image: url('+avatarUrl+')'"></div>
                                 </div>
                                 <div class="comment-item-right">
                                     <div class="line1">
-                                        <div class="username">sk02330</div>
-                                        <div class="time">2020-06-12</div>
+                                        <div class="username">{{item.user_name}}</div>
+                                        <div class="time">{{item.create_time|timeFormat}}</div>
                                     </div>
-                                    <span class="line2" v-html="emoji(item)">
+                                    <span class="line2" v-html="emoji(item.content)">
 
                                     </span>
                                     <div class="line3">
-                                        <span>回复</span>
+                                        <span @click="replyComment(item)">回复</span>
                                     </div>
-                                    <div class="reply">
+                                    <div class="reply" v-for="item2 in item.twolist">
                                         <div class="reply-left">
-                                            <div class="img" :style="'background-image: url('+imgUrl+')'"></div>
+                                            <div v-if="item2.user_avatar" class="img" :style="'background-image: url('+baseUrl+item2.to_user_avatar+')'"></div>
+                                            <div v-if="!item2.user_avatar" class="img" :style="'background-image: url('+avatarUrl+')'"></div>
                                         </div>
                                         <div class="reply-right">
                                             <div class="reply-right-line1">
                                                 <div class="reply-line1-left">
-                                                    admin <div class="tag">官方</div>
+                                                    {{item2.user_name}} <div class="tag">官方</div>
                                                 </div>
                                                 <div class="reply-line1-right">
-                                                    2020-06-20
+                                                    {{item2.create_time|timeFormat}}
                                                 </div>
                                             </div>
-                                            <div class="reply-right-line2">
-                                                已经处理了
+                                            <div class="reply-right-line2" v-html="emoji(item2.content)">
+<!--                                                {{item2.content}}-->
                                             </div>
                                             <div class="reply-right-line3">
-                                                <span>回复</span>
+<!--                                                <span @click="replyComment(item)">回复</span>-->
                                             </div>
                                         </div>
                                     </div>
@@ -255,7 +258,14 @@
     import Header from '@/components/pc/Header'
     import Footer from '@/components/pc/Footer'
     import ToTop from "../../components/pc/ToTop";
-    import {getArticleDetail, getArticleList, getBannerList, getTagList, likeArticle} from "../../api/pc/api";
+    import {
+        doComment,
+        getArticleDetail,
+        getArticleList,
+        getBannerList, getCommentList,
+        getTagList,
+        likeArticle
+    } from "../../api/pc/api";
     import {formatTime, formatTimeThree} from "../../utils/utils";
     import vueEmoji from '../../components/pc/emoji'
 
@@ -281,6 +291,7 @@
             return {
                 baseUrl: this.$baseUrl,
                 imgUrl: require('../../../public/images/default.png'),
+                avatarUrl: require('../../../public/images/user.png'),
                 imagesUrl: [
                     require('../../../public/images/avatar.gif'),
                     require('../../../public/images/avatar.gif'),
@@ -298,6 +309,8 @@
                     value: '选项3',
                     label: '女神主播'
                 }],
+                loading1:false,
+                loading2:false,
                 tagValue:'',
                 category:0,
                 menu:0,
@@ -313,10 +326,10 @@
                         photos:[]
                     }
                 },
+                parent_id:'',//回复上级的id
                 commentList:[],
-
-
                 showEmoji: false,
+                placeholder:'说点什么...'
             }
         },
         methods: {
@@ -343,11 +356,13 @@
                 this.category=this.$route.query.type;
                 this.id=this.$route.query.id;
                 this.menu=Number(this.$route.query.type)+1;
+                this.loading1=true
                 let articleDetail = await  getArticleDetail({
                     id:that.id
                 })
                 that.articleDetail=articleDetail.data
-                console.log(that.articleDetail)
+                this.loading1=false
+                that.fetchComment()
                 let bannerList = await getBannerList()
                 this.bannerList = bannerList.data
                 let tagList = await getTagList()
@@ -378,20 +393,56 @@
                 })
                 this.specialList=specialList.data.list
             },
+            async fetchComment(){
+                let that = this
+                that.loading2=true
+                let commentList = await  getCommentList({
+                    id:that.id
+                })
+                that.commentList=commentList.data
+                that.loading2=false
+            },
             tagChange(){
                 this.$router.push('/result?tagId='+this.tagValue)
             },
 
 
+            replyComment(item){
+                this.commentContent=''
+                console.log(item)
+                this.placeholder='回复@'+item.user_name
+                this.parent_id=item.id
+                this.$refs['commentIpnut'].focus()
+            },
             doComment(){
-                if(this.commentContent!=''){
-                    this.commentList.push(this.commentContent)
+                let that = this
+                if(that.commentContent!=''){
+                    let formdata={}
+                    if(that.placeholder=='说点什么..'){
+                        formdata={
+                            pp_id:that.id,
+                            content:that.commentContent
+                        }
+                    }else {
+                        formdata={
+                            pp_id:that.id,
+                            content:that.commentContent,
+                            parent_id:that.parent_id
+                        }
+                    }
+                    console.log(formdata)
+                    doComment(formdata).then(res=>{
+                        console.log(res)
+                        that.fetchComment()
+                    })
+                    // this.commentList.push(this.commentContent)
                     this.commentContent=''
                 }
                 this.showEmoji=false
             },
             selectEmoji (code) {
-                this.showEmoji = false
+                console.log('select',this.showEmoji)
+                // this.showEmoji = false
                 this.commentContent += code
             },
         },
