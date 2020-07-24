@@ -23,7 +23,7 @@
             </div>
             <div class="center-box2">
                 <img src="../../../public/images/back.png" alt="">
-                <a class="register" href="/home">返回首页</a>
+                <a class="register" @click="$router.push('/home')" >返回首页</a>
             </div>
         </div>
     </div>
@@ -72,9 +72,9 @@
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         forgetPassword({
-                            user_login:that.username,
-                            user_pass:that.password,
-                            repassword:that.rePassword,
+                            user_login:that.formData.username,
+                            user_pass:that.formData.password,
+                            repassword:that.formData.rePassword,
                         }).then(res=>{
                             that.$message.success('修改成功！')
                         })

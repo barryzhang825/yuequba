@@ -8,11 +8,11 @@
                         <el-input v-model="formData.username"></el-input>
                     </el-form-item>
                     <el-form-item label="密 码：" prop="password">
-                        <el-input type="password" show-password v-model="formData.password"></el-input>
+                        <el-input type="password" show-password v-model="formData.password" @keyup.enter.native="submitForm('ruleForm')"></el-input>
                     </el-form-item>
                     <div class="set">
                         <el-checkbox v-model="rememberPassword">记住密码</el-checkbox>
-                        <a class="forget" href="/forget">忘记密码?</a>
+                        <a class="forget"  @click="$router.push('/mobile/forget')">忘记密码?</a>
                     </div>
                     <el-form-item>
                         <div class="center-box">
@@ -22,7 +22,7 @@
 
                 </el-form>
                 <div class="center-box2">
-                    <a class="register" href="/register">还没有账号，去注册>></a>
+                    <a class="register" @click="$router.push('/mobile/register')">还没有账号，去注册>></a>
                 </div>
             </div>
         </div>
@@ -30,6 +30,8 @@
 </template>
 
 <script>
+    import {userLogin} from "../../api/pc/api";
+
     export default {
         name: "MobileLogin",
         data() {
@@ -51,9 +53,21 @@
         },
         methods:{
             submitForm(formName) {
+                let that = this
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        alert('submit!');
+                        userLogin({
+                            user_login:that.formData.username,
+                            user_pass:that.formData.password,
+                        }).then(res=>{
+                            that.$message({
+                                message: '登录成功！',
+                                type: 'success'
+                            });
+                            localStorage.setItem('token',res.data.token)
+                            localStorage.setItem('user_login',res.data.userinfo.user_login)
+                            that.$router.push('/mobile/home')
+                        })
                     } else {
                         console.log('error submit!!');
                         return false;

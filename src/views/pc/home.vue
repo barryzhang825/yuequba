@@ -184,7 +184,6 @@
                     require('../../../public/images/avatar.gif'),
                     require('../../../public/images/avatar.gif'),
                 ],
-                artLoading:false,
                 tagOptions: [{
                     value: '选项1',
                     label: '女神主播'
@@ -195,6 +194,7 @@
                     value: '选项3',
                     label: '女神主播'
                 }],
+                artLoading:false,
                 swiperActiveIndex2:0,
                 pageSize:5,
                 pageNum:1,
@@ -215,9 +215,8 @@
                 console.log(`每页 ${val} 条`);
             },
             handleCurrentChange(val) {
-                console.log(`当前页: ${val}`);
-                this.fetchArticle(val)
 
+                this.fetchArticle(val)
             },
             async fetchData() {
                 let that = this

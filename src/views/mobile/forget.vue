@@ -7,7 +7,7 @@
                     <el-form-item label="用户名：" prop="username">
                         <el-input v-model="formData.username"></el-input>
                     </el-form-item>
-                    <el-form-item label="密 码：" prop="password">
+                    <el-form-item label="新密码：" prop="password">
                         <el-input type="password" show-password v-model="formData.password"></el-input>
                     </el-form-item>
                     <el-form-item label="确认密码：" prop="rePassword">
@@ -15,7 +15,7 @@
                     </el-form-item>
                     <el-form-item>
                         <div class="center-box">
-                            <el-button type="primary" @click="submitForm('ruleForm')">注册</el-button>
+                            <el-button type="primary" @click="submitForm('ruleForm')">确定</el-button>
                         </div>
                     </el-form-item>
                 </el-form>
@@ -23,16 +23,17 @@
             </div>
             <div class="center-box2">
                 <img src="../../../public/images/back.png" alt="">
-                <a class="register" @click="$router.push('/mobile/home')" >返回首页</a>
+                <a class="register"  @click="$router.push('/mobile/home')" >返回首页</a>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-    import {userRegister} from "../../api/pc/api";
+    import {forgetPassword} from "../../api/pc/api";
+
     export default {
-        name: "MobileRegister",
+        name: "MobileForget",
         data() {
             var validateRePassword = (rule, value, callback) => {
                 if (value === '') {
@@ -47,7 +48,8 @@
                 rememberPassword:false,
                 formData: {
                     username: '',
-                    password: ''
+                    password: '',
+                    rePassword: '',
                 },
                 rules: {
                     username: [
@@ -69,16 +71,12 @@
                 let that = this
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        userRegister({
+                        forgetPassword({
                             user_login:that.formData.username,
                             user_pass:that.formData.password,
                             repassword:that.formData.rePassword,
                         }).then(res=>{
-                            this.$message({
-                                message: '注册成功！',
-                                type: 'success'
-                            });
-                            that.$router.push('/mobile/login')
+                            that.$message.success('修改成功！')
                         })
                     } else {
                         console.log('error submit!!');

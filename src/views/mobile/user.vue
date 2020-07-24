@@ -62,7 +62,7 @@
                 </div>
             </div>
             <div class="button">
-                <el-button type="primary">退出登录</el-button>
+                <el-button type="primary" @click="loginOut">退出登录</el-button>
             </div>
         </div>
     </div>
@@ -80,6 +80,13 @@
                 backImg:require('../../../public/images/user-back.png'),
                 avatar:require('../../../public/images/avatar.gif'),
             }
+        },
+        methods:{
+            loginOut(){
+                localStorage.clear()
+                this.$router.push({path:'/mobile/login'})
+            }
+
         },
         mounted() {
             let clientWidth = document.documentElement.clientWidth;

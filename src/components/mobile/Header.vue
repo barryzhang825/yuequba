@@ -31,7 +31,7 @@
                     <img src="../../../public/images/close.png" alt="">
                 </div>
                 <div class="input">
-                    <el-input v-model="searchWord" placeholder="请输入关键字搜索"></el-input>
+                    <el-input v-model="searchWord" placeholder="请输入关键字搜索" ></el-input>
                     <img src="../../../public/images/search.png" alt="" @click="toSearch">
                 </div>
             </div>
@@ -94,8 +94,15 @@
             },
             toSearch(){
                 this.ifSearch=false
-
                 console.log(this.searchWord)
+
+                if(this.searchWord!=''){
+                    this.ifSearch=false
+                    this.$router.push({
+                        path:'/result?keyword='+this.searchWord
+                    })
+                    this.searchWord=''
+                }
             }
 
         },

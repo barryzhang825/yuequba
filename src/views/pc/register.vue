@@ -1,7 +1,7 @@
 <template>
     <div class="page">
         <div class="gray">
-            <img class="logo" src="../../../public/images/logo.png" alt="">
+            <img class="logo" @click="$router.push('/home')"  src="../../../public/images/logo.png" alt="">
             <div class="login-box">
                 <el-form label-position="left" :rules="rules" ref="ruleForm" label-width="100px" :model="formData">
                     <el-form-item label="用户名：" prop="username">
@@ -23,7 +23,7 @@
             </div>
             <div class="center-box2">
                 <img src="../../../public/images/back.png" alt="">
-                <a class="register" href="/home">返回首页</a>
+                <a class="register" @click="$router.push('/home')">返回首页</a>
             </div>
         </div>
     </div>
@@ -47,9 +47,9 @@
             return {
                 rememberPassword:false,
                 formData: {
-                    username: 'user123',
-                    password: '123123',
-                    rePassword:'123123'
+                    username: '',
+                    password: '',
+                    rePassword:''
                 },
                 rules: {
                     username: [

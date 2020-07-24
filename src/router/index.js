@@ -8,7 +8,7 @@ const routes = [
     {
         path: '/',
         name: 'Home',
-        redirect:'/home'
+        redirect: '/home'
     },
     {
         path: '/home',
@@ -55,24 +55,24 @@ const routes = [
         name: 'User',
         redirect: '/user/info',
         component: () => import( '../views/pc/user'),
-        children:[{
-            path:'info',
-            component:() => import( '../views/pc/user-info'),
-        },{
-            path:'user-vip',
-            component:() => import( '../views/pc/user-vip'),
-        },{
-            path:'download',
-            component:() => import( '../views/pc/user-download'),
-        },{
-            path:'recommend-vip',
-            component:() => import( '../views/pc/user-recommend-vip'),
-        },{
-            path:'update-password',
-            component:() => import( '../views/pc/user-update-password'),
-        },{
-            path:'recommend',
-            component:() => import( '../views/pc/user-recommend'),
+        children: [{
+            path: 'info',
+            component: () => import( '../views/pc/user-info'),
+        }, {
+            path: 'user-vip',
+            component: () => import( '../views/pc/user-vip'),
+        }, {
+            path: 'download',
+            component: () => import( '../views/pc/user-download'),
+        }, {
+            path: 'recommend-vip',
+            component: () => import( '../views/pc/user-recommend-vip'),
+        }, {
+            path: 'update-password',
+            component: () => import( '../views/pc/user-update-password'),
+        }, {
+            path: 'recommend',
+            component: () => import( '../views/pc/user-recommend'),
         }]
     },
 
@@ -85,6 +85,11 @@ const routes = [
         path: '/mobile/login',
         name: 'MobileLogin',
         component: () => import( '../views/mobile/login')
+    },
+    {
+        path: '/mobile/forget',
+        name: 'MobileForget',
+        component: () => import( '../views/mobile/forget')
     },
     {
         path: '/mobile/home',
@@ -166,17 +171,51 @@ const router = new VueRouter({
  * start
  * 导航守卫配置
  * **/
-const whiteList = ['/login', '/register', '/forget'] // 路由白名单
-router.beforeEach(function(to,from,next){
-    let isMobile=navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
+const whiteList = ['/login', '/register', '/forget','/mobile/login', '/mobile/register', '/mobile/forget',] // 路由白名单
+router.beforeEach(function (to, from, next) {
+    const isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
+    const hasMobile=to.fullPath.indexOf('/mobile')
 
-    if (whiteList.indexOf(to.path) !== -1) {
-        next()
-    } else {
-        if(hasToken()){
+    if (isMobile&&hasMobile==-1) {
+        if (whiteList.indexOf(to.path) !== -1) {
+            next('/mobile' + to.fullPath)
+        } else {
+            if (hasToken()) {
+                next('/mobile' + to.fullPath)
+            } else {
+                next('/mobile/login')
+            }
+        }
+    }else if(!isMobile && hasMobile>-1){
+        let newPah = to.fullPath.replace(new RegExp("/mobile","g"),"");
+        if (whiteList.indexOf(to.path) !== -1) {
+            next(newPah)
+        } else {
+            if (hasToken()) {
+                next(newPah)
+            } else {
+                next('/login')
+            }
+        }
+    } else if (isMobile&&hasMobile>-1) {
+        if (whiteList.indexOf(to.path) !== -1) {
             next()
-        }else {
-            next('/login')
+        } else {
+            if (hasToken()) {
+                next()
+            } else {
+                next('/mobile/login')
+            }
+        }
+    }else {
+        if (whiteList.indexOf(to.path) !== -1) {
+            next()
+        } else {
+            if (hasToken()) {
+                next()
+            } else {
+                next('/login')
+            }
         }
     }
 
@@ -186,5 +225,5 @@ router.beforeEach(function(to,from,next){
 })
 /**
  * end
-**/
+ **/
 export default router
