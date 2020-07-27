@@ -16,8 +16,7 @@
                     label="VIP类型"
                     width="180">
                 <template slot-scope="scope">
-<!--                    <span >{{ scope.row.vip_json.name}}</span>-->
-                    <span >{{ scope.row.vip_json}}</span>
+                    <span >{{ scope.row.vip_json.name}}</span>
                 </template>
             </el-table-column>
             <el-table-column

@@ -14,7 +14,7 @@
                     </div>
                     <div class="line3">全站资源无限下载</div>
                     <img class="check" v-if="selectedIndex==index" src="../../../public/images/check.png" alt="">
-                    <div class="tag" v-if="index==3">包年精选福利</div>
+                    <div class="tag" v-if="item.mony==4">包年精选福利</div>
                 </div>
 
             </div>
@@ -29,7 +29,7 @@
 <script>
     import Header from '@/components/pc/Header'
     import Footer from '@/components/pc/Footer'
-    import {getVipList} from "../../api/pc/api";
+    import {buyVip, getVipList} from "../../api/pc/api";
     export default {
         name: "Purchase",
         components: {
@@ -65,7 +65,12 @@
                     });
                 } else {
                     console.log(that.vipList[that.selectedIndex])
-                    window.open(that.vipList[that.selectedIndex].ext_link)
+                    buyVip({
+                        token:localStorage.getItem('token'),
+                        id:that.vipList[that.selectedIndex].id
+                    }).then(res=>{
+                        window.open(that.vipList[that.selectedIndex].ext_link)
+                    })
                 }
             }
         },

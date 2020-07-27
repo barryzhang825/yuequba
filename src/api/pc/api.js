@@ -136,7 +136,13 @@ export function updateUserinfo(data) {
         data
     })
 }
-
+export function buyVip(data) {
+    return request({
+        url: '/home/pay/addVipOrder',
+        method: 'post',
+        data
+    })
+}
 
 
 
