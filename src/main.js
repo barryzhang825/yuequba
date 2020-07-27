@@ -18,7 +18,14 @@ Vue.use(Vant)
 import { emoji } from './assets/emoji/emoji.js'
 Vue.prototype.emoji = emoji
 
+
+import VueClipboard from 'vue-clipboard2'
+Vue.use(VueClipboard)
+
+//图片显示Host
 Vue.prototype.$baseUrl = 'http://yuequba.zhengshangwl.com/upload/'
+//项目地址Host
+Vue.prototype.$baseHost = 'http://yuequba.zhengshangwl.com'
 
 new Vue({
   router,

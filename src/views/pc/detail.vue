@@ -61,7 +61,7 @@
                                 <img src="../../../public/images/like0.png" alt="">
                                 喜欢（{{articleDetail.post_like}}）
                             </div>
-                            <div class="set-share">
+                            <div class="set-share" v-clipboard:copy="shareUrl" v-clipboard:success="onCopy">
                                 <img src="../../../public/images/share0.png" alt="">
                                 分享
                             </div>
@@ -268,6 +268,7 @@
     } from "../../api/pc/api";
     import {formatTime, formatTimeThree} from "../../utils/utils";
     import vueEmoji from '../../components/pc/emoji'
+    import VueClipboard from 'vue-clipboard2'
 
 
     export default {
@@ -277,7 +278,8 @@
             Header: Header,
             Footer: Footer,
             Swiper,
-            vueEmoji
+            vueEmoji,
+            VueClipboard
         },
         filters:{
             timeFormat(val){
@@ -329,7 +331,8 @@
                 parent_id:'',//回复上级的id
                 commentList:[],
                 showEmoji: false,
-                placeholder:'说点什么...'
+                placeholder:'说点什么...',
+                shareUrl:'',//分享链接
             }
         },
         methods: {
@@ -338,6 +341,9 @@
             },
             handleCurrentChange(val) {
                 console.log(`当前页: ${val}`);
+            },
+            onCopy(){
+                this.$message.success('复制链接成功，去粘贴分享吧~')
             },
             async likeArt(){
                 let that = this
@@ -356,6 +362,8 @@
                 this.category=this.$route.query.type;
                 this.id=this.$route.query.id;
                 this.menu=Number(this.$route.query.type)+1;
+                this.shareUrl=this.$baseHost+this.$route.fullPath
+
                 this.loading1=true
                 let articleDetail = await  getArticleDetail({
                     id:that.id

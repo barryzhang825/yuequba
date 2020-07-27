@@ -2,9 +2,9 @@
     <div class="page">
         <Header :menu="6"></Header>
         <div class="container">
-            <div class="user-info">
-                <div class="img" :style="'background-image: url('+imgUrl+')'"></div>
-                <span>踢出个未来，请选择VIP会员服务</span>
+            <div class="user-info" v-if="user_info">
+                <div class="img" :style="'background-image: url('+baseUrl+user_info.avatar+')'"></div>
+                <span >{{user_info.user_nickname}}，请选择VIP会员服务</span>
             </div>
             <div class="select-box">
                 <div class="item" :class="selectedIndex==index?'selected':''" @click="selectedIndex=index" v-for="(item,index) in vipList">
@@ -19,7 +19,7 @@
 
             </div>
             <div class="button-box">
-                <el-button type="primary">立即购买</el-button>
+                <el-button type="primary" @click="buyVip">立即购买</el-button>
             </div>
         </div>
         <Footer></Footer>
@@ -38,9 +38,11 @@
         },
         data(){
             return{
+                baseUrl: this.$baseUrl,
                 imgUrl: require('../../../public/images/avatar.gif'),
                 selectedIndex:0,
-                vipList:[]
+                vipList:[],
+                user_info:''
             }
         },
         methods:{
@@ -49,10 +51,28 @@
                     console.log(res)
                     this.vipList=res.data.reverse()
                 })
+            },
+            buyVip(){
+                let that = this
+                let token = localStorage.getItem('token')
+                if (!token) {
+                    this.$confirm('请先去登录').then(_ => {
+                        that.$router.push({
+                            path: '/login'
+                        })
+                    }).catch(_ => {
+
+                    });
+                } else {
+
+                }
             }
         },
         mounted() {
             this.fetchData()
+            if(localStorage.getItem('user_info')){
+                this.user_info = JSON.parse(localStorage.getItem('user_info'))
+            }
         }
     }
 </script>
