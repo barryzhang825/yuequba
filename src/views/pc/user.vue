@@ -66,7 +66,10 @@
         },
         mounted() {
             let that = this
-            let user_info = JSON.parse(localStorage.getItem('user_info'))
+            let user_info=''
+            if(localStorage.getItem('user_info')){
+                user_info = JSON.parse(localStorage.getItem('user_info'))
+            }
             let token = localStorage.getItem('token')
             if (user_info && token) {
                 that.userInfo=user_info

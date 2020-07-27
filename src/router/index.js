@@ -180,42 +180,46 @@ router.beforeEach(function (to, from, next) {
         if (whiteList.indexOf(to.path) !== -1) {
             next('/mobile' + to.fullPath)
         } else {
-            if (hasToken()) {
-                next('/mobile' + to.fullPath)
-            } else {
-                next('/mobile/login')
-            }
+            next('/mobile' + to.fullPath)
+            // if (hasToken()) {
+            //     next('/mobile' + to.fullPath)
+            // } else {
+            //     next('/mobile/login')
+            // }
         }
     }else if(!isMobile && hasMobile>-1){
         let newPah = to.fullPath.replace(new RegExp("/mobile","g"),"");
         if (whiteList.indexOf(to.path) !== -1) {
             next(newPah)
         } else {
-            if (hasToken()) {
-                next(newPah)
-            } else {
-                next('/login')
-            }
+            next(newPah)
+            // if (hasToken()) {
+            //     next(newPah)
+            // } else {
+            //     next('/login')
+            // }
         }
     } else if (isMobile&&hasMobile>-1) {
         if (whiteList.indexOf(to.path) !== -1) {
             next()
         } else {
-            if (hasToken()) {
-                next()
-            } else {
-                next('/mobile/login')
-            }
+            next()
+            // if (hasToken()) {
+            //     next()
+            // } else {
+            //     next('/mobile/login')
+            // }
         }
     }else {
         if (whiteList.indexOf(to.path) !== -1) {
             next()
         } else {
-            if (hasToken()) {
-                next()
-            } else {
-                next('/login')
-            }
+            next()
+            // if (hasToken()) {
+            //     next()
+            // } else {
+            //     next('/login')
+            // }
         }
     }
 

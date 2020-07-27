@@ -108,7 +108,9 @@
             }
         },
         mounted() {
-            this.user_nickname=JSON.parse(localStorage.getItem('user_info')).user_nickname
+            if(localStorage.getItem('user_info')){
+                this.user_nickname=JSON.parse(localStorage.getItem('user_info')).user_nickname
+            }
             // console.log(localStorage.getItem('user_login'))
         }
     }
