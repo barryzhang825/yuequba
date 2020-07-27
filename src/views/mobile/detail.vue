@@ -4,8 +4,7 @@
         <div class="container">
             <div class="resultTip">
                 <img src="../../../public/images/home.png" alt="">
-                首页 ><span>&nbsp;{{category==1?'主播区':category==2?'美图区':category==3?'视频区':category==4?'包年精选区':''}}</span>
-                <span class="normal"> > 正文</span>
+                首页 ><span>&nbsp;{{category==1?'主播区':category==2?'美图区':category==3?'视频区':category==4?'包年精选区':''}}</span> > <span style="color:#646464;">正文</span>
             </div>
             <div class="line1">
                 <div class="tag tag1">主播</div>
@@ -308,6 +307,7 @@
 <script>
     import MobileTitle from '@/components/mobile/Title'
     import MobileToTop from '@/components/mobile/ToTop'
+    import {getArticleDetail, getCommentList, likeArticle} from "../../api/pc/api";
     export default {
         name: "MobileDetail",
         components: {
@@ -318,13 +318,61 @@
             return {
                 category: 1,
                 imgUrl: require('../../../public/images/avatar.gif'),
-                commentContent:''
+                commentContent:'',
+                articleDetail:{},
+                loading:false,
+                loading1:false,
+                loading2:false,
+                commentList:[]
             }
         },
         methods: {
-            fetchData() {
-                this.category = this.$route.query.type;
-            }
+            checkDownload(){
+                this.loading=true
+                setTimeout(()=>{
+                    this.loading=false
+                },2000)
+            },
+            onCopy(){
+                this.$message.success('复制链接成功，去粘贴分享吧~')
+            },
+            async likeArt(){
+                let that = this
+                let res =  await likeArticle({
+                    id:that.id
+                })
+                if(res.msg=='赞好啦！'){
+                    this.$set(that.articleDetail, 'post_like', that.articleDetail.post_like+1);
+                }else if(res.msg=='您已赞过啦！'){
+                    this.$message.info('您已赞过啦！')
+                }
+                console.log(res,'res')
+            },
+            async fetchData() {
+
+                let that = this
+                this.category=this.$route.query.type;
+                this.id=this.$route.query.id;
+                this.menu=Number(this.$route.query.type)+1;
+                this.shareUrl=this.$baseHost+this.$route.fullPath
+
+                this.loading1=true
+                let articleDetail = await getArticleDetail({
+                    id:that.id
+                })
+                that.articleDetail=articleDetail.data
+                this.loading1=false
+            },
+            async fetchComment(){
+                let that = this
+                that.loading2=true
+                let commentList = await  getCommentList({
+                    id:that.id
+                })
+                that.commentList=commentList.data.list
+                that.loading2=false
+                console.log( that.commentList,88)
+            },
         },
         mounted() {
             let clientWidth = document.documentElement.clientWidth;
@@ -619,7 +667,8 @@
                         display: flex;
                         margin: 0.2rem 0;
                         .button{
-                            width:1.867rem;
+                            flex-shrink: 0;
+                            width:1.2rem;
                             height:0.533rem;
                             background:rgba(51,51,51,1);
 

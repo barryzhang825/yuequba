@@ -3,44 +3,17 @@
         <MobileTitle title="购买专区"></MobileTitle>
         <div class="container">
             <div class="white">
-                <div class="item" :class="selectedIndex==0?'selected':''" @click="selectedIndex=0">
-                    <div class="line1">包月VIP</div>
+                <div class="item" :class="selectedIndex==index?'selected':''" @click="selectedIndex=index" v-for="(item,index) in vipList">
+                    <div class="line1">{{item.name}}</div>
                     <div class="line2">
-                        <span>￥49</span>/月
+                        <span>￥{{item.money}}</span>/{{item.mony==1?'月':item.mony==2?'季度':item.mony==3?'半年':item.mony==4?'年':''}}
                     </div>
                     <div class="line3">全站资源无限下载</div>
-                    <img class="check" v-if="selectedIndex==0" src="../../../public/images/check.png" alt="">
-                    <div class="tag" v-if="false">包年精选福利</div>
-                </div>
-                <div class="item" :class="selectedIndex==1?'selected':''" @click="selectedIndex=1">
-                    <div class="line1">包月VIP</div>
-                    <div class="line2">
-                        <span>￥49</span>/月
-                    </div>
-                    <div class="line3">全站资源无限下载</div>
-                    <img class="check" v-if="selectedIndex==1" src="../../../public/images/check.png" alt="">
-                    <div class="tag" v-if="false">包年精选福利</div>
-                </div>
-                <div class="item" :class="selectedIndex==2?'selected':''" @click="selectedIndex=2">
-                    <div class="line1">包月VIP</div>
-                    <div class="line2">
-                        <span>￥49</span>/月
-                    </div>
-                    <div class="line3">全站资源无限下载</div>
-                    <img class="check" v-if="selectedIndex==2" src="../../../public/images/check.png" alt="">
-                    <div class="tag" v-if="false">包年精选福利</div>
-                </div>
-                <div class="item" :class="selectedIndex==3?'selected':''" @click="selectedIndex=3">
-                    <div class="line1">包月VIP</div>
-                    <div class="line2">
-                        <span>￥49</span>/月
-                    </div>
-                    <div class="line3">全站资源无限下载</div>
-                    <img class="check" v-if="selectedIndex==3" src="../../../public/images/check.png" alt="">
-                    <div class="tag" v-if="true">包年精选福利</div>
+                    <img class="check" v-if="selectedIndex==index" src="../../../public/images/check.png" alt="">
+                    <div class="tag" v-if="index==3">包年精选福利</div>
                 </div>
                 <div class="button-box">
-                    <el-button type="primary">立即购买</el-button>
+                    <el-button type="primary" @click="buyVip">立即购买</el-button>
                 </div>
             </div>
 
@@ -51,6 +24,8 @@
 <script>
     import MobileTitle from '@/components/mobile/Title'
     import { Notify } from 'vant';
+    import {getVipList} from "../../api/pc/api";
+    import { Dialog } from 'vant';
     export default {
         name: "MobilePurchase",
         components: {
@@ -58,15 +33,41 @@
         },
         data() {
             return {
-                selectedIndex:0
+                selectedIndex:0,
+                vipList:[],
             }
         },
         methods:{
-
+            fetchData(){
+                getVipList().then(res=>{
+                    console.log(res)
+                    this.vipList=res.data.reverse()
+                })
+            },
+            buyVip(){
+                let that = this
+                let token = localStorage.getItem('token')
+                if (!token) {
+                    Dialog.confirm({
+                        title: '标题',
+                        message: '请先去登录',
+                    })
+                        .then(() => {
+                            that.$router.push({
+                                path: '/login'
+                            })
+                        })
+                        .catch(() => {
+                            // on cancel
+                        });
+                } else {
+                    console.log(that.vipList[that.selectedIndex])
+                    window.open(that.vipList[that.selectedIndex].ext_link)
+                }
+            }
         },
         mounted() {
-            // Notify('通知内容');
-            // this.$message.error('这是一个消息')
+            this.fetchData()
             let clientWidth = document.documentElement.clientWidth;
             document.documentElement.style.fontSize = clientWidth / 10 + 'px';
         }

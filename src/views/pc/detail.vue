@@ -47,7 +47,7 @@
                                 <div class="tip">
                                     请购买VIP会员后下载资源
                                 </div>
-                                <div class="down">
+                                <div class="down" @click="checkDownload" v-loading='loading'>
                                     网盘链接，点击检测有效后下载
                                 </div>
                             </div>
@@ -73,7 +73,7 @@
                                 <div class="info">
                                     <div class="button">上一篇</div>
                                     <div class="title">
-                                        {{articleDetail.prev_article?articleDetail.prev_article.post_title:'暂无'}}
+                                        {{articleDetail.prev_article?articleDetail.prev_article.post_title:'暂无更多'}}
                                     </div>
                                 </div>
                             </div>
@@ -82,7 +82,7 @@
                                 <div v-if="!articleDetail.next_article" class="img" :style="'background-image: url('+imgUrl+')'" ></div>
                                 <div class="info">
                                     <div class="title">
-                                        {{articleDetail.next_article?articleDetail.next_article.post_title:'暂无'}}
+                                        {{articleDetail.next_article?articleDetail.next_article.post_title:'暂无更多'}}
                                     </div>
                                     <div class="button">下一篇</div>
                                 </div>
@@ -150,7 +150,7 @@
                                         <div class="reply-right">
                                             <div class="reply-right-line1">
                                                 <div class="reply-line1-left">
-                                                    {{item2.user_name}} <div class="tag">官方</div>
+                                                    {{item2.user_name}} <div class="tag" v-if="item2.user_id==1">官方</div>
                                                 </div>
                                                 <div class="reply-line1-right">
                                                     {{item2.create_time|timeFormat}}
@@ -300,6 +300,7 @@
                     require('../../../public/images/avatar.gif'),
                     require('../../../public/images/avatar.gif'),
                 ],
+                loading:false,
                 currentPage: 5,
                 tagOptions: [{
                     value: '选项1',
@@ -341,6 +342,12 @@
             },
             handleCurrentChange(val) {
                 console.log(`当前页: ${val}`);
+            },
+            checkDownload(){
+              this.loading=true
+              setTimeout(()=>{
+                  this.loading=false
+              },2000)
             },
             onCopy(){
                 this.$message.success('复制链接成功，去粘贴分享吧~')

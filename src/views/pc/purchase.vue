@@ -10,7 +10,7 @@
                 <div class="item" :class="selectedIndex==index?'selected':''" @click="selectedIndex=index" v-for="(item,index) in vipList">
                     <div class="line1">{{item.name}}</div>
                     <div class="line2">
-                        <span>￥{{item.money}}</span>/月
+                        <span>￥{{item.money}}</span>/{{item.mony==1?'月':item.mony==2?'季度':item.mony==3?'半年':item.mony==4?'年':''}}
                     </div>
                     <div class="line3">全站资源无限下载</div>
                     <img class="check" v-if="selectedIndex==index" src="../../../public/images/check.png" alt="">
@@ -64,7 +64,8 @@
 
                     });
                 } else {
-
+                    console.log(that.vipList[that.selectedIndex])
+                    window.open(that.vipList[that.selectedIndex].ext_link)
                 }
             }
         },

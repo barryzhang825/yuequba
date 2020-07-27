@@ -58,7 +58,7 @@
             </div>
             <div class="pics">
                 <div class="pics-box">
-                    <div class="pics-item" :style="'background-image: url('+baseUrl+item.more.thumbnail+')'" v-for="item in specialList">
+                    <div class="pics-item"  @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)" :style="'background-image: url('+baseUrl+item.more.thumbnail+')'" v-for="item in specialList">
                         <div class="gray">
                             <div class="text">{{item.post_excerpt}}</div>
                         </div>

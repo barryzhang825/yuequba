@@ -4,7 +4,18 @@
         <div class="center-box">
             <div class="left">
                 <div class="info">
-                    <div class="line1" :style="'background-image: url('+baseUrl+userInfo.avatar+')'"></div>
+
+                    <el-upload
+                            :data="Formtoken"
+                            class="avatar-uploader"
+                            :action="baseHost"
+                            :show-file-list="false"
+                            :on-success="handleAvatarSuccess"
+                            :before-upload="beforeAvatarUpload">
+                        <div class="line1" :style="'background-image: url('+baseUrl+userInfo.avatar+')'"></div>
+<!--                        <img v-if="imageUrl" :src="imageUrl" class="avatar">-->
+<!--                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
+                    </el-upload>
                     <div class="line2">{{userInfo.user_nickname}}</div>
                     <div class="line3">ID：{{userInfo.popularize}}</div>
                 </div>
@@ -40,7 +51,8 @@
         data(){
             return{
                 baseUrl: this.$baseUrl,
-                imgUrl: require('../../../public/images/avatar.gif'),
+                baseHost: this.$baseHost+'/home/upload/index',
+                imageUrl: '',
                 userInfo:{
                     user_email:'',
                     create_time:'',
@@ -48,10 +60,37 @@
                     user_url:'',
                     user_nickname:'',
                     avatar:''
+                },
+                Formtoken:{
+                    token:localStorage.getItem('token')
                 }
             }
         },
         methods:{
+            handleAvatarSuccess(res, file) {
+                this.imageUrl = URL.createObjectURL(file.raw);
+
+                this.userInfo.avatar=res.data.avatar
+                let user_info=JSON.parse(localStorage.getItem('user_info'))
+                user_info.avatar=res.data.avatar
+                localStorage.setItem('user_info',JSON.stringify(user_info))
+            },
+            beforeAvatarUpload(file) {
+                const isJPG = file.type === 'image/jpeg' ||  file.type === 'image/png';
+                const isLt2M = file.size / 1024 / 1024 < 2;
+
+                if (!isJPG) {
+                    this.$message.error('上传头像图片只能是 JPG 格式!');
+                }
+                if (!isLt2M) {
+                    this.$message.error('上传头像图片大小不能超过 2MB!');
+                }
+                return isJPG && isLt2M;
+            },
+
+
+
+
             loginOut(){
                 let that = this
                 userLoginOut({
@@ -167,6 +206,31 @@
                     background-color: #ffffff;
                 }
             }
+        }
+
+
+        .avatar-uploader .el-upload {
+            border: 1px dashed #d9d9d9;
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .avatar-uploader .el-upload:hover {
+            border-color: #409EFF;
+        }
+        .avatar-uploader-icon {
+            font-size: 28px;
+            color: #8c939d;
+            width: 178px;
+            height: 178px;
+            line-height: 178px;
+            text-align: center;
+        }
+        .avatar {
+            width: 178px;
+            height: 178px;
+            display: block;
         }
     }
 </style>
