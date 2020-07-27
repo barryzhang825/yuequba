@@ -4,9 +4,9 @@
         <div class="center-box">
             <div class="left">
                 <div class="info">
-                    <div class="line1" :style="'background-image: url('+imgUrl+')'"></div>
-                    <div class="line2">枫叶</div>
-                    <div class="line3">ID：6809026597</div>
+                    <div class="line1" :style="'background-image: url('+baseUrl+userInfo.avatar+')'"></div>
+                    <div class="line2">{{userInfo.user_nickname}}</div>
+                    <div class="line3">ID：{{userInfo.popularize}}</div>
                 </div>
                 <div class="menus">
                     <router-link class="menu" to="/user/info" :class="$route.path==='/user/info'?'selected':''">个人信息</router-link>
@@ -29,6 +29,7 @@
 <script>
     import Header from '@/components/pc/Header'
     import Footer from '@/components/pc/Footer'
+    import {userLoginOut} from "../../api/pc/api";
 
     export default {
         name: "User",
@@ -38,14 +39,47 @@
         },
         data(){
             return{
+                baseUrl: this.$baseUrl,
                 imgUrl: require('../../../public/images/avatar.gif'),
+                userInfo:{
+                    user_email:'',
+                    create_time:'',
+                    more:'',
+                    user_url:'',
+                    user_nickname:'',
+                    avatar:''
+                }
             }
         },
         methods:{
             loginOut(){
-                this.$router.push({
-                    path:'/login'
+                let that = this
+                userLoginOut({
+                    token:localStorage.getItem('token')
+                }).then(res=>{
+                    localStorage.clear()
+                    that.$router.push({
+                        path:'/login'
+                    })
                 })
+            }
+        },
+        mounted() {
+            let that = this
+            let user_info = JSON.parse(localStorage.getItem('user_info'))
+            let token = localStorage.getItem('token')
+            if (user_info && token) {
+                that.userInfo=user_info
+            } else {
+                this.$confirm('请先去登录').then(_ => {
+                    that.$router.push({
+                        path: '/login'
+                    })
+                }).catch(_ => {
+                    that.$router.push({
+                        path: '/home'
+                    })
+                });
             }
         }
 

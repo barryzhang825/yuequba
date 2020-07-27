@@ -1,8 +1,9 @@
 <template>
     <div class="page">
         <el-table
-                :data="tableData"
+                :data="itemList"
                 stripe
+                v-loading="loading"
                 style="width: 100%">
             <el-table-column
                     prop=""
@@ -11,14 +12,16 @@
             >
             </el-table-column>
             <el-table-column
-                    prop="name"
+                    prop="post_title"
                     label="资源名称"
             >
             </el-table-column>
 
             <el-table-column
-                    prop="download_time"
                     label="下载时间">
+                <template slot-scope="scope">
+                    <span >{{ scope.row.create_time|timeFormat }}</span>
+                </template>
             </el-table-column>
 
         </el-table>
@@ -28,11 +31,11 @@
                     :background="false"
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
-                    :current-page.sync="currentPage"
-                    :page-size="100"
+                    :current-page.sync="pageNum"
+                    :page-size="15"
                     background
                     layout="prev, pager, next, jumper"
-                    :total="1000">
+                    :total="totalNum">
             </el-pagination>
         </div>
 
@@ -40,39 +43,26 @@
 </template>
 
 <script>
+    import {getDownloadList, getUserVip} from "../../api/pc/api";
+    import {formatTime, formatTimeThree} from "../../utils/utils";
+
     export default {
         name: "UserDownload",
+        filters:{
+            timeFormat(val){
+                return formatTime(val)
+            },
+            timeFormatTwo(val){
+                return formatTimeThree(val)
+            },
+        },
         data() {
             return {
                 currentPage: 1,
-                tableData: [{
-                    name: '超级小奶猫主播[林熙的话]微信福利13V会员',
-                    download_time: '2017-05-04 15:26',
-                },{
-                    name: '超级小奶猫主播[林熙的话]微信福利13V会员',
-                    download_time: '2017-05-04 15:26',
-                },{
-                    name: '超级小奶猫主播[林熙的话]微信福利13V会员',
-                    download_time: '2017-05-04 15:26',
-                },{
-                    name: '超级小奶猫主播[林熙的话]微信福利13V会员',
-                    download_time: '2017-05-04 15:26',
-                },{
-                    name: '超级小奶猫主播[林熙的话]微信福利13V会员',
-                    download_time: '2017-05-04 15:26',
-                },{
-                    name: '超级小奶猫主播[林熙的话]微信福利13V会员',
-                    download_time: '2017-05-04 15:26',
-                },{
-                    name: '超级小奶猫主播[林熙的话]微信福利13V会员',
-                    download_time: '2017-05-04 15:26',
-                },{
-                    name: '超级小奶猫主播[林熙的话]微信福利13V会员',
-                    download_time: '2017-05-04 15:26',
-                },{
-                    name: '超级小奶猫主播[林熙的话]微信福利13V会员',
-                    download_time: '2017-05-04 15:26',
-                },]
+                pageNum:1,
+                totalNum:0,
+                itemList:[],
+                loading:false
             }
         },
         methods: {
@@ -81,8 +71,30 @@
             },
             handleCurrentChange(val) {
                 console.log(`当前页: ${val}`);
+                this.fetchData(val)
+            },
+            fetchData(pageNum=1){
+                this.loading=true
+                let that = this
+                getDownloadList({
+                    token:localStorage.getItem('token'),
+                    page:pageNum
+                }).then(res=>{
+                    console.log(res)
+                    if(res.data.list && res.data.list.length>0){
+                        that.totalNum=res.data.count
+                        that.itemList=res.data.list
+                    }
+
+                    setTimeout(()=>{
+                        that.loading=false
+                    },300)
+                })
             }
         },
+        mounted() {
+            this.fetchData()
+        }
     }
 </script>
 

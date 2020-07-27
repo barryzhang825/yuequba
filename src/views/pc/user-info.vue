@@ -7,40 +7,40 @@
         </div>
         <div class="content">
             <div class="line">
-                <div class="left">登录名</div>
-                <div class="right">admin98765</div>
+                <div class="left">昵称：</div>
+                <div v-if="userInfo.user_nickname" class="right">{{userInfo.user_nickname||'-'}}</div>
             </div>
             <div class="line">
-                <div class="left">注册时间</div>
-                <div class="right">2020.6.30 15:36:02</div>
+                <div class="left">注册时间：</div>
+                <div v-if="userInfo.create_time" class="right">{{userInfo.create_time|timeFormat}}</div>
             </div>
             <div class="line">
-                <div class="left">邮箱</div>
-                <div class="right">admin98765@mail.com</div>
+                <div class="left">邮箱：</div>
+                <div v-if="userInfo.user_email" class="right">{{userInfo.user_email||'-'}}</div>
             </div>
             <div class="line">
-                <div class="left">网址</div>
-                <div class="right">www.admin98765.com</div>
+                <div class="left">网址：</div>
+                <div v-if="userInfo.user_url" class="right">{{userInfo.user_url||'-'}}</div>
             </div>
             <div class="line">
-                <div class="left">简介</div>
-                <div class="right textarea">特斯拉在国内开启大规模招聘 特斯拉在国内开启大规模招聘 特斯拉在国内开启大规模招聘</div>
+                <div class="left">简介：</div>
+                <div v-if="userInfo.more" class="right textarea">{{userInfo.more||'-'}}</div>
             </div>
         </div>
 
         <el-dialog title="修改信息" :visible.sync="dialogFormVisible">
-            <el-form :model="form" :rules="rules" ref="ruleForm">
-                <el-form-item label="登录名" :label-width="formLabelWidth" prop="username">
-                    <el-input v-model="form.username" autocomplete="off"></el-input>
+            <el-form :model="formData" :rules="rules" ref="ruleForm">
+                <el-form-item label="昵称" :label-width="formLabelWidth" prop="user_nickname">
+                    <el-input v-model="formData.user_nickname" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="邮箱" :label-width="formLabelWidth" prop="email">
-                    <el-input v-model="form.email" autocomplete="off"></el-input>
+                <el-form-item label="邮箱" :label-width="formLabelWidth" prop="user_email">
+                    <el-input v-model="formData.user_email" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="网址" :label-width="formLabelWidth" prop="website">
-                    <el-input v-model="form.website" autocomplete="off"></el-input>
+                <el-form-item label="网址" :label-width="formLabelWidth" prop="user_url">
+                    <el-input v-model="formData.user_url" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="简介" :label-width="formLabelWidth" prop="introduction">
-                    <el-input type="textarea" v-model="form.introduction" autocomplete="off"></el-input>
+                <el-form-item label="简介" :label-width="formLabelWidth" prop="more">
+                    <el-input type="textarea" v-model="formData.more" autocomplete="off"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -52,47 +52,96 @@
 </template>
 
 <script>
+    import {formatTime, formatTimeThree} from "../../utils/utils";
+    import {getUserinfo, updateUserinfo} from "../../api/pc/api";
+
     export default {
         name: "UserInfo",
+        filters:{
+            timeFormat(val){
+                return formatTime(val)
+            },
+            timeFormatTwo(val){
+                return formatTimeThree(val)
+            },
+        },
         data() {
             return {
                 dialogTableVisible: false,
                 dialogFormVisible: false,
-                form: {
-                    username: '',
-                    email: '',
-                    website: '',
-                    introduction: '',
-                },
                 formLabelWidth: '120px',
                 rules: {
-                    username: [
-                        {required: true, message: '请输入登录名', trigger: 'blur'}
+                    user_nickname: [
+                        {required: true, message: '请输入登录名', trigger: 'blur'},
+                        { min: 1, max: 10, message: '长度需小于 10 个字符', trigger: 'blur' }
                     ],
-                    email: [
+                    user_email: [
                         {required: true, message: '请输入邮箱', trigger: 'blur'},
-                        {type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur'] }
+                        {type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur']}
                     ],
-                    website: [
+                    user_url: [
                         {required: true, message: '请输入网址', trigger: 'blur'}
                     ],
-                    introduction: [
+                    more: [
                         {required: true, message: '请输入简介', trigger: 'blur'}
                     ],
+                },
+                formData:{
+                    user_email:'',
+                    more:'',
+                    user_url:'',
+                    user_nickname:'',
+                },
+                userInfo: {
+                    user_email:'',
+                    create_time:'',
+                    more:'',
+                    user_url:'',
+                    user_nickname:'',
                 }
             }
         },
-        methods:{
+        methods: {
             submitForm(formName) {
+                let that = this
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        alert('submit!');
+                        updateUserinfo({
+                            token:localStorage.getItem('token'),
+                            user_email:that.formData.user_email,
+                            more:that.formData.more,
+                            user_url:that.formData.user_url,
+                            user_nickname:that.formData.user_nickname,
+                        }).then(res=>{
+                            that.$message.success('修改成功！')
+                            that.fetchData()
+                            that.dialogFormVisible = false
+                        })
                     } else {
                         console.log('error submit!!');
                         return false;
                     }
                 });
             },
+            fetchData(){
+                let that = this
+                getUserinfo({
+                    token:localStorage.getItem('token')
+                }).then(res=>{
+                    console.log(res,999)
+                    localStorage.setItem('user_info',JSON.stringify(res.data))
+                    that.userInfo=res.data
+                    that.formData=res.data
+                })
+            }
+
+        },
+        mounted() {
+            let that = this
+            let user_info = JSON.parse(localStorage.getItem('user_info'))
+            let token = localStorage.getItem('token')
+            that.userInfo=user_info
+            that.formData=user_info
         }
     }
 </script>

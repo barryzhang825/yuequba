@@ -399,8 +399,9 @@
                 let commentList = await  getCommentList({
                     id:that.id
                 })
-                that.commentList=commentList.data
+                that.commentList=commentList.data.list
                 that.loading2=false
+                console.log( that.commentList,88)
             },
             tagChange(){
                 this.$router.push('/result?tagId='+this.tagValue)

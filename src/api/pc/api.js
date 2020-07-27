@@ -7,10 +7,23 @@ export function userLogin(data) {
         data
     })
 }
-
+export function userLoginOut(data) {
+    return request({
+        url: '/home/login/logout',
+        method: 'post',
+        data
+    })
+}
 export function userRegister(data) {
     return request({
         url: '/home/register/doRegister',
+        method: 'post',
+        data
+    })
+}
+export function updatePassword(data) {
+    return request({
+        url: '/home/login/upPass',
         method: 'post',
         data
     })
@@ -22,6 +35,42 @@ export function forgetPassword(data) {
         data
     })
 }
+export function getUserinfo(data) {
+    return request({
+        url: '/home/user/index',
+        method: 'get',
+        params:data
+    })
+}
+export function getUserVip(data) {
+    return request({
+        url: '/home/user/getMyBuyVipList',
+        method: 'get',
+        params:data
+    })
+}
+export function getDownloadList(data) {
+    return request({
+        url: '/home/user/getMyDownLog',
+        method: 'get',
+        params:data
+    })
+}
+export function getRecommentList(data) {
+    return request({
+        url: '/home/user/getMyPopularizeUser',
+        method: 'get',
+        params:data
+    })
+}
+export function getRecommentVip(data) {
+    return request({
+        url: '/home/user/getMyPopularizeVipList',
+        method: 'get',
+        params:data
+    })
+}
+
 export function getBannerList(data) {
     return request({
         url: '/home/slide/index',
@@ -75,6 +124,14 @@ export function getVipList(data) {
 export function doComment(data) {
     return request({
         url: '/home/postcomment/addComment',
+        method: 'post',
+        data
+    })
+}
+
+export function updateUserinfo(data) {
+    return request({
+        url: '/home/user/postUser',
         method: 'post',
         data
     })

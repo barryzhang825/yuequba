@@ -1,7 +1,7 @@
 <template>
     <div class="page">
         <el-table
-                :data="tableData"
+                :data="itemList"
                 stripe
                 style="width: 100%">
             <el-table-column
@@ -17,8 +17,11 @@
             </el-table-column>
 
             <el-table-column
-                    prop="type"
                     label="VIP类型">
+                <template slot-scope="scope">
+                    <!--                    <span >{{ scope.row.vip_json.name}}</span>-->
+                    <span >{{ scope.row.vip_json}}</span>
+                </template>
             </el-table-column>
 
             <el-table-column
@@ -26,12 +29,14 @@
                     label="价格"
             >
                 <template slot-scope="scope">
-                    ￥{{ scope.row.price }}
+                    ￥{{ scope.row.money }}
                 </template>
             </el-table-column>
             <el-table-column
-                    prop="deal_time"
                     label="交易时间">
+                <template slot-scope="scope">
+                    <span >{{ scope.row.create_time|timeFormat }}</span>
+                </template>
             </el-table-column>
 
         </el-table>
@@ -41,11 +46,11 @@
                     :background="false"
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
-                    :current-page.sync="currentPage"
-                    :page-size="100"
+                    :current-page.sync="pageNum"
+                    :page-size="15"
                     background
                     layout="prev, pager, next, jumper"
-                    :total="1000">
+                    :total="totalNum">
             </el-pagination>
         </div>
 
@@ -53,47 +58,26 @@
 </template>
 
 <script>
+    import {getRecommentList, getRecommentVip} from "../../api/pc/api";
+    import {formatTime, formatTimeThree} from "../../utils/utils";
+
     export default {
         name: "UserRecommendVip",
+        filters:{
+            timeFormat(val){
+                return formatTime(val)
+            },
+            timeFormatTwo(val){
+                return formatTimeThree(val)
+            },
+        },
         data() {
             return {
                 currentPage: 1,
-                tableData: [{
-                    id: '1523545',
-                    type: '包年会员',
-                    price: '588',
-                    deal_time: '2017-05-04 15:26',
-                },{
-                    id: '1523545',
-                    type: '包年会员',
-                    price: '588',
-                    deal_time: '2017-05-04 15:26',
-                },{
-                    id: '1523545',
-                    type: '包年会员',
-                    price: '588',
-                    deal_time: '2017-05-04 15:26',
-                },{
-                    id: '1523545',
-                    type: '包年会员',
-                    price: '588',
-                    deal_time: '2017-05-04 15:26',
-                },{
-                    id: '1523545',
-                    type: '包年会员',
-                    price: '588',
-                    deal_time: '2017-05-04 15:26',
-                },{
-                    id: '1523545',
-                    type: '包年会员',
-                    price: '588',
-                    deal_time: '2017-05-04 15:26',
-                },{
-                    id: '1523545',
-                    type: '包年会员',
-                    price: '588',
-                    deal_time: '2017-05-04 15:26',
-                },]
+                pageNum: 1,
+                totalNum: 0,
+                itemList: [],
+                loading: false
             }
         },
         methods: {
@@ -102,8 +86,30 @@
             },
             handleCurrentChange(val) {
                 console.log(`当前页: ${val}`);
+                this.fetchData(val)
+            },
+            fetchData(pageNum = 1) {
+                this.loading = true
+                let that = this
+                getRecommentVip({
+                    token: localStorage.getItem('token'),
+                    page: pageNum
+                }).then(res => {
+                    console.log(res)
+                    if (res.data.list && res.data.list.length > 0) {
+                        that.totalNum = res.data.count
+                        that.itemList = res.data.list
+                    }
+
+                    setTimeout(() => {
+                        that.loading = false
+                    }, 300)
+                })
             }
         },
+        mounted() {
+            this.fetchData()
+        }
     }
 </script>
 

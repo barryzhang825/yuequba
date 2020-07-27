@@ -20,8 +20,8 @@
 <!--                        <img class="alert" src="../../../public/images/alert.png" alt="">-->
 <!--                    </el-badge>-->
 <!--                </div>-->
-                <div class="link" v-if="!user_login"><router-link to="/login">登录</router-link> | <router-link to="/register">注册</router-link></div>
-                <div class="userinfo" v-if="user_login"><router-link to="/user">{{user_login}}</router-link> | <a @click="loginOut" style="cursor:pointer;">退出</a></div>
+                <div class="link" v-if="!user_nickname"><router-link to="/login">登录</router-link> | <router-link to="/register">注册</router-link></div>
+                <div class="userinfo" v-if="user_nickname"><router-link to="/user">{{user_nickname}}</router-link> | <a @click="loginOut" style="cursor:pointer;">退出</a></div>
             </div>
         </div>
         <van-overlay :show="searchShow" >
@@ -51,7 +51,7 @@
             return{
                 searchShow:false,
                 searchWord:"",
-                user_login:''
+                user_nickname:''
             }
         },
         methods: {
@@ -108,7 +108,7 @@
             }
         },
         mounted() {
-            this.user_login=localStorage.getItem('user_login')
+            this.user_nickname=JSON.parse(localStorage.getItem('user_info')).user_nickname
             // console.log(localStorage.getItem('user_login'))
         }
     }

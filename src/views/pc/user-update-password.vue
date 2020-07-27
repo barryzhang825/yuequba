@@ -9,12 +9,12 @@
                 <el-form-item
                         label="新密码"
                         prop="password">
-                    <el-input type="password" v-model="ruleFormData.password" ></el-input>
+                    <el-input type="password" v-model="ruleFormData.password"></el-input>
                 </el-form-item>
                 <el-form-item
                         label="确认新密码"
                         prop="rePassword">
-                    <el-input type="password" v-model="ruleFormData.rePassword" ></el-input>
+                    <el-input type="password" v-model="ruleFormData.rePassword"></el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="submitForm('ruleForm')">确定修改</el-button>
@@ -25,9 +25,11 @@
 </template>
 
 <script>
+    import {updatePassword} from "../../api/pc/api";
+
     export default {
         name: "UserUpdatePassword",
-        data(){
+        data() {
             var validateRePassword = (rule, value, callback) => {
                 if (value === '') {
                     callback(new Error('请输入确认密码'))
@@ -37,10 +39,10 @@
                     callback()
                 }
             }
-            return{
-                ruleFormData:{
-                    password:'',
-                    rePassword:'',
+            return {
+                ruleFormData: {
+                    password: '',
+                    rePassword: '',
                 },
                 rules: {
                     password: [
@@ -49,16 +51,30 @@
                     ],
                     rePassword: [
                         {required: true, message: '请输入确认密码', trigger: 'blur'},
-                        { required: true, validator: validateRePassword, trigger: 'blur' }
+                        {required: true, validator: validateRePassword, trigger: 'blur'}
                     ],
                 }
             }
         },
-        methods:{
+        methods: {
             submitForm(formName) {
+                let that = this
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        alert('submit!');
+                        updatePassword({
+                            token: localStorage.getItem('token'),
+                            newpass: that.ruleFormData.password,
+                            repass: that.ruleFormData.rePassword,
+                        }).then(res => {
+                            if (res.code == 200) {
+                                that.$message.success('修改成功！')
+                                that.ruleFormData = {
+                                    password: '',
+                                    rePassword: '',
+                                }
+                            }
+
+                        })
                     } else {
                         console.log('error submit!!');
                         return false;
@@ -71,7 +87,8 @@
 
 <style scoped lang="scss">
 
-    .page {min-width:1200px;
+    .page {
+        min-width: 1200px;
         width: 100%;
 
         .header {
@@ -101,8 +118,10 @@
                 color: rgba(241, 47, 47, 1);
                 margin-bottom: 20px;
             }
-            .ruleForm{
+
+            .ruleForm {
                 width: 50%;
+
                 .el-button {
                     width: 80px;
                     height: 30px;

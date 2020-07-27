@@ -69,7 +69,8 @@
                                 type: 'success'
                             });
                             localStorage.setItem('token',res.data.token)
-                            localStorage.setItem('user_login',res.data.userinfo.user_login)
+                            localStorage.setItem('user_info',JSON.stringify(res.data.userinfo))
+
                             that.$router.push('/home')
                         })
                     } else {
