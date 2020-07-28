@@ -44,7 +44,7 @@
                     <div class="tip">
                         请购买VIP会员后下载资源
                     </div>
-                    <div class="down" v-clipboard:copy="resource_pass" v-clipboard:success="onResourceCopy" v-loading='loading'>
+                    <div class="down" @click="getResource" v-loading='loading'>
                         网盘链接，点击检测有效后下载
                     </div>
                 </div>
@@ -167,6 +167,22 @@
             </div>
         </div>
         <MobileToTop></MobileToTop>
+        <el-dialog
+                title="提示"
+                :visible.sync="dialogVisible"
+                width="80%">
+            <div class="downloadTip">
+                <div class="line1">点击确定跳转下载地址</div>
+                <div class="line2">
+                    <span>资源提取密码：{{resource_pass}}</span>
+                    <div class="copy" v-clipboard:copy="resource_pass" v-clipboard:success="onResourceCopy">复制</div>
+                </div>
+            </div>
+            <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="goResource">确 定</el-button>
+  </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -174,7 +190,14 @@
     import { Dialog,Notify } from 'vant';
     import MobileTitle from '@/components/mobile/Title'
     import MobileToTop from '@/components/mobile/ToTop'
-    import {doComment, getArticleDetail, getArticleList, getCommentList, likeArticle} from "../../api/pc/api";
+    import {
+        doComment,
+        getArticleDetail,
+        getArticleList,
+        getArticleResource,
+        getCommentList,
+        likeArticle
+    } from "../../api/pc/api";
     import {formatTime, formatTimeThree} from "../../utils/utils";
     import vueEmoji from "../../components/mobile/emoji";
     import VueClipboard from "vue-clipboard2";
@@ -196,6 +219,7 @@
         },
         data() {
             return {
+                dialogVisible: false,
                 baseUrl: this.$baseUrl,
                 category: 1,
                 imgUrl: require('../../../public/images/default.png'),
@@ -228,12 +252,29 @@
             onCopy(){
                 Notify({ type: 'success', message: '复制链接成功，去粘贴分享吧~' });
             },
-            onResourceCopy(){
-                this.loading=true
-
-                setTimeout(()=>{
-                    this.loading=false
-                },2000)
+            goResource(){
+                this.dialogVisible=false
+                window.open(this.resource_url)
+            },
+            onResourceCopy() {
+                Notify({ type: 'success', message: '复制成功！' });
+            },
+            getResource(){
+                let that = this
+                that.loading=true
+                getArticleResource({
+                    id:this.id,
+                    token:localStorage.getItem('token')
+                }).then(res=>{
+                    setTimeout(()=>{
+                        that.loading=false
+                        if(res.data.resource_pass){
+                            that.dialogVisible=true
+                            that.resource_url=res.data.resource_url
+                            that.resource_pass=res.data.resource_pass
+                        }
+                    },1500)
+                })
             },
             async likeArt(){
                 let that = this
@@ -899,6 +940,33 @@
                         }
                     }
 
+                }
+            }
+        }
+        .downloadTip {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            .line1 {
+                width: 100%;
+                text-align: center;
+            }
+
+            .line2 {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                margin-top: .5rem;
+
+                .copy {
+                    cursor: pointer;
+                    margin-left: 0.4rem;
+                    border: 1px solid gainsboro;
+                    border-radius: 0.267rem;
+                    padding: 0 0.133rem;
+                    color: #949494;
                 }
             }
         }

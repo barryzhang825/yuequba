@@ -99,6 +99,13 @@ export function getArticleDetail(data) {
         params:data
     })
 }
+export function getArticleResource(data) {
+    return request({
+        url: '/home/article/getArticleResource',
+        method: 'get',
+        params:data
+    })
+}
 export function getCommentList(data) {
     return request({
         url: '/home/postcomment/getPostCommentList',

@@ -13,6 +13,9 @@
                     <el-form-item label="确认密码：" prop="rePassword">
                         <el-input type="password" show-password v-model="formData.rePassword"></el-input>
                     </el-form-item>
+                    <el-form-item label="推广码：">
+                        <el-input v-model="formData.popuid" :disabled="disabled"></el-input>
+                    </el-form-item>
                     <el-form-item>
                         <div class="center-box">
                             <el-button type="primary" @click="submitForm('ruleForm')">注册</el-button>
@@ -45,11 +48,13 @@
                 }
             };
             return {
+                disabled:false,
                 rememberPassword:false,
                 formData: {
                     username: '',
                     password: '',
-                    rePassword:''
+                    rePassword:'',
+                    popuid:''
                 },
                 rules: {
                     username: [
@@ -71,11 +76,15 @@
                 let that = this
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        userRegister({
+                        let formData={
                             user_login:that.formData.username,
                             user_pass:that.formData.password,
                             repassword:that.formData.rePassword,
-                        }).then(res=>{
+                        }
+                        if(that.formData.popuid){
+                            formData.popuid=that.formData.popuid
+                        }
+                        userRegister(formData).then(res=>{
                             this.$message({
                                 message: '注册成功！',
                                 type: 'success'
@@ -91,6 +100,11 @@
         },
         mounted() {
             // this.$message('这是一条消息提示');
+            let popuid=this.$route.query.popuid
+            if(popuid){
+                this.formData.popuid=popuid
+                this.disabled=true
+            }
         }
     }
 </script>
@@ -130,7 +144,7 @@
                 box-sizing: border-box;
 
                 .el-form-item{
-                    margin: 30px 0;
+                    margin: 20px 0;
                 }
                 .center-box{
                     width: 100%;

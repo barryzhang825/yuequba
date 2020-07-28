@@ -13,6 +13,9 @@
                     <el-form-item label="确认密码：" prop="rePassword">
                         <el-input type="password" show-password v-model="formData.rePassword"></el-input>
                     </el-form-item>
+                    <el-form-item label="推广码：">
+                        <el-input v-model="formData.popuid" :disabled="disabled"></el-input>
+                    </el-form-item>
                     <el-form-item>
                         <div class="center-box">
                             <el-button type="primary" @click="submitForm('ruleForm')">注册</el-button>
@@ -30,6 +33,7 @@
 </template>
 
 <script>
+    import { Notify } from 'vant';
     import {userRegister} from "../../api/pc/api";
     export default {
         name: "MobileRegister",
@@ -44,10 +48,13 @@
                 }
             };
             return {
+                disabled:false,
                 rememberPassword:false,
                 formData: {
                     username: '',
-                    password: ''
+                    password: '',
+                    rePassword: '',
+                    popuid: '',
                 },
                 rules: {
                     username: [
@@ -69,15 +76,16 @@
                 let that = this
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        userRegister({
+                        let formData={
                             user_login:that.formData.username,
                             user_pass:that.formData.password,
                             repassword:that.formData.rePassword,
-                        }).then(res=>{
-                            this.$message({
-                                message: '注册成功！',
-                                type: 'success'
-                            });
+                        }
+                        if(that.formData.popuid){
+                            formData.popuid=that.formData.popuid
+                        }
+                        userRegister(formData).then(res=>{
+                            Notify({ type: 'success', message: '注册成功！' });
                             that.$router.push('/mobile/login')
                         })
                     } else {
@@ -92,6 +100,11 @@
 
             let clientWidth = document.documentElement.clientWidth;
             document.documentElement.style.fontSize = clientWidth/10+'px';
+            let popuid=this.$route.query.popuid
+            if(popuid){
+                this.formData.popuid=popuid
+                this.disabled=true
+            }
         }
     }
 </script>
