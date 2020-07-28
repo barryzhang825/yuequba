@@ -31,6 +31,7 @@
 
 <script>
     import {userLogin} from "../../api/pc/api";
+    import {Notify} from "vant";
 
     export default {
         name: "MobileLogin",
@@ -60,12 +61,8 @@
                             user_login:that.formData.username,
                             user_pass:that.formData.password,
                         }).then(res=>{
-                            that.$message({
-                                message: '登录成功！',
-                                type: 'success'
-                            });
                             localStorage.setItem('token',res.data.token)
-                            localStorage.setItem('user_login',res.data.userinfo.user_login)
+                            localStorage.setItem('user_info',JSON.stringify(res.data.userinfo))
                             that.$router.push('/mobile/home')
                         })
                     } else {

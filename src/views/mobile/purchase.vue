@@ -10,7 +10,7 @@
                     </div>
                     <div class="line3">全站资源无限下载</div>
                     <img class="check" v-if="selectedIndex==index" src="../../../public/images/check.png" alt="">
-                    <div class="tag" v-if="index==3">包年精选福利</div>
+                    <div class="tag" v-if="item.mony==4">包年精选福利</div>
                 </div>
                 <div class="button-box">
                     <el-button type="primary" @click="buyVip">立即购买</el-button>

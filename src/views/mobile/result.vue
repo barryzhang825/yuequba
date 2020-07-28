@@ -2,7 +2,6 @@
     <div class="page">
         <MobileTitle title="搜索"></MobileTitle>
         <div class="center-box">
-
             <div class="content">
                 <div class="left">
                     <div class="result-tip">
@@ -13,7 +12,7 @@
                         <div class="line1">
                             <div  :class="'tag'+' tag'+item2.color_id" v-for="item2 in item.taglist">{{item2.name}}</div>
                         </div>
-                        <div class="line2">
+                        <div class="line2" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)">
                             {{item.post_title}}
                         </div>
                         <div class="line3">
@@ -40,21 +39,28 @@
 
                     <div class="pagination">
                         <el-pagination
+                                hide-on-single-page
                                 :background="false"
                                 @size-change="handleSizeChange"
                                 @current-change="handleCurrentChange"
                                 :current-page.sync="pageNum"
                                 :page-size="pageSize"
-                                layout="prev, pager, next, jumper"
+                                layout="prev, pager, next"
                                 :total="totalNum">
                         </el-pagination>
                     </div>
                 </div>
             </div>
-            <div class="device">
-                <span>手机端</span> |
-                <span>电脑端</span>
+            <van-empty v-if="totalNum<1" description="暂无数据" />
+            <div class="device" v-if="totalNum>0">
+                <router-link :to="{path:'/mobile/home'}" target="_blank">
+                    <span>手机端</span>
+                </router-link> |
+                <router-link :to="{path:'/home'}" target="_blank">
+                    <span>电脑端</span>
+                </router-link>
             </div>
+
         </div>
         <MobileFooter></MobileFooter>
         <MobileToTop></MobileToTop>
@@ -192,6 +198,9 @@
         width: 100%;
         background-color: $page-back-color;
         padding-bottom: 1.32rem;
+        @include full-page;
+        box-sizing: border-box;
+        overflow: scroll;
 
         .van-overlay-tag{
             z-index: 999999;
@@ -446,6 +455,10 @@
                 font-size:0.32rem;
                 font-weight:400;
                 color:rgba(51,51,51,1);
+                span{
+                    text-decoration: none;
+                    color: rgba(51, 51, 51, 1);
+                }
             }
         }
     }

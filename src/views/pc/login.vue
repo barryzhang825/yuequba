@@ -13,7 +13,7 @@
                     </el-form-item>
                     <div class="set">
                         <el-checkbox v-model="rememberPassword">记住密码</el-checkbox>
-                        <a class="forget" href="/forget">忘记密码?</a>
+                        <a class="forget" @click="$router.push('/forget')"  >忘记密码?</a>
                     </div>
                     <el-form-item>
                         <div class="center-box">
@@ -22,7 +22,7 @@
                     </el-form-item>
                     <el-form-item>
                         <div class="center-box">
-                            <a class="register" href="/register">还没有账号，去注册>></a>
+                            <a class="register" @click="$router.push('/register')" >还没有账号，去注册>></a>
                         </div>
                     </el-form-item>
                 </el-form>

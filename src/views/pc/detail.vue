@@ -47,7 +47,7 @@
                                 <div class="tip">
                                     请购买VIP会员后下载资源
                                 </div>
-                                <div class="down" @click="checkDownload" v-loading='loading'>
+                                <div class="down" v-clipboard:copy="resource_pass" v-clipboard:success="onResourceCopy" v-loading='loading'>
                                     网盘链接，点击检测有效后下载
                                 </div>
                             </div>
@@ -247,6 +247,17 @@
                 </div>
             </div>
         </div>
+        <el-dialog
+                title="提示"
+                :visible.sync="dialogVisible"
+                width="30%"
+                :before-close="handleClose">
+            <span>这是一段信息</span>
+            <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+  </span>
+        </el-dialog>
         <Footer></Footer>
         <ToTop></ToTop>
     </div>
@@ -291,6 +302,7 @@
         },
         data() {
             return {
+                dialogVisible: false,
                 baseUrl: this.$baseUrl,
                 imgUrl: require('../../../public/images/default.png'),
                 avatarUrl: require('../../../public/images/user.png'),
@@ -334,23 +346,37 @@
                 showEmoji: false,
                 placeholder:'说点什么...',
                 shareUrl:'',//分享链接
+                resource_url:'',
+                resource_pass:'',
             }
         },
         methods: {
+            handleClose(done) {
+                this.$confirm('确认关闭？')
+                    .then(_ => {
+                        done();
+                    })
+                    .catch(_ => {});
+            },
             handleSizeChange(val) {
                 console.log(`每页 ${val} 条`);
             },
             handleCurrentChange(val) {
                 console.log(`当前页: ${val}`);
             },
-            checkDownload(){
-              this.loading=true
-              setTimeout(()=>{
-                  this.loading=false
-              },2000)
-            },
             onCopy(){
                 this.$message.success('复制链接成功，去粘贴分享吧~')
+                console.log(this.$route)
+                console.log(this.$router)
+                console.log(window.location.href)
+            },
+            onResourceCopy(){
+                this.loading=true
+                this.dialogVisible=true
+
+                setTimeout(()=>{
+                    this.loading=false
+                },2000)
             },
             async likeArt(){
                 let that = this
@@ -369,13 +395,15 @@
                 this.category=this.$route.query.type;
                 this.id=this.$route.query.id;
                 this.menu=Number(this.$route.query.type)+1;
-                this.shareUrl=this.$baseHost+this.$route.fullPath
+                this.shareUrl=window.location.href
 
                 this.loading1=true
                 let articleDetail = await  getArticleDetail({
                     id:that.id
                 })
                 that.articleDetail=articleDetail.data
+                that.resource_url=articleDetail.data.resource_url
+                that.resource_pass=articleDetail.data.resource_pass
                 this.loading1=false
                 that.fetchComment()
                 let bannerList = await getBannerList()

@@ -7,50 +7,44 @@
                 首页 ><span>&nbsp;{{category==1?'主播区':category==2?'美图区':category==3?'视频区':category==4?'包年精选区':''}}</span> > <span style="color:#646464;">正文</span>
             </div>
             <div class="line1">
-                <div class="tag tag1">主播</div>
-                <div class="tag tag2">美女</div>
-                <div class="tag tag3">颜值萌妹</div>
-                <div class="tag tag4">福利</div>
-                <div class="tag tag5">粉丝</div>
+                <div  :class="'tag'+' tag'+item2.color_id" v-for="item2 in articleDetail.taglist">{{item2.name}}</div>
             </div>
             <div class="line2">
-                [抖音福利]新增超高颜值萌妹82W粉丝奔跑晶骡子大尺度福利[9V]
+                {{articleDetail.post_title}}
             </div>
             <div class="line3">
                 <div class="type">
-                    <img v-if="category==1" class="img-upper" src="../../../public/images/upper.png" alt="">
-                    <img v-if="category==4" class="img-year" src="../../../public/images/year.png" alt="">
-                    <img v-if="category==3" class="img-video" src="../../../public/images/video.png" alt="">
-                    <img v-if="category==2" class="img-img" src="../../../public/images/img.png" alt="">
-                    &nbsp;{{category==1?'主播区':category==2?'美图区':category==3?'视频区':category==4?'包年精选区':''}}
+                    <img :class="articleDetail.category_id==1?'img-upper':articleDetail.category_id==2?'img-img':articleDetail.category_id==3?'img-video':articleDetail.category_id==4?'img-year':''"
+                         :src="articleDetail.category_id==1?require('../../../public/images/upper.png'):articleDetail.category_id==2?require('../../../public/images/img.png'):articleDetail.category_id==3?require('../../../public/images/video.png'):articleDetail.category_id==4?require('../../../public/images/year.png'):''" alt="">
+                    {{articleDetail.category_id==1?'主播区':articleDetail.category_id==2?'美图区':articleDetail.category_id==3?'视频区':articleDetail.category_id==4?'包年精选区':''}}
                 </div>
                 <div class="time">
-                    <img class="img-time" src="../../../public/images/time1.png" alt="">2020-05-24
+                    <img class="img-time" src="../../../public/images/time1.png" alt="">{{articleDetail.create_time|timeFormatTwo}}
                 </div>
                 <div class="like">
-                    <img class="img-like" src="../../../public/images/heart1.png" alt="">2
+                    <img class="img-like" src="../../../public/images/heart1.png" alt="">{{articleDetail.post_like}}
                 </div>
                 <div class="com">
-                    <img class="img-comment" src="../../../public/images/comment.png" alt="">2
+                    <img class="img-comment" src="../../../public/images/comment.png" alt="">{{articleDetail.comment_count}}
                 </div>
                 <div class="download">
-                    下载资源：2
+                    下载资源：{{articleDetail.down_num}}
                 </div>
             </div>
             <div class="introduction">
                 <img src="../../../public/images/tag.png" alt="">
                 <span style="color:rgba(255,194,49,1);">摘要：</span>
-                [抖音福利]新增超高颜值萌妹82W粉丝奔跑晶骡子福利新增超高颜值萌妹82W粉丝奔跑晶骡子福利新增超高颜值萌妹82W粉丝奔跑晶骡子福利[9V]
+                {{articleDetail.post_excerpt}}
             </div>
-            <div class="images">
-                <img v-for="item in 3" src="../../../public/images/avatar.gif" alt="">
+            <div class="images" v-loading="loading1">
+                <img v-for="item in articleDetail.more.photos" :src="baseUrl+item.url" alt="">
             </div>
             <div class="download-box">
                 <div class="download-box-line1">
                     <div class="tip">
                         请购买VIP会员后下载资源
                     </div>
-                    <div class="down">
+                    <div class="down" v-clipboard:copy="resource_pass" v-clipboard:success="onResourceCopy" v-loading='loading'>
                         网盘链接，点击检测有效后下载
                     </div>
                 </div>
@@ -60,30 +54,32 @@
                 </div>
             </div>
             <div class="set">
-                <div class="set-like">
+                <div class="set-like" @click="likeArt">
                     <img src="../../../public/images/like0.png" alt="">
-                    喜欢（2）
+                    喜欢（{{articleDetail.post_like}}）
                 </div>
-                <div class="set-share">
+                <div class="set-share" v-clipboard:copy="shareUrl" v-clipboard:success="onCopy">
                     <img src="../../../public/images/share0.png" alt="">
                     分享
                 </div>
             </div>
             <div class="art-list">
-                <div class="item">
-                    <div class="img" :style="'background-image: url('+imgUrl+')'"></div>
+                <div class="item" @click="articleDetail.prev_article?$router.push('/detail?type='+category+'&id='+articleDetail.prev_article.id):''">
+                    <div v-if="articleDetail.prev_article" class="img" :style="'background-image: url('+baseUrl+articleDetail.prev_article.more.thumbnail+')'"></div>
+                    <div v-if="!articleDetail.prev_article" class="img" :style="'background-image: url('+imgUrl+')'"></div>
                     <div class="info">
                         <div class="button">上一篇</div>
                         <div class="title">
-                            冯提莫:主播不低俗却励志,不当网红一姐,却当佛系少女
+                            {{articleDetail.prev_article?articleDetail.prev_article.post_title:'暂无更多'}}
                         </div>
                     </div>
                 </div>
-                <div class="item">
-                    <div class="img" :style="'background-image: url('+imgUrl+')'" ></div>
+                <div class="item" @click="articleDetail.next_article?$router.push('/detail?type='+category+'&id='+articleDetail.next_article.id):''">
+                    <div v-if="articleDetail.next_article" class="img" :style="'background-image: url('+baseUrl+articleDetail.next_article.more.thumbnail+')'" ></div>
+                    <div v-if="!articleDetail.next_article" class="img" :style="'background-image: url('+imgUrl+')'" ></div>
                     <div class="info">
                         <div class="title">
-                            冯提莫:主播不低俗却励志,不当网红一姐,却当佛系少女
+                            {{articleDetail.next_article?articleDetail.next_article.post_title:'暂无更多'}}
                         </div>
                         <div class="button">下一篇</div>
                     </div>
@@ -93,10 +89,10 @@
         <div class="guess">
             <div class="title">猜你喜欢</div>
             <div class="art-list">
-                <div class="item" v-for="item in 3">
-                    <div class="img" :style="'background-image: url('+imgUrl+')'"></div>
+                <div class="item" v-for="(item,index) in recommendList" v-if="index<3" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)">
+                    <div class="img" :style="'background-image: url('+baseUrl+item.more.thumbnail+')'"></div>
                     <div class="art-title">
-                        冯提莫:主播不低俗却励志,不当网红一姐,却当佛系少女
+                        {{item.post_title}}
                     </div>
                 </div>
             </div>
@@ -104,195 +100,65 @@
         <div class="comment">
             <div class="title">发表评论</div>
             <el-input
+                    ref="commentIpnut"
+                    @focus="showEmoji=false"
                     type="textarea"
                     :rows="5"
                     resize="none"
-                    placeholder="说点什么..."
+                    :placeholder="placeholder"
                     v-model="commentContent">
             </el-input>
             <div class="comment-button">
-                <div class="comment-button-left">
+                <div class="comment-button-left" @click="showEmoji=true">
                     <img src="../../../public/images/emoji.png" alt="">
                     <span>添加表情</span>
+
                 </div>
+                <vue-emoji
+                        v-if="showEmoji"
+                        @select="selectEmoji">
+                </vue-emoji>
                 <div class="comment-button-right">
-                    <el-button type="primary">评论</el-button>
+                    <el-button type="primary" @click="doComment">评论</el-button>
                 </div>
             </div>
-            <div class="all-comment">
-                <div class="all-comment-title">全部评论（2）</div>
-                <div class="comment-item">
+            <div class="all-comment" v-loading="loading2">
+                <div class="all-comment-title">全部评论（{{articleDetail.comment_count}}）</div>
+                <div class="comment-item" v-for="item in commentList">
                     <div class="comment-item-left">
-                        <div class="img" :style="'background-image: url('+imgUrl+')'"></div>
+                        <div v-if="item.user_avatar" class="img" :style="'background-image: url('+baseUrl+item.user_avatar+')'"></div>
+                        <div v-if="!item.user_avatar" class="img" :style="'background-image: url('+avatarUrl+')'"></div>
                     </div>
                     <div class="comment-item-right">
                         <div class="line1">
-                            <div class="username">sk02330</div>
-                            <div class="time">2020-06-12</div>
+                            <div class="username">{{item.user_name}}</div>
+                            <div class="time">{{item.create_time|timeFormatTwo}}</div>
                         </div>
-                        <div class="line2">
-                            为啥我是老会员，怎么到这里了变成了新会员？以前买过的啥都没有了？
-                        </div>
+                        <span class="line2" v-html="emoji(item.content)">
+
+                                    </span>
                         <div class="line3">
-                            <span>回复</span>
+                            <span @click="replyComment(item)">回复</span>
                         </div>
-                        <div class="reply">
+                        <div class="reply" v-for="item2 in item.twolist">
                             <div class="reply-left">
-                                <div class="img" :style="'background-image: url('+imgUrl+')'"></div>
+                                <div v-if="item2.user_avatar" class="img" :style="'background-image: url('+baseUrl+item2.to_user_avatar+')'"></div>
+                                <div v-if="!item2.user_avatar" class="img" :style="'background-image: url('+avatarUrl+')'"></div>
                             </div>
                             <div class="reply-right">
                                 <div class="reply-right-line1">
                                     <div class="reply-line1-left">
-                                        admin <div class="tag">官方</div>
+                                        {{item2.user_name}} <div class="tag" v-if="item2.user_id==1">官方</div>
                                     </div>
                                     <div class="reply-line1-right">
-                                        2020-06-20
+                                        {{item2.create_time|timeFormatTwo}}
                                     </div>
                                 </div>
-                                <div class="reply-right-line2">
-                                    已经处理了
+                                <div class="reply-right-line2" v-html="emoji(item2.content)">
+                                    <!--                                                {{item2.content}}-->
                                 </div>
                                 <div class="reply-right-line3">
-                                    <span>回复</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="reply">
-                            <div class="reply-left">
-                                <div class="img" :style="'background-image: url('+imgUrl+')'"></div>
-                            </div>
-                            <div class="reply-right">
-                                <div class="reply-right-line1">
-                                    <div class="reply-line1-left">
-                                        admin <div class="tag">官方</div>
-                                    </div>
-                                    <div class="reply-line1-right">
-                                        2020-06-20
-                                    </div>
-                                </div>
-                                <div class="reply-right-line2">
-                                    已经处理了
-                                </div>
-                                <div class="reply-right-line3">
-                                    <span>回复</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="comment-item">
-                    <div class="comment-item-left">
-                        <div class="img" :style="'background-image: url('+imgUrl+')'"></div>
-                    </div>
-                    <div class="comment-item-right">
-                        <div class="line1">
-                            <div class="username">sk02330</div>
-                            <div class="time">2020-06-12</div>
-                        </div>
-                        <div class="line2">
-                            为啥我是老会员，怎么到这里了变成了新会员？以前买过的啥都没有了？
-                        </div>
-                        <div class="line3">
-                            <span>回复</span>
-                        </div>
-                        <div class="reply">
-                            <div class="reply-left">
-                                <div class="img" :style="'background-image: url('+imgUrl+')'"></div>
-                            </div>
-                            <div class="reply-right">
-                                <div class="reply-right-line1">
-                                    <div class="reply-line1-left">
-                                        admin <div class="tag">官方</div>
-                                    </div>
-                                    <div class="reply-line1-right">
-                                        2020-06-20
-                                    </div>
-                                </div>
-                                <div class="reply-right-line2">
-                                    已经处理了
-                                </div>
-                                <div class="reply-right-line3">
-                                    <span>回复</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="reply">
-                            <div class="reply-left">
-                                <div class="img" :style="'background-image: url('+imgUrl+')'"></div>
-                            </div>
-                            <div class="reply-right">
-                                <div class="reply-right-line1">
-                                    <div class="reply-line1-left">
-                                        admin <div class="tag">官方</div>
-                                    </div>
-                                    <div class="reply-line1-right">
-                                        2020-06-20
-                                    </div>
-                                </div>
-                                <div class="reply-right-line2">
-                                    已经处理了
-                                </div>
-                                <div class="reply-right-line3">
-                                    <span>回复</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="comment-item">
-                    <div class="comment-item-left">
-                        <div class="img" :style="'background-image: url('+imgUrl+')'"></div>
-                    </div>
-                    <div class="comment-item-right">
-                        <div class="line1">
-                            <div class="username">sk02330</div>
-                            <div class="time">2020-06-12</div>
-                        </div>
-                        <div class="line2">
-                            为啥我是老会员，怎么到这里了变成了新会员？以前买过的啥都没有了？
-                        </div>
-                        <div class="line3">
-                            <span>回复</span>
-                        </div>
-                        <div class="reply">
-                            <div class="reply-left">
-                                <div class="img" :style="'background-image: url('+imgUrl+')'"></div>
-                            </div>
-                            <div class="reply-right">
-                                <div class="reply-right-line1">
-                                    <div class="reply-line1-left">
-                                        admin <div class="tag">官方</div>
-                                    </div>
-                                    <div class="reply-line1-right">
-                                        2020-06-20
-                                    </div>
-                                </div>
-                                <div class="reply-right-line2">
-                                    已经处理了
-                                </div>
-                                <div class="reply-right-line3">
-                                    <span>回复</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="reply">
-                            <div class="reply-left">
-                                <div class="img" :style="'background-image: url('+imgUrl+')'"></div>
-                            </div>
-                            <div class="reply-right">
-                                <div class="reply-right-line1">
-                                    <div class="reply-line1-left">
-                                        admin <div class="tag">官方</div>
-                                    </div>
-                                    <div class="reply-line1-right">
-                                        2020-06-20
-                                    </div>
-                                </div>
-                                <div class="reply-right-line2">
-                                    已经处理了
-                                </div>
-                                <div class="reply-right-line3">
-                                    <span>回复</span>
+                                    <!--                                                <span @click="replyComment(item)">回复</span>-->
                                 </div>
                             </div>
                         </div>
@@ -305,25 +171,51 @@
 </template>
 
 <script>
+    import { Dialog,Notify } from 'vant';
     import MobileTitle from '@/components/mobile/Title'
     import MobileToTop from '@/components/mobile/ToTop'
-    import {getArticleDetail, getCommentList, likeArticle} from "../../api/pc/api";
+    import {doComment, getArticleDetail, getArticleList, getCommentList, likeArticle} from "../../api/pc/api";
+    import {formatTime, formatTimeThree} from "../../utils/utils";
+    import vueEmoji from "../../components/mobile/emoji";
+    import VueClipboard from "vue-clipboard2";
     export default {
         name: "MobileDetail",
         components: {
             MobileTitle,
-            MobileToTop
+            MobileToTop,
+            vueEmoji,
+            VueClipboard
+        },
+        filters:{
+            timeFormat(val){
+                return formatTime(val)
+            },
+            timeFormatTwo(val){
+                return formatTimeThree(val)
+            },
         },
         data() {
             return {
+                baseUrl: this.$baseUrl,
                 category: 1,
-                imgUrl: require('../../../public/images/avatar.gif'),
+                imgUrl: require('../../../public/images/default.png'),
                 commentContent:'',
-                articleDetail:{},
+                articleDetail:{
+                    more:{
+                        photos:[]
+                    }
+                },
+                recommendList: [],//推荐文章
                 loading:false,
                 loading1:false,
                 loading2:false,
-                commentList:[]
+                parent_id:'',//回复上级的id
+                commentList:[],
+                showEmoji: false,
+                placeholder:'说点什么...',
+                shareUrl:'',//分享链接
+                resource_url:'',
+                resource_pass:'',
             }
         },
         methods: {
@@ -334,7 +226,14 @@
                 },2000)
             },
             onCopy(){
-                this.$message.success('复制链接成功，去粘贴分享吧~')
+                Notify({ type: 'success', message: '复制链接成功，去粘贴分享吧~' });
+            },
+            onResourceCopy(){
+                this.loading=true
+
+                setTimeout(()=>{
+                    this.loading=false
+                },2000)
             },
             async likeArt(){
                 let that = this
@@ -344,7 +243,8 @@
                 if(res.msg=='赞好啦！'){
                     this.$set(that.articleDetail, 'post_like', that.articleDetail.post_like+1);
                 }else if(res.msg=='您已赞过啦！'){
-                    this.$message.info('您已赞过啦！')
+                    // this.$message.info('您已赞过啦！')
+                    Notify({ type: 'success', message: '您已赞过啦！' });
                 }
                 console.log(res,'res')
             },
@@ -354,14 +254,23 @@
                 this.category=this.$route.query.type;
                 this.id=this.$route.query.id;
                 this.menu=Number(this.$route.query.type)+1;
-                this.shareUrl=this.$baseHost+this.$route.fullPath
+                this.shareUrl=window.location.href
 
                 this.loading1=true
                 let articleDetail = await getArticleDetail({
                     id:that.id
                 })
                 that.articleDetail=articleDetail.data
+                let recommendList=await getArticleList({
+                    page:1,
+                    limit:3,
+                    ttd:1
+                })
+                this.recommendList=recommendList.data.list
+                that.fetchComment()
                 this.loading1=false
+
+                window.scroll(0,0)
             },
             async fetchComment(){
                 let that = this
@@ -372,7 +281,50 @@
                 that.commentList=commentList.data.list
                 that.loading2=false
                 console.log( that.commentList,88)
+
             },
+
+            replyComment(item){
+                this.commentContent=''
+                console.log(item)
+                this.placeholder='回复@'+item.user_name
+                this.parent_id=item.id
+                this.$refs['commentIpnut'].focus()
+            },
+            doComment(){
+                let that = this
+                if(that.commentContent!=''){
+                    let formdata={}
+                    if(that.placeholder=='说点什么..'){
+                        formdata={
+                            pp_id:that.id,
+                            content:that.commentContent
+                        }
+                    }else {
+                        formdata={
+                            pp_id:that.id,
+                            content:that.commentContent,
+                            parent_id:that.parent_id
+                        }
+                    }
+                    console.log(formdata)
+                    doComment(formdata).then(res=>{
+                        console.log(res)
+                        that.fetchComment()
+                    })
+                    // this.commentList.push(this.commentContent)
+                    this.commentContent=''
+                }
+                this.showEmoji=false
+            },
+            selectEmoji (code) {
+                console.log('select',this.showEmoji)
+                // this.showEmoji = false
+                this.commentContent += code
+            },
+        },
+        watch:{
+            '$route':'fetchData'
         },
         mounted() {
             let clientWidth = document.documentElement.clientWidth;
@@ -658,6 +610,7 @@
                 .item{
                     cursor: pointer;
                     width:4.533rem;
+                    padding: 0 0.133rem;
                     .img{
                         width:100%;
                         height:2.133rem;
@@ -666,6 +619,8 @@
                     .info{
                         display: flex;
                         margin: 0.2rem 0;
+                        width: 100%;
+                        justify-content: space-between;
                         .button{
                             flex-shrink: 0;
                             width:1.2rem;
@@ -720,6 +675,7 @@
                 display: flex;
                 justify-content: space-between;
                 .item{
+                    padding: 0 5px;
                     cursor: pointer;
                     width: 3.0rem;
                     display: flex;
@@ -769,10 +725,13 @@
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
+                position: relative;
+                box-sizing: border-box;
                 .comment-button-left{
                     cursor: pointer;
                     display: flex;
                     align-items: center;
+                    position: relative;
                     span{
                         font-size:0.24rem;
                         font-weight:400;
@@ -893,6 +852,7 @@
                                     flex-direction: row;
                                     justify-content: space-between;
                                     .reply-line1-left{
+                                        flex-shrink: 0;
                                         display: flex;
                                         flex-direction: row;
                                         align-items: center;
@@ -911,6 +871,7 @@
                                         }
                                     }
                                     .reply-line1-right{
+                                        flex-shrink: 0;
                                         font-size:0.213rem;
                                         font-weight:400;
                                         color:rgba(128,128,128,1);

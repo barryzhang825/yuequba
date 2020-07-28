@@ -7,7 +7,7 @@
         </div>
         <div class="tip">注：为了确保安全，密码最好是由“字母+字符+数字”组成！</div>
         <div class="button">
-            <el-button type="primary">确定</el-button>
+            <el-button type="primary" @click="submitForm">确定</el-button>
         </div>
 
     </div>
@@ -16,6 +16,7 @@
 <script>
     import MobileTitle from '@/components/mobile/Title'
     import { Notify } from 'vant';
+    import {updatePassword} from "../../api/pc/api";
     export default {
         name: "UserPassword",
         components: {
@@ -28,10 +29,31 @@
             }
         },
         methods:{
-
+            submitForm(){
+                let that = this
+                if(this.password==''){
+                    Notify('请输入密码！');
+                }else if(this.password!=this.rePassword){
+                    Notify('两次密码不一致！');
+                }else if(this.password.length<6 || this.password.length>18){
+                    Notify('密码长度应在 6 到 18 个字符！');
+                }else{
+                    updatePassword({
+                        token: localStorage.getItem('token'),
+                        newpass: that.password,
+                        repass: that.password,
+                    }).then(res => {
+                        if (res.code == 200) {
+                            Notify({ type: 'success', message: '修改成功！' });
+                            that.password =''
+                            that.rePassword =''
+                        }
+                    })
+                }
+            }
         },
         mounted() {
-            Notify('通知内容');
+            // Notify('通知内容');
             // this.$message.error('这是一个消息')
             let clientWidth = document.documentElement.clientWidth;
             document.documentElement.style.fontSize = clientWidth / 10 + 'px';

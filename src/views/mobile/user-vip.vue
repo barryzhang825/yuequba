@@ -2,86 +2,103 @@
     <div class="page">
         <MobileTitle title="我的VIP"></MobileTitle>
         <div class="items">
-            <div class="item">
+            <div class="item" v-for="item in itemList">
                 <div class="line line1">
-                    <div class="half">
+                    <div class="half half1">
                         <span class="label">VIP类型：</span>
-                        <span class="value">包月会员</span>
+                        <span class="value">{{ item.vip_json.name}}</span>
                     </div>
-                    <div class="half">
+                    <div class="half half2">
                         <span  class="label">开通时间：</span>
-                        <span  class="value">2020.6.30 17:26</span>
+                        <span  class="value">{{ item.create_time|timeFormat }}</span>
                     </div>
                 </div>
                 <div class="line line2">
-                    <div class="half">
+                    <div class="half half1">
                         <span class="label">价格：</span>
-                        <span class="value">￥49</span>
+                        <span class="value">￥{{item.money}}</span>
                     </div>
-                    <div class="half">
+                    <div class="half half2">
                         <span  class="label">到期时间：</span>
-                        <span  class="value">2020.6.30 17:26</span>
+                        <span  class="value">{{ item.end_time|timeFormat }}</span>
                     </div>
                 </div>
             </div>
-            <div class="item">
-                <div class="line line1">
-                    <div class="half">
-                        <span class="label">VIP类型：</span>
-                        <span class="value">包月会员</span>
-                    </div>
-                    <div class="half">
-                        <span  class="label">开通时间：</span>
-                        <span  class="value">2020.6.30 17:26</span>
-                    </div>
-                </div>
-                <div class="line line2">
-                    <div class="half">
-                        <span class="label">价格：</span>
-                        <span class="value">￥49</span>
-                    </div>
-                    <div class="half">
-                        <span  class="label">到期时间：</span>
-                        <span  class="value">2020.6.30 17:26</span>
-                    </div>
-                </div>
-            </div>
-            <div class="item">
-                <div class="line line1">
-                    <div class="half">
-                        <span class="label">VIP类型：</span>
-                        <span class="value">包月会员</span>
-                    </div>
-                    <div class="half">
-                        <span  class="label">开通时间：</span>
-                        <span  class="value">2020.6.30 17:26</span>
-                    </div>
-                </div>
-                <div class="line line2">
-                    <div class="half">
-                        <span class="label">价格：</span>
-                        <span class="value">￥49</span>
-                    </div>
-                    <div class="half">
-                        <span  class="label">到期时间：</span>
-                        <span  class="value">2020.6.30 17:26</span>
-                    </div>
-                </div>
-            </div>
+        </div>
+        <van-empty v-if="totalNum<1" description="暂无数据" />
+        <div class="pagination" v-if="totalNum>10">
+            <el-pagination
+                                hide-on-single-page
+                    :background="false"
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page.sync="pageNum"
+                    :page-size="15"
+                    background
+                    layout="prev, pager, next"
+                    :total="totalNum">
+            </el-pagination>
         </div>
     </div>
 </template>
 
 <script>
     import MobileTitle from '@/components/mobile/Title'
+    import {getUserVip} from "../../api/pc/api";
+    import {formatTime, formatTimeThree} from "../../utils/utils";
     export default {
         name: "UserVip",
         components:{
             MobileTitle
         },
+        filters:{
+            timeFormat(val){
+                return formatTime(val)
+            },
+            timeFormatTwo(val){
+                return formatTimeThree(val)
+            },
+        },
+        data(){
+            return{
+                pageNum:1,
+                totalNum:0,
+                itemList:[],
+                loading:false
+            }
+        },
+        methods:{
+            handleSizeChange(val) {
+                console.log(`每页 ${val} 条`);
+            },
+            handleCurrentChange(val) {
+                console.log(`当前页: ${val}`);
+                this.fetchData(val)
+                window.scroll(0,0)
+            },
+            fetchData(pageNum=1){
+                this.loading=true
+                let that = this
+                getUserVip({
+                    token:localStorage.getItem('token'),
+                    page:pageNum
+                }).then(res=>{
+                    console.log(res)
+                    if(res.data.list && res.data.list.length>0){
+                        that.totalNum=res.data.count
+                        that.itemList=res.data.list
+                    }
+
+                    setTimeout(()=>{
+                        that.loading=false
+                    },300)
+                })
+            }
+        },
         mounted() {
             let clientWidth = document.documentElement.clientWidth;
             document.documentElement.style.fontSize = clientWidth/10+'px';
+            this.fetchData()
         }
     }
 </script>
@@ -90,6 +107,9 @@
     .page{
         @include full-page;
         background-color: rgba(246,246,246,1);
+        overflow: scroll;
+        padding-bottom: 0.267rem;
+        box-sizing: border-box;
 
         .items{
             width: 100%;
@@ -111,7 +131,7 @@
                     display: flex;
                     justify-content: space-between;
                     .half{
-                        width: 50%;
+
                         display: flex;
                         align-items: center;
                         .label{
@@ -128,10 +148,29 @@
                         }
 
                     }
+                    .half1{
+                        width: 40%;
+                    }
+                    .half2{
+                        width: 60%;
+                    }
                 }
                 .line2{
                     box-shadow:0px -1px 0px 0px rgba(238,238,238,1);
                 }
+            }
+        }
+        .pagination{
+            margin: 0.267rem 0;
+            box-sizing: border-box;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            /deep/ .btn-prev,.btn-next{
+                margin: 0;
+            }
+            /deep/.el-pagination.is-background .el-pager li{
+                margin: 0 3px;
             }
         }
     }

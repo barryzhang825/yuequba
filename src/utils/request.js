@@ -4,6 +4,7 @@ import {getToken, hasToken} from "./auth";
 import {Message, MessageBox} from 'element-ui'
 import qs from 'qs'
 import router from '../router/index'
+import { Dialog } from 'vant';
 
 //axios全局配置
 const instance = axios.create({
@@ -14,7 +15,6 @@ const instance = axios.create({
         "Content-Type": "application/x-www-form-urlencoded"
     }
 })
-// 在发送请求之前做些什么("请求拦截器")
 instance.interceptors.request.use(config => {
 
     config.params = {
@@ -25,29 +25,44 @@ instance.interceptors.request.use(config => {
     return config;
 
 }, error => {
-    // 对请求错误做些什么
     //console.log(error)
 });
 
 instance.interceptors.response.use(
-    response => {  //成功请求到数据
+    response => {
         let that = this
         if (response.data.code == 200) {
             return response.data
         } else if (response.data.code == 2) {
-
-            MessageBox.confirm('', {
-                message: '请先去登录',
-                title: '提示',
-                confirmButtonText: '登录',
-                cancelButtonText: '取消'
-            }).then(action => {
-                router.push({
-                    path: '/login'
+            const isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
+            if(isMobile){
+                Dialog.confirm({
+                    title: '提示',
+                    message: '请先去登录',
                 })
-            }).catch(err => {
+                    .then(() => {
+                        router.push({
+                            path: '/mobile/login'
+                        })
+                    })
+                    .catch(() => {
+                        // on cancel
+                    });
+            }else {
+                MessageBox.confirm('', {
+                    message: '请先去登录',
+                    title: '提示',
+                    confirmButtonText: '登录',
+                    cancelButtonText: '取消'
+                }).then(action => {
+                    router.push({
+                        path: '/login'
+                    })
+                }).catch(err => {
 
-            });
+                });
+            }
+
             return
         } else {
             Message({

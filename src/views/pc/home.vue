@@ -56,6 +56,7 @@
                     </div>
                     <div class="pagination">
                         <el-pagination
+                                hide-on-single-page
                                 :background="false"
                                 @size-change="handleSizeChange"
                                 @current-change="handleCurrentChange"

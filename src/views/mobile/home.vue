@@ -102,15 +102,19 @@
                                 @current-change="handleCurrentChange"
                                 :current-page.sync="pageNum"
                                 :page-size="pageSize"
-                                layout="prev, pager, next, jumper"
+                                layout="prev, pager, next"
                                 :total="totalNum">
                         </el-pagination>
                     </div>
                 </div>
             </div>
             <div class="device">
-                <span>手机端</span> |
-                <span>电脑端</span>
+                <router-link :to="{path:'/mobile/home'}" target="_blank">
+                    <span>手机端</span>
+                </router-link> |
+                <router-link :to="{path:'/home'}" target="_blank">
+                    <span>电脑端</span>
+                </router-link>
             </div>
         </div>
         <MobileFooter></MobileFooter>
@@ -665,6 +669,10 @@
                 font-size: 0.32rem;
                 font-weight: 400;
                 color: rgba(51, 51, 51, 1);
+                span{
+                    text-decoration: none;
+                    color: rgba(51, 51, 51, 1);
+                }
             }
         }
     }

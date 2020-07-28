@@ -118,32 +118,32 @@ const routes = [
         component: () => import( '../views/mobile/user')
     },
     {
-        path: '/mobile/user-info',
+        path: '/mobile/user/user-info',
         name: 'MobileUserInfo',
         component: () => import( '../views/mobile/user-info')
     },
     {
-        path: '/mobile/user-vip',
+        path: '/mobile/user/user-vip',
         name: 'UserVip',
         component: () => import( '../views/mobile/user-vip')
     },
     {
-        path: '/mobile/user-download',
+        path: '/mobile/user/user-download',
         name: 'UserDownload',
         component: () => import( '../views/mobile/user-download')
     },
     {
-        path: '/mobile/user-password',
+        path: '/mobile/user/user-password',
         name: 'UserPassword',
         component: () => import( '../views/mobile/user-password')
     },
     {
-        path: '/mobile/recommend-vip',
+        path: '/mobile/user/recommend-vip',
         name: 'MobileUserRecommendVip',
         component: () => import( '../views/mobile/user-recommend-vip')
     },
     {
-        path: '/mobile/recommend-register',
+        path: '/mobile/user/recommend-register',
         name: 'MobileUserRecommendRegister',
         component: () => import( '../views/mobile/user-recommend-register')
     },

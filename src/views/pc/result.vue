@@ -11,7 +11,7 @@
                         <div class="line1">
                             <div  :class="'tag'+' tag'+item2.color_id" v-for="item2 in item.taglist">{{item2.name}}</div>
                         </div>
-                        <div class="line2">
+                        <div class="line2" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)">
                             {{item.post_title}}
                         </div>
                         <div class="line3">
@@ -38,6 +38,7 @@
 
                     <div class="pagination">
                         <el-pagination
+                                hide-on-single-page
                                 :background="false"
                                 @size-change="handleSizeChange"
                                 @current-change="handleCurrentChange"

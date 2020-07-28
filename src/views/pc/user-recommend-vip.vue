@@ -19,8 +19,7 @@
             <el-table-column
                     label="VIP类型">
                 <template slot-scope="scope">
-                    <!--                    <span >{{ scope.row.vip_json.name}}</span>-->
-                    <span >{{ scope.row.vip_json}}</span>
+                    <span>{{ scope.row.vip_json.name}}</span>
                 </template>
             </el-table-column>
 
@@ -35,7 +34,7 @@
             <el-table-column
                     label="交易时间">
                 <template slot-scope="scope">
-                    <span >{{ scope.row.create_time|timeFormat }}</span>
+                    <span>{{ scope.row.create_time|timeFormat }}</span>
                 </template>
             </el-table-column>
 
@@ -43,6 +42,7 @@
 
         <div class="pagination">
             <el-pagination
+                                hide-on-single-page
                     :background="false"
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
@@ -63,11 +63,11 @@
 
     export default {
         name: "UserRecommendVip",
-        filters:{
-            timeFormat(val){
+        filters: {
+            timeFormat(val) {
                 return formatTime(val)
             },
-            timeFormatTwo(val){
+            timeFormatTwo(val) {
                 return formatTimeThree(val)
             },
         },
@@ -114,10 +114,10 @@
 </script>
 
 <style scoped lang="scss">
-    .page{
+    .page {
         width: 100%;
 
-        .pagination{
+        .pagination {
             margin: 20px;
             width: 100%;
             display: flex;
