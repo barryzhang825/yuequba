@@ -19,7 +19,8 @@
                         <div class="line3">
                             <div class="type">
                                 <img :class="item.category_id==1?'img-upper':item.category_id==2?'img-img':item.category_id==3?'img-video':item.category_id==4?'img-year':''"
-                                     :src="item.category_id==1?require('../../../public/images/upper.png'):item.category_id==2?require('../../../public/images/img.png'):item.category_id==3?require('../../../public/images/video.png'):item.category_id==4?require('../../../public/images/year.png'):''" alt="">
+                                     :src="item.category_id==1?require('../../../public/images/upper.png'):item.category_id==2?require('../../../public/images/img.png'):item.category_id==3?require('../../../public/images/video.png'):item.category_id==4?require('../../../public/images/year.png'):''"
+                                     alt="">
                                 {{item.category_id==1?'主播区':item.category_id==2?'美图区':item.category_id==3?'视频区':item.category_id==4?'包年精选区':''}}
                             </div>
                             <div class="time">
@@ -30,9 +31,18 @@
                             </div>
                         </div>
                         <div class="line4">
-                            <div v-if="item.more.photos.length>0" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)" class="line4-item" :style="'background-image: url('+baseUrl+item.more.photos[0].url+')'"></div>
-                            <div v-if="item.more.photos.length>1" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)" class="line4-item" :style="'background-image: url('+baseUrl+item.more.photos[1].url+')'"></div>
-                            <div v-if="item.more.photos.length>2" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)" class="line4-item" :style="'background-image: url('+baseUrl+item.more.photos[2].url+')'">
+                            <div v-if="item.more.photos.length>0"
+                                 @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)"
+                                 class="line4-item"
+                                 :style="'background-image: url('+baseUrl+item.more.photos[0].url+')'"></div>
+                            <div v-if="item.more.photos.length>1"
+                                 @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)"
+                                 class="line4-item"
+                                 :style="'background-image: url('+baseUrl+item.more.photos[1].url+')'"></div>
+                            <div v-if="item.more.photos.length>2"
+                                 @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)"
+                                 class="line4-item"
+                                 :style="'background-image: url('+baseUrl+item.more.photos[2].url+')'">
                                 <div class="more" v-if="item.surplusimgnum">+{{item.surplusimgnum}}</div>
                             </div>
                         </div>
@@ -52,11 +62,12 @@
                     </div>
                 </div>
             </div>
-            <van-empty v-if="totalNum<1" description="暂无数据" />
+            <van-empty v-if="totalNum<1" description="暂无数据"/>
             <div class="device" v-if="totalNum>0">
                 <router-link :to="{path:'/mobile/home'}" target="_blank">
                     <span>手机端</span>
-                </router-link> |
+                </router-link>
+                |
                 <router-link :to="{path:'/home'}" target="_blank">
                     <span>电脑端</span>
                 </router-link>
@@ -74,6 +85,7 @@
     import MobileToTop from '@/components/mobile/ToTop'
     import {getArticleList, getTagList} from "../../api/pc/api";
     import {formatTime, formatTimeThree} from "../../utils/utils";
+
     export default {
         name: "MobileCategory",
         components: {
@@ -81,11 +93,11 @@
             MobileFooter,
             MobileToTop
         },
-        filters:{
-            timeFormat(val){
+        filters: {
+            timeFormat(val) {
                 return formatTime(val)
             },
-            timeFormatTwo(val){
+            timeFormatTwo(val) {
                 return formatTimeThree(val)
             },
         },
@@ -94,14 +106,14 @@
                 baseUrl: this.$baseUrl,
                 imgUrl: require('../../../public/images/avatar.gif'),
                 currentPage: 5,
-                artLoading:false,
-                tagValue:'',
-                keyword:'',
-                category:0,
-                menu:0,
-                pageSize:10,
-                pageNum:1,
-                totalNum:0,
+                artLoading: false,
+                tagValue: '',
+                keyword: '',
+                category: 0,
+                menu: 0,
+                pageSize: 10,
+                pageNum: 1,
+                totalNum: 0,
                 tagList: [],
                 artList: [],
                 hotList: [],//热门文章
@@ -117,51 +129,51 @@
                 console.log(`当前页: ${val}`);
                 this.fetchArticle(val)
             },
-            async fetchData(){
+            async fetchData() {
                 this.fetchArticle()
-                this.pageNum=1
-                this.category=this.$route.query.type;
-                this.menu=parseInt(this.$route.query.type);
+                this.pageNum = 1
+                this.category = this.$route.query.type;
+                this.menu = parseInt(this.$route.query.type);
                 let that = this
                 let tagList = await getTagList()
                 this.tagList = tagList.data
-                let hotList=await getArticleList({
-                    page:1,
-                    limit:4,
-                    hot:1
+                let hotList = await getArticleList({
+                    page: 1,
+                    limit: 4,
+                    hot: 1
                 })
-                this.hotList=hotList.data.list
+                this.hotList = hotList.data.list
 
-                let yearList=await getArticleList({
-                    page:1,
-                    limit:4,
-                    category:4
+                let yearList = await getArticleList({
+                    page: 1,
+                    limit: 4,
+                    category: 4
                 })
-                this.yearList=yearList.data.list
-                let specialList=await getArticleList({
-                    page:1,
-                    limit:4,
-                    boutique:1
+                this.yearList = yearList.data.list
+                let specialList = await getArticleList({
+                    page: 1,
+                    limit: 4,
+                    boutique: 1
                 })
-                this.specialList=specialList.data.list
+                this.specialList = specialList.data.list
             },
-            async fetchArticle(pageNum=1){
-                this.artLoading=true
+            async fetchArticle(pageNum = 1) {
+                this.artLoading = true
                 let that = this
-                let artList=await getArticleList({
-                    page:pageNum,
-                    limit:that.pageSize,
-                    category:this.category?this.$route.query.type:''
+                let artList = await getArticleList({
+                    page: pageNum,
+                    limit: that.pageSize,
+                    category: this.category ? this.$route.query.type : ''
                 })
-                setTimeout(()=>{
-                    this.artLoading=false
-                },500)
-                that.totalNum=artList.data.count
-                that.artList=artList.data.list
+                setTimeout(() => {
+                    this.artLoading = false
+                }, 500)
+                that.totalNum = artList.data.count
+                that.artList = artList.data.list
             },
         },
-        watch:{
-            '$route':'fetchData'
+        watch: {
+            '$route': 'fetchData'
         },
         mounted() {
             this.fetchData()
@@ -171,6 +183,7 @@
 
 <style scoped lang="scss">
     .page {
+        @include max-width;
         width: 100%;
         background-color: $page-back-color;
         padding-bottom: 1.32rem;
@@ -181,18 +194,20 @@
 
         .center-box {
             margin: 0 auto;
-            width:100%;
+            width: 100%;
 
             .content {
                 margin-top: 0.267rem;
                 width: 100%;
+
                 .left {
-                    width:100%;
+                    width: 100%;
                     padding: 0 0.267rem;
                     display: flex;
                     flex-direction: column;
                     box-sizing: border-box;
-                    .resultTip{
+
+                    .resultTip {
 
                         margin-bottom: 0.267rem;
                         background-color: #ffffff;
@@ -204,26 +219,29 @@
                         display: flex;
                         flex-direction: row;
                         align-items: center;
-                        font-size:0.213rem;
-                        font-weight:400;
-                        color:rgba(255,194,49,1);
+                        font-size: 0.213rem;
+                        font-weight: 400;
+                        color: rgba(255, 194, 49, 1);
 
                         white-space: pre-wrap;
-                        img{
+
+                        img {
                             margin-right: 0.133rem;
-                            width:0.32rem;
-                            height:0.32rem;
+                            width: 0.32rem;
+                            height: 0.32rem;
                         }
-                        .normal{
+
+                        .normal {
                             color: #666666;
                         }
 
                     }
+
                     .item {
                         margin-bottom: 0.267rem;
                         background-color: #ffffff;
-                        box-shadow:0px 0px 10px 0px rgba(179, 179, 179, 0.35);
-                        border-radius:0.133rem;
+                        box-shadow: 0px 0px 10px 0px rgba(179, 179, 179, 0.35);
+                        border-radius: 0.133rem;
                         padding: 0.333rem;
                         box-sizing: border-box;
 
@@ -272,8 +290,8 @@
 
                         .line2 {
                             cursor: pointer;
-                            font-size:0.36rem;
-                            font-weight:400;
+                            font-size: 0.36rem;
+                            font-weight: 400;
                             color: rgba(51, 51, 51, 1);
                             @include line-hidden(2);
                             margin: 0.133rem 0;
@@ -346,7 +364,7 @@
                             display: flex;
                             justify-content: flex-start;
 
-                            .line4-item:nth-child(2){
+                            .line4-item:nth-child(2) {
                                 margin: 0 0.267rem;
                             }
 
@@ -362,9 +380,9 @@
                                     width: 100%;
                                     height: 100%;
                                     background: rgba(20, 20, 20, 0.6);
-                                    font-size:0.64rem;
-                                    font-weight:400;
-                                    color:rgba(255,255,255,1);
+                                    font-size: 0.64rem;
+                                    font-weight: 400;
+                                    color: rgba(255, 255, 255, 1);
                                     display: flex;
                                     justify-content: center;
                                     align-items: center;
@@ -388,16 +406,18 @@
                 }
 
             }
-            .device{
+
+            .device {
                 white-space: pre-wrap;
                 padding-bottom: 0.267rem;
                 width: 100%;
                 display: flex;
                 justify-content: center;
-                font-size:0.32rem;
-                font-weight:400;
-                color:rgba(51,51,51,1);
-                span{
+                font-size: 0.32rem;
+                font-weight: 400;
+                color: rgba(51, 51, 51, 1);
+
+                span {
                     text-decoration: none;
                     color: rgba(51, 51, 51, 1);
                 }

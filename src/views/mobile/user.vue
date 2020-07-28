@@ -146,9 +146,11 @@
 
 <style scoped lang="scss">
     .page{
+@include max-width;
         @include full-page;
         background-color: rgba(246,246,246,1);
-
+        box-sizing: border-box;
+        overflow: scroll;
         .container{
             width: 100%;
             padding: 0.133rem 0.267rem;

@@ -19,3 +19,9 @@ $page-back-color:#f6f6f6;
   height: 100%;
   position: absolute;
 }
+
+@mixin max-width{
+  margin: 0 auto;
+  max-width: 750px;
+
+}

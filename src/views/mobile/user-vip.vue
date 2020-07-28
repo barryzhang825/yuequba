@@ -10,7 +10,7 @@
                     </div>
                     <div class="half half2">
                         <span  class="label">开通时间：</span>
-                        <span  class="value">{{ item.create_time|timeFormat }}</span>
+                        <span  class="value">{{ item.create_time|timeFormatTwo }}</span>
                     </div>
                 </div>
                 <div class="line line2">
@@ -20,7 +20,7 @@
                     </div>
                     <div class="half half2">
                         <span  class="label">到期时间：</span>
-                        <span  class="value">{{ item.end_time|timeFormat }}</span>
+                        <span  class="value">{{ item.end_time|timeFormatTwo }}</span>
                     </div>
                 </div>
             </div>
@@ -105,6 +105,8 @@
 
 <style scoped lang="scss">
     .page{
+@include max-width;
+
         @include full-page;
         background-color: rgba(246,246,246,1);
         overflow: scroll;
@@ -149,10 +151,10 @@
 
                     }
                     .half1{
-                        width: 40%;
+                        width: 45%;
                     }
                     .half2{
-                        width: 60%;
+                        width: 55%;
                     }
                 }
                 .line2{

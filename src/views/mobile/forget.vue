@@ -101,7 +101,7 @@
         position: absolute;
         z-index: -1;
         background-color: rgba(246,246,246,1);
-
+@include max-width;
         .gray {
             width: 100%;
             height: 100%;

@@ -195,6 +195,7 @@
 
 <style scoped lang="scss">
     .page {
+@include max-width;
         width: 100%;
         background-color: $page-back-color;
         padding-bottom: 1.32rem;

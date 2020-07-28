@@ -84,7 +84,7 @@
     .page{
         @include full-page;
         background-color: rgba(246,246,246,1);
-
+@include max-width;
         .items{
             width: 100%;
             padding: 0 0.267rem;

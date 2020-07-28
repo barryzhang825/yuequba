@@ -338,7 +338,7 @@
     .page {
         @include full-page;
         background-color: rgba(246, 246, 246, 1);
-
+@include max-width;
         .container {
             width: 100%;
             background: rgba(255, 255, 255, 1);

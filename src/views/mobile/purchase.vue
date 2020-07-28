@@ -76,6 +76,7 @@
 
 <style scoped lang="scss">
     .page {
+@include max-width;
         @include full-page;
         background-color: rgba(246, 246, 246, 1);
         .container{
