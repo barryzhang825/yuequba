@@ -159,7 +159,7 @@
                                     <div class="reply" v-for="item2 in item.twolist">
                                         <div class="reply-left">
                                             <div v-if="item2.user_avatar" class="img"
-                                                 :style="'background-image: url('+baseUrl+item2.to_user_avatar+')'"></div>
+                                                 :style="'background-image: url('+baseUrl+item2.user_avatar+')'"></div>
                                             <div v-if="!item2.user_avatar" class="img"
                                                  :style="'background-image: url('+avatarUrl+')'"></div>
                                         </div>
