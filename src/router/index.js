@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import {hasToken} from "../utils/auth";
+import fa from "element-ui/src/locale/lang/fa";
 
 Vue.use(VueRouter)
 
@@ -175,53 +176,36 @@ const whiteList = ['/login', '/register', '/forget','/mobile/login', '/mobile/re
 router.beforeEach(function (to, from, next) {
     const isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
     const hasMobile=to.fullPath.indexOf('/mobile')
+    if(isMobile){
+        localStorage.setItem('device','mobile')
+    }else {
+        localStorage.setItem('device','pc')
+    }
 
-    if (isMobile&&hasMobile==-1) {
-        if (whiteList.indexOf(to.path) !== -1) {
-            next('/mobile' + to.fullPath)
-        } else {
-            next('/mobile' + to.fullPath)
-            // if (hasToken()) {
-            //     next('/mobile' + to.fullPath)
-            // } else {
-            //     next('/mobile/login')
-            // }
-        }
-    }else if(!isMobile && hasMobile>-1){
-        let newPah = to.fullPath.replace(new RegExp("/mobile","g"),"");
-        if (whiteList.indexOf(to.path) !== -1) {
-            next(newPah)
-        } else {
-            next(newPah)
-            // if (hasToken()) {
-            //     next(newPah)
-            // } else {
-            //     next('/login')
-            // }
-        }
-    } else if (isMobile&&hasMobile>-1) {
-        if (whiteList.indexOf(to.path) !== -1) {
+
+    //判断是否设置为pc端展示
+    const setDevice=localStorage.getItem('setDevice')
+    if(setDevice=='pc'&&isMobile){
+        if (hasMobile==-1) {
+
             next()
-        } else {
-            next()
-            // if (hasToken()) {
-            //     next()
-            // } else {
-            //     next('/mobile/login')
-            // }
+        }else if (hasMobile>-1) {
+            let newPah = to.fullPath.replace(new RegExp("/mobile","g"),"");
+
+            next(newPah)
         }
     }else {
-        if (whiteList.indexOf(to.path) !== -1) {
-            next()
+        if (isMobile&&hasMobile==-1) {
+            next('/mobile' + to.fullPath)
+        }else if(!isMobile && hasMobile>-1){
+            let newPah = to.fullPath.replace(new RegExp("/mobile","g"),"");
+            next(newPah)
         } else {
             next()
-            // if (hasToken()) {
-            //     next()
-            // } else {
-            //     next('/login')
-            // }
         }
     }
+
+
 
 
     //跳转失败页面

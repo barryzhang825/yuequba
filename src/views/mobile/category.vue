@@ -64,13 +64,7 @@
             </div>
             <van-empty v-if="totalNum<1" description="暂无数据"/>
             <div class="device" v-if="totalNum>0">
-                <router-link :to="{path:'/mobile/home'}" target="_blank">
-                    <span>手机端</span>
-                </router-link>
-                |
-                <router-link :to="{path:'/home'}" target="_blank">
-                    <span>电脑端</span>
-                </router-link>
+                <span @click="changeDevice(0)">手机端</span> | <span @click="changeDevice(1)">电脑端</span>
             </div>
         </div>
         <MobileFooter :menu="menu"></MobileFooter>
@@ -122,6 +116,16 @@
             }
         },
         methods: {
+            changeDevice(e){
+                if(e){
+                    localStorage.setItem('setDevice','pc')
+                    this.$router.go(0)
+                }else {
+                    localStorage.setItem('setDevice','mobile')
+                    this.$router.go(0)
+                }
+
+            },
             handleSizeChange(val) {
                 console.log(`每页 ${val} 条`);
             },

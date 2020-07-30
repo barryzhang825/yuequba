@@ -49,6 +49,9 @@
                                 :total="totalNum">
                         </el-pagination>
                     </div>
+                    <div class="device" v-if="device=='mobile'">
+                        <span @click="changeDevice(0)">手机端</span> | <span @click="changeDevice(1)">电脑端</span>
+                    </div>
                 </div>
                 <div class="right">
                     <div class="block-box">
@@ -160,6 +163,7 @@
         },
         data() {
             return {
+                device:localStorage.getItem('device'),
                 baseUrl: this.$baseUrl,
                 imgUrl: require('../../../public/images/avatar.gif'),
                 imagesUrl: [
@@ -195,6 +199,16 @@
             }
         },
         methods: {
+            changeDevice(e){
+                if(e){
+                    localStorage.setItem('setDevice','pc')
+                    this.$router.go(0)
+                }else {
+                    localStorage.setItem('setDevice','mobile')
+                    this.$router.go(0)
+                }
+
+            },
             handleSizeChange(val) {
                 console.log(`每页 ${val} 条`);
             },
@@ -557,7 +571,21 @@
                             }
                         }
                     }
-
+                    .device {
+                        margin-bottom: 20px;
+                        white-space: pre-wrap;
+                        width: 100%;
+                        display: flex;
+                        justify-content: center;
+                        font-size: 15px;
+                        font-weight: 400;
+                        color: rgba(51, 51, 51, 1);
+                        span{
+                            cursor: pointer;
+                            text-decoration: none;
+                            color: rgba(51, 51, 51, 1);
+                        }
+                    }
                     .pagination {
                         width: 100%;
                         padding: 20px 0;

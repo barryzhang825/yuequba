@@ -109,12 +109,7 @@
                 </div>
             </div>
             <div class="device">
-                <router-link :to="{path:'/mobile/home'}" target="_blank">
-                    <span>手机端</span>
-                </router-link> |
-                <router-link :to="{path:'/home'}" target="_blank">
-                    <span>电脑端</span>
-                </router-link>
+                <span @click="changeDevice(0)">手机端</span> | <span @click="changeDevice(1)">电脑端</span>
             </div>
         </div>
         <MobileFooter></MobileFooter>
@@ -240,6 +235,16 @@
                 this.specialList=specialList.data.list
                 console.log(specialList,'specialList')
             },
+            changeDevice(e){
+                if(e){
+                    localStorage.setItem('setDevice','pc')
+                    this.$router.go(0)
+                }else {
+                    localStorage.setItem('setDevice','mobile')
+                    this.$router.go(0)
+                }
+
+            }
         },
         mounted() {
             this.fetchData()
