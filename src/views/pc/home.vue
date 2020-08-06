@@ -17,7 +17,7 @@
                 </div>
             </div>
             <div class="class">
-                <div class="item" :style="'background-image: url('+baseUrl+item.more.thumbnail+')'" v-for="item in recommendList" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)">
+                <div class="item" v-if="index < 4" :style="'background-image: url('+baseUrl+item.more.thumbnail+')'" v-for="(item,index) in recommendList" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)">
                     <div class="text">
                         <a>{{item.post_excerpt}}</a>
                     </div>

@@ -13,6 +13,13 @@
                     <el-form-item label="确认密码：" prop="rePassword">
                         <el-input type="password" show-password v-model="formData.rePassword"></el-input>
                     </el-form-item>
+                    <el-form-item label="邮箱：" prop="email">
+                        <el-input v-model="formData.email"></el-input>
+                    </el-form-item>
+                    <el-form-item label="验证码：" prop="code" class="email">
+                        <el-input v-model="formData.code"></el-input>
+                        <div class="button" @click="checkSend">{{sendTips}}</div>
+                    </el-form-item>
                     <el-form-item label="推广码：">
                         <el-input v-model="formData.popuid" :disabled="disabled"></el-input>
                     </el-form-item>
@@ -33,7 +40,8 @@
 </template>
 
 <script>
-    import {userRegister} from "../../api/pc/api";
+    import {sendEmail, userRegister} from "../../api/pc/api";
+    import {checkEmail} from "../../utils/utils";
 
     export default {
         name: "Register",
@@ -50,11 +58,16 @@
             return {
                 disabled:false,
                 rememberPassword:false,
+                sendTips:'发送验证码',
+                canSend:true,
+                timeNum:60,
                 formData: {
                     username: '',
                     password: '',
                     rePassword:'',
-                    popuid:''
+                    popuid:'',
+                    code:'',
+                    email:''
                 },
                 rules: {
                     username: [
@@ -65,13 +78,55 @@
                         {required: true, message: '请输入密码', trigger: 'blur'},
                         { min: 6, max: 18, message: '长度在 6 到 18 个字符', trigger: 'blur' }
                     ],
+                    code: [
+                        {required: true, message: '请输入验证码', trigger: 'blur'},
+                    ],
                     rePassword: [
                         {required: true, validator: validateRePassword, trigger: 'blur'}
+                    ],
+                    email: [
+                        {required: true, message: '请输入邮箱', trigger: 'blur'},
+                        {type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur']}
                     ],
                 }
             }
         },
         methods:{
+            checkSend(){
+                if(this.canSend){
+                    if(checkEmail(this.formData.email)){
+                        this.sendEmail()
+
+                    }else {
+                        this.$message.info('请输入正确的邮箱！')
+                    }
+                }
+
+            },
+            sendEmail(){
+                sendEmail({
+                    user_email:this.formData.email
+                }).then((res)=>{
+                    console.log(res)
+                    if(res.code=200){
+                        let that = this
+                        this.$message.success('验证码已发送！')
+                        this.sendTips='重新发送（60）'
+                        let timer = setInterval(()=>{
+                            if(that.timeNum>0){
+                                that.canSend=false
+                                that.timeNum=that.timeNum-1
+                                that.sendTips='重新发送（'+(that.timeNum)+'）'
+                            }else {
+                                that.timeNum=60
+                                that.canSend=true
+                                that.sendTips='重新发送'
+                                clearInterval(timer)
+                            }
+                        }, 1000);
+                    }
+                })
+            },
             submitForm(formName) {
                 let that = this
                 this.$refs[formName].validate((valid) => {
@@ -79,11 +134,14 @@
                         let formData={
                             user_login:that.formData.username,
                             user_pass:that.formData.password,
+                            user_email:that.formData.email,
+                            code:that.formData.code,
                             repassword:that.formData.rePassword,
                         }
                         if(that.formData.popuid){
                             formData.popuid=that.formData.popuid
                         }
+                        console.log(formData)
                         userRegister(formData).then(res=>{
                             this.$message({
                                 message: '注册成功！',
@@ -135,7 +193,6 @@
             .login-box {
                 margin:0 auto;
                 width: 640px;
-                height: 420px;
                 background: rgba(255, 255, 255, 1);
                 opacity: 0.9;
                 border-radius: 10px;
@@ -150,7 +207,6 @@
                     width: 100%;
                     display: flex;
                     justify-content: center;
-                    margin-top: 20px;
                     .register{
                         cursor: pointer;
                         font-size:15px;
@@ -161,6 +217,16 @@
                             font-size:14px;
                             font-weight:400;
                             color:rgba(34,34,34,1);
+                        }
+                    }
+                }
+                .email{
+                    /deep/.el-form-item__content{
+                        display: flex;
+                        .button{
+                            flex-shrink: 0;
+                            padding: 0 10px 0 20px;
+                            cursor:pointer;
                         }
                     }
                 }

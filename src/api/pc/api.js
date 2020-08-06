@@ -150,7 +150,13 @@ export function buyVip(data) {
         data
     })
 }
-
+export function sendEmail(data) {
+    return request({
+        url: '/home/login/sendEmailCode',
+        method: 'post',
+        data
+    })
+}
 
 
 

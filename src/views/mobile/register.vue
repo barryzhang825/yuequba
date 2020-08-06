@@ -13,6 +13,13 @@
                     <el-form-item label="确认密码：" prop="rePassword">
                         <el-input type="password" show-password v-model="formData.rePassword"></el-input>
                     </el-form-item>
+                    <el-form-item label="邮箱：" prop="email">
+                        <el-input v-model="formData.email"></el-input>
+                    </el-form-item>
+                    <el-form-item label="验证码：" prop="code" class="email">
+                        <el-input v-model="formData.code"></el-input>
+                        <div class="button" @click="checkSend">{{sendTips}}</div>
+                    </el-form-item>
                     <el-form-item label="推广码：">
                         <el-input v-model="formData.popuid" :disabled="disabled"></el-input>
                     </el-form-item>
@@ -34,7 +41,8 @@
 
 <script>
     import { Notify } from 'vant';
-    import {userRegister} from "../../api/pc/api";
+    import {sendEmail, userRegister} from "../../api/pc/api";
+    import {checkEmail} from "../../utils/utils";
     export default {
         name: "MobileRegister",
         data() {
@@ -50,10 +58,15 @@
             return {
                 disabled:false,
                 rememberPassword:false,
+                sendTips:'发送验证码',
+                canSend:true,
+                timeNum:60,
                 formData: {
                     username: '',
                     password: '',
                     rePassword: '',
+                    email: '',
+                    code: '',
                     popuid: '',
                 },
                 rules: {
@@ -67,6 +80,13 @@
                     ],
                     rePassword: [
                         {required: true, validator: validateRePassword, trigger: 'blur'}
+                    ],
+                    code: [
+                        {required: true, message: '请输入验证码', trigger: 'blur'},
+                    ],
+                    email: [
+                        {required: true, message: '请输入邮箱', trigger: 'blur'},
+                        {type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur']}
                     ],
                 }
             }
@@ -93,6 +113,40 @@
                         return false;
                     }
                 });
+            },
+            checkSend(){
+                if(this.canSend){
+                    if(checkEmail(this.formData.email)){
+                        this.sendEmail()
+                    }else {
+                        Notify({ type: 'warning', message: '请输入正确的邮箱' });
+                    }
+                }
+
+            },
+            sendEmail(){
+                sendEmail({
+                    user_email:this.formData.email
+                }).then((res)=>{
+                    console.log(res)
+                    if(res.code=200){
+                        let that = this
+                        Notify({ type: 'success', message: '验证码已发送！' });
+                        this.sendTips='重新发送（60）'
+                        let timer = setInterval(()=>{
+                            if(that.timeNum>0){
+                                that.canSend=false
+                                that.timeNum=that.timeNum-1
+                                that.sendTips='重新发送（'+(that.timeNum)+'）'
+                            }else {
+                                that.timeNum=60
+                                that.canSend=true
+                                that.sendTips='重新发送'
+                                clearInterval(timer)
+                            }
+                        }, 1000);
+                    }
+                })
             },
         },
         mounted() {
@@ -160,6 +214,16 @@
                             font-size:0.32rem;
                             font-weight:400;
                             color:rgba(34,34,34,1);
+                        }
+                    }
+                }
+                .email{
+                    /deep/.el-form-item__content{
+                        display: flex;
+                        .button{
+                            flex-shrink: 0;
+                            padding: 0 10px 0 20px;
+                            cursor:pointer;
                         }
                     }
                 }
