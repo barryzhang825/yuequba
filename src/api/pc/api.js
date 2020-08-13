@@ -1,5 +1,12 @@
 import request from '@/utils/request'
 
+export function LoginWithBaidu(data) {
+    return request({
+        url: '/home/Baidulogin/index',
+        method: 'get',
+        params:data
+    })
+}
 export function userLogin(data) {
     return request({
         url: '/home/login/doLogin',

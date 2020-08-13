@@ -33,6 +33,44 @@ instance.interceptors.response.use(
         let that = this
         if (response.data.code == 200) {
             return response.data
+        }else if (response.data.code == 201||response.data.code == 202) {
+            const isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
+            let text=''
+            if(response.data.code==201){
+                text='请开通Vip后重试'
+            }else if(response.data.code==202){
+                text='开通包年Vip可下载包年精选资源'
+            }
+            if(isMobile){
+                Dialog.confirm({
+                    title: '提示',
+                    message: text,
+                    confirmButtonText:'去开通',
+                    cancelButtonText:'取消',
+                })
+                    .then(() => {
+                        router.push({
+                            path: '/mobile/purchase'
+                        })
+                    })
+                    .catch(() => {
+                        // on cancel
+                    });
+            }else {
+                MessageBox.confirm('', {
+                    message: text,
+                    title: '提示',
+                    confirmButtonText: '去开通',
+                    cancelButtonText: '取消'
+                }).then(action => {
+                    router.push({
+                        path: '/purchase'
+                    })
+                }).catch(err => {
+
+                });
+            }
+            return response.data
         } else if (response.data.code == 2) {
             const isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
             if(isMobile){

@@ -11,7 +11,7 @@
 
                 <div class="block-content">
                     <el-select v-model="tagValue" placeholder="请选择" @change="tagChange" popper-class="select-popper"
-                               :popper-append-to-body="false">
+                               >
                         <el-option
                                 v-for="item in tagList"
                                 :key="item.name"
@@ -58,7 +58,10 @@
             </div>
             <div class="pics">
                 <div class="pics-box">
-                    <div class="pics-item" v-if="index<4"  @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)" :style="'background-image: url('+baseUrl+item.more.thumbnail+')'" v-for="(item,index) in specialList">
+                    <div class="pics-item" v-if="index<4"
+                         @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)"
+                         :style="'background-image: url('+baseUrl+item.more.thumbnail+')'"
+                         v-for="(item,index) in specialList">
                         <div class="gray">
                             <div class="text">{{item.post_excerpt}}</div>
                         </div>
@@ -69,7 +72,7 @@
                 <div class="left">
                     <div class="item" v-loading="artLoading" v-for="item in artList">
                         <div class="line1">
-                            <div  :class="'tag'+' tag'+item2.color_id" v-for="item2 in item.taglist">{{item2.name}}</div>
+                            <div :class="'tag'+' tag'+item2.color_id" v-for="item2 in item.taglist">{{item2.name}}</div>
                         </div>
                         <div class="line2" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)">
                             {{item.post_title}}
@@ -77,7 +80,8 @@
                         <div class="line3">
                             <div class="type">
                                 <img :class="item.category_id==1?'img-upper':item.category_id==2?'img-img':item.category_id==3?'img-video':item.category_id==4?'img-year':''"
-                                     :src="item.category_id==1?require('../../../public/images/upper.png'):item.category_id==2?require('../../../public/images/img.png'):item.category_id==3?require('../../../public/images/video.png'):item.category_id==4?require('../../../public/images/year.png'):''" alt="">
+                                     :src="item.category_id==1?require('../../../public/images/upper.png'):item.category_id==2?require('../../../public/images/img.png'):item.category_id==3?require('../../../public/images/video.png'):item.category_id==4?require('../../../public/images/year.png'):''"
+                                     alt="">
                                 {{item.category_id==1?'主播区':item.category_id==2?'美图区':item.category_id==3?'视频区':item.category_id==4?'包年精选区':''}}
                             </div>
                             <div class="time">
@@ -88,9 +92,18 @@
                             </div>
                         </div>
                         <div class="line4">
-                            <div v-if="item.more.photos.length>0" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)" class="line4-item" :style="'background-image: url('+baseUrl+item.more.photos[0].url+')'"></div>
-                            <div v-if="item.more.photos.length>1" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)" class="line4-item" :style="'background-image: url('+baseUrl+item.more.photos[1].url+')'"></div>
-                            <div v-if="item.more.photos.length>2" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)" class="line4-item" :style="'background-image: url('+baseUrl+item.more.photos[2].url+')'">
+                            <div v-if="item.more.photos.length>0"
+                                 @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)"
+                                 class="line4-item"
+                                 :style="'background-image: url('+baseUrl+item.more.photos[0].url+')'"></div>
+                            <div v-if="item.more.photos.length>1"
+                                 @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)"
+                                 class="line4-item"
+                                 :style="'background-image: url('+baseUrl+item.more.photos[1].url+')'"></div>
+                            <div v-if="item.more.photos.length>2"
+                                 @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)"
+                                 class="line4-item"
+                                 :style="'background-image: url('+baseUrl+item.more.photos[2].url+')'">
                                 <div class="more" v-if="item.surplusimgnum">+{{item.surplusimgnum}}</div>
                             </div>
                         </div>
@@ -134,11 +147,11 @@
             MobileFooter,
             MobileToTop
         },
-        filters:{
-            timeFormat(val){
+        filters: {
+            timeFormat(val) {
                 return formatTime(val)
             },
-            timeFormatTwo(val){
+            timeFormatTwo(val) {
                 return formatTimeThree(val)
             },
         },
@@ -164,10 +177,10 @@
                     value: '选项3',
                     label: '女神主播'
                 }],
-                artLoading:false,
-                pageSize:10,
-                pageNum:1,
-                totalNum:0,
+                artLoading: false,
+                pageSize: 10,
+                pageNum: 1,
+                totalNum: 0,
                 tagValue: '',
                 bannerList: [],
                 tagList: [],
@@ -179,28 +192,28 @@
             }
         },
         methods: {
-            tagChange(){
-                this.$router.push('/result?tagId='+this.tagValue)
+            tagChange() {
+                this.$router.push('/result?tagId=' + this.tagValue)
             },
             handleSizeChange(val) {
                 console.log(`每页 ${val} 条`);
             },
             handleCurrentChange(val) {
-                window.scroll(0,0)
+                window.scroll(0, 0)
                 this.fetchArticle(val)
             },
-            async fetchArticle(pageNum=1){
-                this.artLoading=true
+            async fetchArticle(pageNum = 1) {
+                this.artLoading = true
                 let that = this
-                let artList=await getArticleList({
-                    page:pageNum,
-                    limit:that.pageSize
+                let artList = await getArticleList({
+                    page: pageNum,
+                    limit: that.pageSize
                 })
-                setTimeout(()=>{
-                    this.artLoading=false
-                },500)
-                that.totalNum=artList.data.count
-                that.artList=artList.data.list
+                setTimeout(() => {
+                    this.artLoading = false
+                }, 500)
+                that.totalNum = artList.data.count
+                that.artList = artList.data.list
             },
             async fetchData() {
                 let that = this
@@ -208,39 +221,39 @@
                 this.bannerList = bannerList.data
                 let tagList = await getTagList()
                 this.tagList = tagList.data
-                let hotList=await getArticleList({
-                    page:1,
-                    limit:4,
-                    hot:1
+                let hotList = await getArticleList({
+                    page: 1,
+                    limit: 4,
+                    hot: 1
                 })
-                this.hotList=hotList.data.list
+                this.hotList = hotList.data.list
 
-                let yearList=await getArticleList({
-                    page:1,
-                    limit:4,
-                    category:4
+                let yearList = await getArticleList({
+                    page: 1,
+                    limit: 4,
+                    category: 4
                 })
-                this.yearList=yearList.data.list
-                let recommendList=await getArticleList({
-                    page:1,
-                    limit:4,
-                    ttd:1
+                this.yearList = yearList.data.list
+                let recommendList = await getArticleList({
+                    page: 1,
+                    limit: 4,
+                    ttd: 1
                 })
-                this.recommendList=recommendList.data.list
-                let specialList=await getArticleList({
-                    page:1,
-                    limit:4,
-                    boutique:1
+                this.recommendList = recommendList.data.list
+                let specialList = await getArticleList({
+                    page: 1,
+                    limit: 4,
+                    boutique: 1
                 })
-                this.specialList=specialList.data.list
-                console.log(specialList,'specialList')
+                this.specialList = specialList.data.list
+                console.log(specialList, 'specialList')
             },
-            changeDevice(e){
-                if(e){
-                    localStorage.setItem('setDevice','pc')
+            changeDevice(e) {
+                if (e) {
+                    localStorage.setItem('setDevice', 'pc')
                     this.$router.go(0)
-                }else {
-                    localStorage.setItem('setDevice','mobile')
+                } else {
+                    localStorage.setItem('setDevice', 'mobile')
                     this.$router.go(0)
                 }
 
@@ -254,8 +267,8 @@
                 loop: true,
                 autoplay: 3000,
                 paginationClickable: true,
-                observer:true,
-                observeParents:true,
+                observer: true,
+                observeParents: true,
             })
         }
     }
@@ -263,16 +276,26 @@
 
 <style scoped lang="scss">
     .page {
-@include max-width;
+        @include max-width;
         width: 100%;
         background-color: $page-back-color;
         padding-bottom: 1.32rem;
+        .hotTags{
+            z-index: 99999999;
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            background-color: rgba(24,24,24,0.63);
+        }
+        /deep/ .van-overlay{
+            z-index: 2!important;
+        }
 
         .van-overlay-tag {
             z-index: 999999;
 
             .wrapper {
-                margin: 5.333rem auto;
+                margin: 2.5rem auto;
                 width: 8rem;
                 height: 3.2rem;
                 background: rgba(255, 255, 255, 1);
@@ -310,6 +333,7 @@
 
                     /deep/ .select-popper {
                         z-index: 8888 !important;
+
                     }
 
                     .el-select {
@@ -448,10 +472,12 @@
             .pics {
                 width: 100%;
                 box-sizing: border-box;
+
                 .pics-box {
                     overflow-x: scroll;
                     display: flex;
                     box-sizing: border-box;
+
                     .pics-item {
                         flex-shrink: 0;
                         width: 3.733rem;
@@ -623,7 +649,7 @@
                             display: flex;
                             justify-content: flex-start;
 
-                            .line4-item:nth-child(2){
+                            .line4-item:nth-child(2) {
                                 margin: 0 0.267rem;
                             }
 
@@ -675,7 +701,8 @@
                 font-size: 0.32rem;
                 font-weight: 400;
                 color: rgba(51, 51, 51, 1);
-                span{
+
+                span {
                     text-decoration: none;
                     color: rgba(51, 51, 51, 1);
                 }

@@ -10,7 +10,9 @@
                 <div class="item" :class="selectedIndex==index?'selected':''" @click="selectedIndex=index" v-for="(item,index) in vipList">
                     <div class="line1">{{item.name}}</div>
                     <div class="line2">
-                        <span>￥{{item.money}}</span>/{{item.mony==1?'月':item.mony==2?'季度':item.mony==3?'半年':item.mony==4?'年':''}}
+                        <span>{{item.money}}</span>RMB/{{item.mony==1?'月':item.mony==2?'季度':item.mony==3?'半年':item.mony==4?'年':''}}
+                        <br>
+                        (约{{item.taibi}}台币)
                     </div>
                     <div class="line3">全站资源无限下载</div>
                     <img class="check" v-if="selectedIndex==index" src="../../../public/images/check.png" alt="">
@@ -142,6 +144,7 @@
                         text-align: center;
                     }
                     .line2{
+                        white-space: pre-line;
                         font-size:16px;
                         font-weight:400;
                         color: #333333;

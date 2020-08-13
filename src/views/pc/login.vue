@@ -18,11 +18,15 @@
                     <el-form-item>
                         <div class="center-box">
                             <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
+
                         </div>
                     </el-form-item>
                     <el-form-item>
                         <div class="center-box">
                             <a class="register" @click="$router.push('/register')" >还没有账号，去注册>></a>
+                            <div class="baidu">
+                                <img src="../../../public/images/baidu.png" @click="loginWithBaidu" alt="">
+                            </div>
                         </div>
                     </el-form-item>
                 </el-form>
@@ -33,6 +37,7 @@
 
 <script>
     import {userLogin} from '@/api/pc/api'
+    import {LoginWithBaidu} from "../../api/pc/api";
     export default {
         name: "Login",
         data() {
@@ -53,6 +58,12 @@
             }
         },
         methods:{
+            loginWithBaidu(){
+                LoginWithBaidu().then(res=>{
+                    console.log(res.url)
+                    window.open(res.url,'_blank')
+                })
+            },
             submitForm(formName) {
                 let that = this
                 this.$refs[formName].validate((valid) => {
@@ -82,12 +93,17 @@
         },
         mounted() {
             // this.$message('这是一条消息提示');
+            let code = this.$route.query.code
+            if(code){
+                console.log(code,'CODE')
+            }
         }
     }
 </script>
 
 <style scoped lang="scss">
-    .page {min-width:1200px;
+    .page {
+        min-width:640px;
         width: 100%;
         height: 100%;
         min-height: 700px;
@@ -140,6 +156,18 @@
                     width: 100%;
                     display: flex;
                     justify-content: center;
+                    align-items: center;
+                    .baidu{
+                        margin-left: 50px;
+                        display: flex;
+                        align-items: center;
+                        img{
+                            cursor: pointer;
+                            width: 25px;
+                            height: 25px;
+                        }
+                    }
+
                     .register{
                         cursor: pointer;
                         font-size:15px;
