@@ -34,8 +34,14 @@
                     <div class="swiper-pagination"></div>
                 </div>
             </div>
-            <div class="teachText">
-                <div class="box" @click="goToTeach" v-html="teachList.post_content"></div>
+            <div class="teachText" @click="goToTeach">
+                <img src="../../../public/images/notify.png" alt="">
+                <div class="notice-main">
+                    <span class="notice">
+                         {{teachList.title}}{{teachList.post_excerpt}}
+                    </span>
+                </div>
+
             </div>
             <div class="hotMenu">
                 <div class="hotMenu-item">
@@ -413,24 +419,99 @@
                     }
                 }
             }
+            .teachText::-webkit-scrollbar {
+                display: none;
+            }
             .teachText {
-                .box::-webkit-scrollbar {
-                    display: none;
-                }
-                .box {
-                    cursor: pointer;
-                    width: 100%;
-                    height: 100%;
-                    overflow: scroll;
-                    -ms-overflow-style: none;//ie下隐藏滚动条
-                    font-size: 0.3rem;
-                }
+                margin-bottom: 0.5rem;
+                font-size: 0.267rem;
+                display: flex;
+                align-items: center;
                 padding: 10px;
-                box-sizing: border-box;
-                background-color: gainsboro;
+                margin: 0.267rem;
+                margin-bottom: 0.5rem;
+                background-color: #ffffff;
+                border-radius: 10px;
+                box-shadow: 0px 0px 10px 0px rgba(179, 179, 179, 0.35);
+                -ms-overflow-style: none; //ie下隐藏滚动条
+                padding-left: 40px;
+                position: relative;
+                cursor: pointer;
+                .box {
+                    margin: 0 10px;
+                    cursor: pointer;
+                    height: 100%;
+                    display: flex;
+                    flex-wrap: nowrap;
+                    align-items: center;
+                }
 
-                height: 4.267rem;
-                width: 100%;
+                img {
+                    position: absolute;
+                    left: 10px;
+                    width: 20px;
+                    height: 20px;
+                }
+
+                .teachText {
+                    width: 342px;
+                    height: 24px;
+                    line-height: 24px;
+                    margin: 0 auto 15px;
+                    color: #fff;
+                    font-size: 12px;
+                    overflow: hidden;
+                }
+
+                .notice-main {
+                    overflow: hidden;
+                }
+
+                .notice {
+                    display: block;
+                    -moz-animation: move 30s infinite linear;
+                    -webkit-animation: move 30s infinite linear;
+                    animation: move 30s infinite linear;
+                    white-space: nowrap;
+                }
+
+                .notice > span {
+                    color: #FFD460;
+                }
+
+                @-moz-keyframes move {
+                    0% {
+                        transform: translateX(100%);
+                    }
+                    50% {
+                        transform: translateX(0);
+                    }
+                    100% {
+                        transform: translateX(-100%);
+                    }
+                }
+                @-webkit-keyframes move {
+                    0% {
+                        transform: translateX(100%);
+                    }
+                    50% {
+                        transform: translateX(0);
+                    }
+                    100% {
+                        transform: translateX(-100%);
+                    }
+                }
+                @keyframes move {
+                    0% {
+                        transform: translateX(100%);
+                    }
+                    50% {
+                        transform: translateX(0);
+                    }
+                    100% {
+                        transform: translateX(-100%);
+                    }
+                }
             }
             .hotMenu {
                 position: relative;

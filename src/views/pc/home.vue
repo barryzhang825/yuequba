@@ -16,8 +16,14 @@
                     <div class="swiper-button-next"></div>
                 </div>
             </div>
-            <div class="teachText">
-                <div class="box" @click="goToTeach" v-html="teachList.post_content"></div>
+            <div class="teachText" @click="goToTeach">
+                <img src="../../../public/images/notify.png" alt="">
+                <div class="notice-main">
+                    <span class="notice">
+                         {{teachList.title}}{{teachList.post_excerpt}}
+                    </span>
+                </div>
+
             </div>
             <div class="class">
                 <div class="item" v-if="index < 4" :style="'background-image: url('+baseUrl+item.more.thumbnail+')'"
@@ -407,31 +413,99 @@
                     }
                 }
             }
-
+            .teachText::-webkit-scrollbar {
+                display: none;
+            }
             .teachText {
-                .box::-webkit-scrollbar {
-                    display: none;
-                }
-
-                .box {
-                    cursor: pointer;
-                    width: 100%;
-                    height: 100%;
-                    overflow: scroll;
-
-                    -ms-overflow-style: none;//ie下隐藏滚动条
-                }
-
+                display: flex;
+                align-items: center;
                 padding: 10px;
-                box-sizing: border-box;
                 margin-top: 20px;
                 background-color: #ffffff;
                 border-radius: 10px;
-                height: 360px;
-                width: 100%;
                 box-shadow: 0px 0px 10px 0px rgba(179, 179, 179, 0.35);
-            }
+                -ms-overflow-style: none; //ie下隐藏滚动条
+                padding-left: 50px;
+                position: relative;
+                cursor: pointer;
 
+
+                .box {
+                    margin: 0 10px;
+                    cursor: pointer;
+                    height: 100%;
+                    display: flex;
+                    flex-wrap: nowrap;
+                    align-items: center;
+                }
+
+                img {
+                    position: absolute;
+                    left: 10px;
+                    width: 25px;
+                    height: 25px;
+                }
+
+                .teachText {
+                    width: 342px;
+                    height: 24px;
+                    line-height: 24px;
+                    margin: 0 auto 15px;
+                    color: #fff;
+                    font-size: 12px;
+                    overflow: hidden;
+                }
+
+                .notice-main {
+                    overflow: hidden;
+                }
+
+                .notice {
+                    display: block;
+                    -moz-animation: move 50s infinite linear;
+                    -webkit-animation: move 50s infinite linear;
+                    animation: move 50s infinite linear;
+                    white-space: nowrap;
+                }
+
+                .notice > span {
+                    color: #FFD460;
+                }
+
+                @-moz-keyframes move {
+                    0% {
+                        transform: translateX(100%);
+                    }
+                    50% {
+                        transform: translateX(0);
+                    }
+                    100% {
+                        transform: translateX(-100%);
+                    }
+                }
+                @-webkit-keyframes move {
+                    0% {
+                        transform: translateX(100%);
+                    }
+                    50% {
+                        transform: translateX(0);
+                    }
+                    100% {
+                        transform: translateX(-100%);
+                    }
+                }
+                @keyframes move {
+                    0% {
+                        transform: translateX(100%);
+                    }
+                    50% {
+                        transform: translateX(0);
+                    }
+                    100% {
+                        transform: translateX(-100%);
+                    }
+                }
+            }
             .class {
                 width: 100%;
                 margin-top: 20px;
