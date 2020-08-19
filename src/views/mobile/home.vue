@@ -23,7 +23,7 @@
             </div>
         </van-overlay>
         <div class="center-box">
-            <div class="swiper">
+            <div class="swiper" v-if="showBanner">
                 <div class="swiper-container">
                     <div class="swiper-wrapper">
                         <div class="swiper-slide" v-for="item in bannerList">
@@ -33,6 +33,9 @@
                     <!-- 如果需要分页器 -->
                     <div class="swiper-pagination"></div>
                 </div>
+            </div>
+            <div class="teachText">
+                <div class="box" @click="goToTeach" v-html="teachList.post_content"></div>
             </div>
             <div class="hotMenu">
                 <div class="hotMenu-item">
@@ -136,7 +139,7 @@
     import MobileHeader from '@/components/mobile/Header'
     import MobileFooter from '@/components/mobile/Footer'
     import MobileToTop from '@/components/mobile/ToTop'
-    import {getArticleList, getBannerList, getTagList} from "../../api/pc/api";
+    import {getArticleList, getBannerList, getTagList, getTeachList} from "../../api/pc/api";
     import {formatTime, formatTimeThree} from "../../utils/utils";
 
     export default {
@@ -157,6 +160,7 @@
         },
         data() {
             return {
+                showBanner:false,
                 baseUrl: this.$baseUrl,
                 imgUrl: require('../../../public/images/avatar.gif'),
                 imagesUrl: [
@@ -189,9 +193,15 @@
                 yearList: [],//包年精选文章
                 recommendList: [],//推荐文章
                 specialList: [],//精选文章
+                teachList: [],//解压教程
             }
         },
         methods: {
+            goToTeach(){
+                this.$router.push({
+                    path:'/teach-detail'
+                })
+            },
             tagChange() {
                 this.$router.push('/result?tagId=' + this.tagValue)
             },
@@ -219,6 +229,12 @@
                 let that = this
                 let bannerList = await getBannerList()
                 this.bannerList = bannerList.data
+
+                let teachList = await getTeachList({
+                    icon_name: 'home_top_course'
+                })
+                this.teachList = teachList.data
+
                 let tagList = await getTagList()
                 this.tagList = tagList.data
                 let hotList = await getArticleList({
@@ -397,7 +413,25 @@
                     }
                 }
             }
+            .teachText {
+                .box::-webkit-scrollbar {
+                    display: none;
+                }
+                .box {
+                    cursor: pointer;
+                    width: 100%;
+                    height: 100%;
+                    overflow: scroll;
+                    -ms-overflow-style: none;//ie下隐藏滚动条
+                    font-size: 0.3rem;
+                }
+                padding: 10px;
+                box-sizing: border-box;
+                background-color: gainsboro;
 
+                height: 4.267rem;
+                width: 100%;
+            }
             .hotMenu {
                 position: relative;
                 top: -0.267rem;

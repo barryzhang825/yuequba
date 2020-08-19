@@ -21,7 +21,18 @@
 <!--                    </el-badge>-->
 <!--                </div>-->
                 <div class="link" v-if="!user_nickname"><router-link to="/login">登录</router-link> | <router-link to="/register">注册</router-link></div>
-                <div class="userinfo" v-if="user_nickname"><router-link to="/user">{{user_nickname}}</router-link> | <a @click="loginOut" style="cursor:pointer;">退出</a></div>
+                <div class="userinfo" v-if="user_nickname">
+                    <div class="userinfo-left">
+                        <router-link to="/user">{{user_nickname}}</router-link>
+                        <div class="time-left" v-if="vipEndTime">{{vipEndTime}} VIP到期</div>
+                    </div>
+                    <div class="userinfo-middle">
+                        |
+                    </div>
+                    <div class="userinfo-right">
+                        <a @click="loginOut" style="cursor:pointer;">退出</a>
+                    </div>
+                </div>
             </div>
         </div>
         <van-overlay :show="searchShow" >
@@ -39,6 +50,8 @@
 </template>
 
 <script>
+    import {formatTimeThree} from "../../utils/utils";
+
     export default {
         name: "Header",
         props: {
@@ -49,6 +62,7 @@
         },
         data(){
             return{
+                vipEndTime:0,
                 searchShow:false,
                 searchWord:"",
                 user_nickname:''
@@ -110,6 +124,10 @@
         mounted() {
             if(localStorage.getItem('user_info')){
                 this.user_nickname=JSON.parse(localStorage.getItem('user_info')).user_nickname
+                let endTime=JSON.parse(localStorage.getItem('user_info')).vip_end_time
+                if(endTime>0){
+                    this.vipEndTime=formatTimeThree(endTime)
+                }
             }
             // console.log(localStorage.getItem('user_login'))
         }
@@ -164,18 +182,16 @@
             }
 
             .right {
-                width: 200px;
+
                 height: 100%;
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-
                 .search {
                     cursor: pointer;
                     width: 27px;
                     height: 27px;
                 }
-
                 .alert-box {
                     cursor: pointer;
                     width: 24px;
@@ -205,8 +221,8 @@
                         color: rgba(255, 255, 255, 1);
                     }
                 }
-
                 .link {
+                    margin-left: 10px;
                     color: $theme-color;
 
                     a {
@@ -217,9 +233,37 @@
                     }
                 }
                 .userinfo{
-                    a{
-                        color: #666666;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    padding-left: 10px;
+                    .userinfo-left{
+                        color: black;
                         text-decoration: none;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        a{
+                            font-size: 15px;
+                            color: #333333;
+                            text-decoration: none;
+                        }
+                        .time-left{
+                            color: #666666;
+                            text-decoration: none;
+                            font-size: 10px;
+                            margin-top: 5px;
+                        }
+                    }
+                    .userinfo-middle{
+                        padding: 0 5px;
+                    }
+                    .userinfo-right{
+                        font-size: 15px;
+                        a{
+                            color: #333333;
+                            text-decoration: none;
+                        }
                     }
                 }
             }

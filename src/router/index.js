@@ -32,6 +32,11 @@ const routes = [
         component: () => import( '../views/pc/detail')
     },
     {
+        path: '/teach-detail',
+        name: 'TeachDetail',
+        component: () => import( '../views/pc/teach-detail')
+    },
+    {
         path: '/purchase',
         name: 'Purchase',
         component: () => import( '../views/pc/purchase')
@@ -158,11 +163,16 @@ const routes = [
         name: 'MobileDetail',
         component: () => import( '../views/mobile/detail')
     },
+    {
+        path: '/mobile/teach-detail',
+        name: 'MobileTeachDetail',
+        component: () => import( '../views/mobile/teach-detail')
+    },
 
 ]
 
 const router = new VueRouter({
-    mode: 'hash',
+    mode: 'history',
     base: process.env.BASE_URL,
     routes
 })

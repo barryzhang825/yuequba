@@ -37,7 +37,7 @@
 
 <script>
     import {userLogin} from '@/api/pc/api'
-    import {LoginWithBaidu} from "../../api/pc/api";
+    import {fetchBaiduCode, loginWithBaidu} from "../../api/pc/api";
     export default {
         name: "Login",
         data() {
@@ -59,11 +59,12 @@
         },
         methods:{
             loginWithBaidu(){
-                LoginWithBaidu().then(res=>{
+                fetchBaiduCode().then(res=>{
                     console.log(res.url)
                     window.open(res.url,'_blank')
                 })
             },
+
             submitForm(formName) {
                 let that = this
                 this.$refs[formName].validate((valid) => {
@@ -93,9 +94,25 @@
         },
         mounted() {
             // this.$message('这是一条消息提示');
+            let that = this
             let code = this.$route.query.code
             if(code){
                 console.log(code,'CODE')
+                loginWithBaidu({
+                    code:code
+                }).then(res=>{
+                    console.log(res)
+                    if(res.code == 200){
+                        this.$message({
+                            message: '登录成功！',
+                            type: 'success'
+                        });
+                        localStorage.setItem('token',res.data.token)
+                        localStorage.setItem('user_info',JSON.stringify(res.data.userinfo))
+
+                        that.$router.push('/home')
+                    }
+                })
             }
         }
     }

@@ -2,7 +2,7 @@
     <div class="page">
         <Header :menu="1"></Header>
         <div class="center-box">
-            <div class="swiper">
+            <div class="swiper" v-if="showBanner">
                 <div class="swiper-container">
                     <div class="swiper-wrapper">
                         <div class="swiper-slide" v-for="item in bannerList">
@@ -16,19 +16,24 @@
                     <div class="swiper-button-next"></div>
                 </div>
             </div>
+            <div class="teachText">
+                <div class="box" @click="goToTeach" v-html="teachList.post_content"></div>
+            </div>
             <div class="class">
-                <div class="item" v-if="index < 4" :style="'background-image: url('+baseUrl+item.more.thumbnail+')'" v-for="(item,index) in recommendList" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)">
+                <div class="item" v-if="index < 4" :style="'background-image: url('+baseUrl+item.more.thumbnail+')'"
+                     v-for="(item,index) in recommendList"
+                     @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)">
                     <div class="text">
                         <a>{{item.post_excerpt}}</a>
                     </div>
                     <div class="gray"></div>
                 </div>
             </div>
-            <div class="content" >
+            <div class="content">
                 <div class="left">
                     <div class="item" v-loading="artLoading" v-for="item in artList">
                         <div class="line1">
-                            <div  :class="'tag'+' tag'+item2.color_id" v-for="item2 in item.taglist">{{item2.name}}</div>
+                            <div :class="'tag'+' tag'+item2.color_id" v-for="item2 in item.taglist">{{item2.name}}</div>
                         </div>
                         <div class="line2" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)">
                             {{item.post_title}}
@@ -36,7 +41,8 @@
                         <div class="line3">
                             <div class="type">
                                 <img :class="item.category_id==1?'img-upper':item.category_id==2?'img-img':item.category_id==3?'img-video':item.category_id==4?'img-year':''"
-                                     :src="item.category_id==1?require('../../../public/images/upper.png'):item.category_id==2?require('../../../public/images/img.png'):item.category_id==3?require('../../../public/images/video.png'):item.category_id==4?require('../../../public/images/year.png'):''" alt="">
+                                     :src="item.category_id==1?require('../../../public/images/upper.png'):item.category_id==2?require('../../../public/images/img.png'):item.category_id==3?require('../../../public/images/video.png'):item.category_id==4?require('../../../public/images/year.png'):''"
+                                     alt="">
                                 {{item.category_id==1?'主播区':item.category_id==2?'美图区':item.category_id==3?'视频区':item.category_id==4?'包年精选区':''}}
                             </div>
                             <div class="time">
@@ -47,9 +53,18 @@
                             </div>
                         </div>
                         <div class="line4">
-                            <div v-if="item.more.photos.length>0" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)" class="line4-item" :style="'background-image: url('+baseUrl+item.more.photos[0].url+')'"></div>
-                            <div v-if="item.more.photos.length>1" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)" class="line4-item" :style="'background-image: url('+baseUrl+item.more.photos[1].url+')'"></div>
-                            <div v-if="item.more.photos.length>2" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)" class="line4-item" :style="'background-image: url('+baseUrl+item.more.photos[2].url+')'">
+                            <div v-if="item.more.photos.length>0"
+                                 @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)"
+                                 class="line4-item"
+                                 :style="'background-image: url('+baseUrl+item.more.photos[0].url+')'"></div>
+                            <div v-if="item.more.photos.length>1"
+                                 @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)"
+                                 class="line4-item"
+                                 :style="'background-image: url('+baseUrl+item.more.photos[1].url+')'"></div>
+                            <div v-if="item.more.photos.length>2"
+                                 @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)"
+                                 class="line4-item"
+                                 :style="'background-image: url('+baseUrl+item.more.photos[2].url+')'">
                                 <div class="more" v-if="item.surplusimgnum">+{{item.surplusimgnum}}</div>
                             </div>
                         </div>
@@ -91,21 +106,25 @@
                             <div class="block-swiper-container">
                                 <div class="swiper-wrapper">
                                     <div class="swiper-slide" v-for="(item,index) in yearList">
-                                        <div @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)" class="block-img" :style="'background-image: url('+baseUrl+item.more.thumbnail+')'"></div>
+                                        <div @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)"
+                                             class="block-img"
+                                             :style="'background-image: url('+baseUrl+item.more.thumbnail+')'"></div>
                                     </div>
                                 </div>
                                 <!-- 如果需要分页器 -->
                                 <div class="swiper-pagination2"></div>
                             </div>
-<!--                            <div class="block-content-title">新增超高颜值萌妹82W粉丝奔跑晶骡子大尺</div>-->
+                            <!--                            <div class="block-content-title">新增超高颜值萌妹82W粉丝奔跑晶骡子大尺</div>-->
                         </div>
                     </div>
                     <div class="block-box">
                         <div class="title">热门文章</div>
                         <div class="block-content">
-                            <div class="article" v-for="item in hotList" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)">
+                            <div class="article" v-for="item in hotList"
+                                 @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)">
                                 <div class="left">
-                                    <div class="img" :style="'background-image: url('+baseUrl+item.more.thumbnail+')'"></div>
+                                    <div class="img"
+                                         :style="'background-image: url('+baseUrl+item.more.thumbnail+')'"></div>
                                 </div>
                                 <div class="right">
                                     <div class="right-title">
@@ -128,18 +147,23 @@
                             <div class="block-swiper-container">
                                 <div class="swiper-wrapper">
                                     <div class="swiper-slide" v-for="(item,index) in specialList">
-                                        <div class="block-img" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)" :style="'background-image: url('+baseUrl+item.more.thumbnail+')'"></div>
+                                        <div class="block-img"
+                                             @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)"
+                                             :style="'background-image: url('+baseUrl+item.more.thumbnail+')'"></div>
                                     </div>
                                 </div>
                                 <!-- 如果需要分页器 -->
                                 <div class="swiper-pagination2"></div>
                             </div>
-<!--                            <div class="block-content-title">新增超高颜值萌妹82W粉丝奔跑晶骡子大尺</div>-->
+                            <!--                            <div class="block-content-title">新增超高颜值萌妹82W粉丝奔跑晶骡子大尺</div>-->
                             <div class="block-items">
                                 <div class="block-item" v-for="(item,index) in specialList" v-if="index<4">
-                                    <div class="line1" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)" :style="'background-image: url('+baseUrl+item.more.thumbnail+')'"></div>
+                                    <div class="line1"
+                                         @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)"
+                                         :style="'background-image: url('+baseUrl+item.more.thumbnail+')'"></div>
                                     <div class="line2">{{item.create_time|timeFormatTwo}}</div>
-                                    <div class="line3" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)">
+                                    <div class="line3"
+                                         @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)">
                                         {{item.post_title}}
                                     </div>
                                 </div>
@@ -160,7 +184,7 @@
     import Header from '@/components/pc/Header'
     import Footer from '@/components/pc/Footer'
     import ToTop from '@/components/pc/ToTop'
-    import {getArticleList, getBannerList, getTagList} from "../../api/pc/api";
+    import {getArticleList, getBannerList, getTagList, getTeachList} from "../../api/pc/api";
     import {formatTime, formatTimeThree} from "../../utils/utils";
 
     export default {
@@ -171,17 +195,18 @@
             Footer,
             Swiper
         },
-        filters:{
-            timeFormat(val){
+        filters: {
+            timeFormat(val) {
                 return formatTime(val)
             },
-            timeFormatTwo(val){
+            timeFormatTwo(val) {
                 return formatTimeThree(val)
             },
         },
         data() {
             return {
-                device:localStorage.getItem('device'),
+                showBanner: false,//是否展示轮播图
+                device: localStorage.getItem('device'),
                 baseUrl: this.$baseUrl,
                 imgUrl: require('../../../public/images/avatar.gif'),
                 imagesUrl: [
@@ -200,11 +225,11 @@
                     value: '选项3',
                     label: '女神主播'
                 }],
-                artLoading:false,
-                swiperActiveIndex2:0,
-                pageSize:5,
-                pageNum:1,
-                totalNum:0,
+                artLoading: false,
+                swiperActiveIndex2: 0,
+                pageSize: 5,
+                pageNum: 1,
+                totalNum: 0,
                 tagValue: '',
                 bannerList: [],
                 tagList: [],
@@ -213,10 +238,16 @@
                 yearList: [],//包年精选文章
                 recommendList: [],//推荐文章
                 specialList: [],//精选文章
+                teachList: [],//解压教程
 
             }
         },
         methods: {
+            goToTeach(){
+              this.$router.push({
+                  path:'/teach-detail'
+              })
+            },
             handleSizeChange(val) {
                 console.log(`每页 ${val} 条`);
             },
@@ -228,57 +259,63 @@
                 let that = this
                 let bannerList = await getBannerList()
                 this.bannerList = bannerList.data
+
+                let teachList = await getTeachList({
+                    icon_name: 'home_top_course'
+                })
+                this.teachList = teachList.data
+
                 let tagList = await getTagList()
                 this.tagList = tagList.data
-                let hotList=await getArticleList({
-                    page:1,
-                    limit:4,
-                    hot:1
+                let hotList = await getArticleList({
+                    page: 1,
+                    limit: 4,
+                    hot: 1
                 })
-                this.hotList=hotList.data.list
+                this.hotList = hotList.data.list
 
-                let yearList=await getArticleList({
-                    page:1,
-                    limit:4,
-                    category:4
+                let yearList = await getArticleList({
+                    page: 1,
+                    limit: 4,
+                    category: 4
                 })
-                this.yearList=yearList.data.list
-                let recommendList=await getArticleList({
-                    page:1,
-                    limit:4,
-                    ttd:1
+                this.yearList = yearList.data.list
+                let recommendList = await getArticleList({
+                    page: 1,
+                    limit: 4,
+                    ttd: 1
                 })
-                this.recommendList=recommendList.data.list
-                let specialList=await getArticleList({
-                    page:1,
-                    limit:4,
-                    boutique:1
+                this.recommendList = recommendList.data.list
+                let specialList = await getArticleList({
+                    page: 1,
+                    limit: 4,
+                    boutique: 1
                 })
-                this.specialList=specialList.data.list
-                console.log(specialList,'specialList')
+                this.specialList = specialList.data.list
+                console.log(specialList, 'specialList')
             },
-            async fetchArticle(pageNum=1){
-                this.artLoading=true
+            async fetchArticle(pageNum = 1) {
+                this.artLoading = true
                 let that = this
-                let artList=await getArticleList({
-                    page:pageNum,
-                    limit:that.pageSize
+                let artList = await getArticleList({
+                    page: pageNum,
+                    limit: that.pageSize
                 })
-                setTimeout(()=>{
-                    this.artLoading=false
-                },500)
-                that.totalNum=artList.data.count
-                that.artList=artList.data.list
+                setTimeout(() => {
+                    this.artLoading = false
+                }, 500)
+                that.totalNum = artList.data.count
+                that.artList = artList.data.list
             },
-            tagChange(){
-                this.$router.push('/result?tagId='+this.tagValue)
+            tagChange() {
+                this.$router.push('/result?tagId=' + this.tagValue)
             },
-            changeDevice(e){
-                if(e){
-                    localStorage.setItem('setDevice','pc')
+            changeDevice(e) {
+                if (e) {
+                    localStorage.setItem('setDevice', 'pc')
                     this.$router.go(0)
-                }else {
-                    localStorage.setItem('setDevice','mobile')
+                } else {
+                    localStorage.setItem('setDevice', 'mobile')
                     this.$router.go(0)
                 }
 
@@ -295,17 +332,17 @@
                 loop: true,
                 autoplay: 3000,
                 paginationClickable: true,
-                observer:true,
-                observeParents:true,
+                observer: true,
+                observeParents: true,
             })
             let swiper2 = new Swiper('.block-swiper-container', {
                 pagination: '.swiper-pagination2',
                 loop: true,
                 autoplay: 3000,
                 paginationClickable: true,
-                observer:true,
-                onSlideChangeStart: function(swiper){
-                    that.swiperActiveIndex2=swiper.activeIndex
+                observer: true,
+                onSlideChangeStart: function (swiper) {
+                    that.swiperActiveIndex2 = swiper.activeIndex
                 }
             })
         }
@@ -371,6 +408,30 @@
                 }
             }
 
+            .teachText {
+                .box::-webkit-scrollbar {
+                    display: none;
+                }
+
+                .box {
+                    cursor: pointer;
+                    width: 100%;
+                    height: 100%;
+                    overflow: scroll;
+
+                    -ms-overflow-style: none;//ie下隐藏滚动条
+                }
+
+                padding: 10px;
+                box-sizing: border-box;
+                margin-top: 20px;
+                background-color: #ffffff;
+                border-radius: 10px;
+                height: 360px;
+                width: 100%;
+                box-shadow: 0px 0px 10px 0px rgba(179, 179, 179, 0.35);
+            }
+
             .class {
                 width: 100%;
                 margin-top: 20px;
@@ -413,7 +474,8 @@
                         border-radius: 10px;
                     }
                 }
-                .item:hover>.gray{
+
+                .item:hover > .gray {
                     background: none;
                     opacity: 1;
                 }
@@ -559,9 +621,10 @@
                             display: flex;
                             justify-content: flex-start;
 
-                            .line4-item:nth-child(2){
+                            .line4-item:nth-child(2) {
                                 margin: 0 20px;
                             }
+
                             .line4-item {
                                 cursor: pointer;
                                 width: 240px;
@@ -584,6 +647,7 @@
                             }
                         }
                     }
+
                     .device {
                         margin-bottom: 20px;
                         white-space: pre-wrap;
@@ -593,12 +657,14 @@
                         font-size: 15px;
                         font-weight: 400;
                         color: rgba(51, 51, 51, 1);
-                        span{
+
+                        span {
                             cursor: pointer;
                             text-decoration: none;
                             color: rgba(51, 51, 51, 1);
                         }
                     }
+
                     .pagination {
                         width: 100%;
                         padding: 20px 0;

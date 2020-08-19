@@ -23,6 +23,9 @@
                 </el-form>
                 <div class="center-box2">
                     <a class="register" @click="$router.push('/mobile/register')">还没有账号，去注册>></a>
+                    <div class="baidu">
+                        <img src="../../../public/images/baidu.png" @click="loginWithBaidu" alt="">
+                    </div>
                 </div>
             </div>
         </div>
@@ -30,7 +33,7 @@
 </template>
 
 <script>
-    import {userLogin} from "../../api/pc/api";
+    import {fetchBaiduCode, loginWithBaidu, userLogin} from "../../api/pc/api";
     import {Notify} from "vant";
 
     export default {
@@ -53,6 +56,12 @@
             }
         },
         methods:{
+            loginWithBaidu(){
+                fetchBaiduCode().then(res=>{
+                    console.log(res.url)
+                    window.location.replace(res.url)
+                })
+            },
             submitForm(formName) {
                 let that = this
                 this.$refs[formName].validate((valid) => {
@@ -73,9 +82,25 @@
             },
         },
         mounted() {
-            // this.$message('这是一条消息提示');
             let clientWidth = document.documentElement.clientWidth;
             document.documentElement.style.fontSize = clientWidth/10+'px';
+
+            let that = this
+            let code = this.$route.query.code
+            if(code){
+                console.log(code,'CODE')
+                loginWithBaidu({
+                    code:code
+                }).then(res=>{
+                    console.log(res)
+                    if(res.code == 200){
+                        localStorage.setItem('token',res.data.token)
+                        localStorage.setItem('user_info',JSON.stringify(res.data.userinfo))
+
+                        that.$router.push('/home')
+                    }
+                })
+            }
         }
     }
 </script>
@@ -130,6 +155,7 @@
                     width: 100%;
                     display: flex;
                     justify-content: flex-start;
+
                     .register{
                         cursor: pointer;
                         font-size:15px;
@@ -150,7 +176,19 @@
                 .center-box2{
                     width: 100%;
                     display: flex;
+                    flex-direction: column;
+                    align-items: center;
                     justify-content: center;
+                    .baidu{
+                        margin-top : 0.667rem;
+                        display: flex;
+                        align-items: center;
+                        img{
+                            cursor: pointer;
+                            width: 20px;
+                            height: 20px;
+                        }
+                    }
                     a{
                         font-size:0.32rem;
                         font-weight:400;

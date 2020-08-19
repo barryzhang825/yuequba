@@ -1,8 +1,15 @@
 import request from '@/utils/request'
 
-export function LoginWithBaidu(data) {
+export function fetchBaiduCode(data) {
     return request({
         url: '/home/Baidulogin/index',
+        method: 'get',
+        params:data
+    })
+}
+export function loginWithBaidu(data) {
+    return request({
+        url: '/home/Baidulogin/register',
         method: 'get',
         params:data
     })
@@ -81,6 +88,13 @@ export function getRecommentVip(data) {
 export function getBannerList(data) {
     return request({
         url: '/home/slide/index',
+        method: 'get',
+        params:data
+    })
+}
+export function getTeachList(data) {
+    return request({
+        url: '/home/article/getCourse',
         method: 'get',
         params:data
     })
