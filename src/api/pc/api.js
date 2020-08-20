@@ -7,6 +7,13 @@ export function fetchBaiduCode(data) {
         params:data
     })
 }
+export function fetchLogo(data) {
+    return request({
+        url: '/home/index/getSiteinfo',
+        method: 'get',
+        params:data
+    })
+}
 export function loginWithBaidu(data) {
     return request({
         url: '/home/Baidulogin/register',

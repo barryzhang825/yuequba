@@ -1,7 +1,7 @@
 <template>
     <div class="page">
         <div class="gray">
-            <img class="logo" src="../../../public/images/logo.png" alt="">
+            <img class="logo" :src="siteInfo.site_logo" alt="">
             <div class="login-box">
                 <el-form label-position="left" :rules="rules" ref="ruleForm" label-width="80px" :model="formData">
                     <el-form-item label="用户名：" prop="username">
@@ -37,11 +37,12 @@
 
 <script>
     import {userLogin} from '@/api/pc/api'
-    import {fetchBaiduCode, loginWithBaidu} from "../../api/pc/api";
+    import {fetchBaiduCode, fetchLogo, loginWithBaidu} from "../../api/pc/api";
     export default {
         name: "Login",
         data() {
             return {
+                siteInfo:{},
                 rememberPassword:false,
                 formData: {
                     username: '',
@@ -91,6 +92,19 @@
                     }
                 });
             },
+            fetchLogo(){
+                let that = this
+                let siteInfo=JSON.parse(localStorage.getItem('siteInfo'))
+                if(siteInfo){
+                    that.siteInfo=siteInfo
+                }else {
+                    fetchLogo().then(res=>{
+                        console.log(res)
+                        that.siteInfo=res.data
+                        localStorage.setItem('siteInfo',JSON.stringify(res.data))
+                    })
+                }
+            }
         },
         mounted() {
             // this.$message('这是一条消息提示');
@@ -114,6 +128,7 @@
                     }
                 })
             }
+            this.fetchLogo()
         }
     }
 </script>

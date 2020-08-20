@@ -1,7 +1,7 @@
 <template>
     <div class="page">
         <div class="gray">
-            <img class="logo" @click="$router.push('/mobile/home')" src="../../../public/images/logo.png" alt="">
+            <img class="logo" @click="$router.push('/mobile/home')" :src="siteInfo.site_logo" alt="">
             <div class="login-box">
                 <el-form label-position="left" :rules="rules" ref="ruleForm" label-width="80px" :model="formData">
                     <el-form-item label="用户名：" prop="username">
@@ -33,13 +33,14 @@
 </template>
 
 <script>
-    import {fetchBaiduCode, loginWithBaidu, userLogin} from "../../api/pc/api";
+    import {fetchBaiduCode, fetchLogo, loginWithBaidu, userLogin} from "../../api/pc/api";
     import {Notify} from "vant";
 
     export default {
         name: "MobileLogin",
         data() {
             return {
+                siteInfo:{},
                 rememberPassword:false,
                 formData: {
                     username: '',
@@ -80,6 +81,19 @@
                     }
                 });
             },
+            fetchLogo(){
+                let that = this
+                let siteInfo=JSON.parse(localStorage.getItem('siteInfo'))
+                if(siteInfo){
+                    that.siteInfo=siteInfo
+                }else {
+                    fetchLogo().then(res=>{
+                        console.log(res)
+                        that.siteInfo=res.data
+                        localStorage.setItem('siteInfo',JSON.stringify(res.data))
+                    })
+                }
+            }
         },
         mounted() {
             let clientWidth = document.documentElement.clientWidth;
@@ -101,6 +115,7 @@
                     }
                 })
             }
+            this.fetchLogo()
         }
     }
 </script>

@@ -1,14 +1,39 @@
 <template>
     <div class="footer-page">
         <div class="center">
-            Copyright © 2020 D.S
+            {{siteInfo.site_icp}}
         </div>
     </div>
 </template>
 
 <script>
+    import {fetchLogo} from "../../api/pc/api";
+
     export default {
-        name: "Footer"
+        name: "Footer",
+        data(){
+            return{
+                siteInfo:{}
+            }
+        },
+        methods:{
+            fetchLogo(){
+                let that = this
+                let siteInfo=JSON.parse(localStorage.getItem('siteInfo'))
+                if(siteInfo){
+                    that.siteInfo=siteInfo
+                }else {
+                    fetchLogo().then(res=>{
+                        console.log(res)
+                        that.siteInfo=res.data
+                        localStorage.setItem('siteInfo',JSON.stringify(res.data))
+                    })
+                }
+            }
+        },
+        mounted() {
+            this.fetchLogo()
+        }
     }
 </script>
 

@@ -3,7 +3,7 @@
         <div class="top">
             <img v-if="!ifShow" class="menu" src="../../../public/images/menu.png" @click="ifShow=true" alt="">
             <img v-if="ifShow" class="close" src="../../../public/images/close.png" @click="ifShow=false" alt="">
-            <img class="logo" src="../../../public/images/logo.png" alt="">
+            <img class="logo" :src="siteInfo.site_logo" alt="">
             <img class="search" src="../../../public/images/search.png" @click="ifSearch=true">
         </div>
 
@@ -11,7 +11,7 @@
             <div class="top">
                 <img v-if="!ifShow" class="menu" src="../../../public/images/menu.png" @click="ifShow=true" alt="">
                 <img v-if="ifShow" class="close" src="../../../public/images/close.png" @click="ifShow=false" alt="">
-                <img class="logo" src="../../../public/images/logo.png" alt="">
+                <img class="logo" :src="siteInfo.site_logo" alt="">
                 <img class="search" src="../../../public/images/search.png" alt="">
             </div>
             <div class="top-menu-box" @click.stop>
@@ -42,6 +42,8 @@
 </template>
 
 <script>
+    import {fetchLogo} from "../../api/pc/api";
+
     export default {
         name: "MobileHeader",
         props: {
@@ -49,6 +51,7 @@
         },
         data(){
             return{
+                siteInfo:{},
                 ifShow:false,
                 ifSearch:false,
                 searchWord:''
@@ -103,10 +106,24 @@
                     })
                     this.searchWord=''
                 }
+            },
+            fetchLogo(){
+                let that = this
+                let siteInfo=JSON.parse(localStorage.getItem('siteInfo'))
+                if(siteInfo){
+                    that.siteInfo=siteInfo
+                }else {
+                    fetchLogo().then(res=>{
+                        console.log(res)
+                        that.siteInfo=res.data
+                        localStorage.setItem('siteInfo',JSON.stringify(res.data))
+                    })
+                }
             }
 
         },
         mounted() {
+            this.fetchLogo()
             let clientWidth = document.documentElement.clientWidth;
             document.documentElement.style.fontSize = clientWidth/10+'px';
         }

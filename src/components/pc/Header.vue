@@ -2,7 +2,7 @@
     <div class="page">
         <div class="center">
             <div class="left">
-                <img src="../../../public/images/logo.png" alt="">
+                <img :src="siteInfo.site_logo" alt="">
             </div>
             <div class="middle">
                 <div class="item" :class="menu===1?'selected':''" @click="goTo(1)">首页</div>
@@ -51,6 +51,7 @@
 
 <script>
     import {formatTimeThree} from "../../utils/utils";
+    import {fetchLogo} from "../../api/pc/api";
 
     export default {
         name: "Header",
@@ -62,6 +63,7 @@
         },
         data(){
             return{
+                siteInfo:{},
                 vipEndTime:0,
                 searchShow:false,
                 searchWord:"",
@@ -119,6 +121,18 @@
             loginOut(){
                 localStorage.clear()
                 this.$router.push('/login')
+            },
+            fetchLogo(){
+                let that = this
+                let siteInfo=JSON.parse(localStorage.getItem('siteInfo'))
+                if(siteInfo){
+                    that.siteInfo=siteInfo
+                }else {
+                    fetchLogo().then(res=>{
+                        that.siteInfo=res.data
+                        localStorage.setItem('siteInfo',JSON.stringify(res.data))
+                    })
+                }
             }
         },
         mounted() {
@@ -129,6 +143,7 @@
                     this.vipEndTime=formatTimeThree(endTime)
                 }
             }
+            this.fetchLogo()
             // console.log(localStorage.getItem('user_login'))
         }
     }
@@ -153,7 +168,6 @@
                 height: 100%;
                 display: flex;
                 align-items: center;
-
                 img {
                     width: 160px;
                 }

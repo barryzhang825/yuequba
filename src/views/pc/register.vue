@@ -1,7 +1,7 @@
 <template>
     <div class="page">
         <div class="gray">
-            <img class="logo" @click="$router.push('/home')"  src="../../../public/images/logo.png" alt="">
+            <img class="logo" @click="$router.push('/home')" :src="siteInfo.site_logo" alt="">
             <div class="login-box">
                 <el-form label-position="left" :rules="rules" ref="ruleForm" label-width="100px" :model="formData">
                     <el-form-item label="用户名：" prop="username">
@@ -40,7 +40,7 @@
 </template>
 
 <script>
-    import {sendEmail, userRegister} from "../../api/pc/api";
+    import {fetchLogo, sendEmail, userRegister} from "../../api/pc/api";
     import {checkEmail} from "../../utils/utils";
 
     export default {
@@ -56,6 +56,7 @@
                 }
             };
             return {
+                siteInfo:{},
                 disabled:false,
                 rememberPassword:false,
                 sendTips:'发送验证码',
@@ -155,6 +156,19 @@
                     }
                 });
             },
+            fetchLogo(){
+                let that = this
+                let siteInfo=JSON.parse(localStorage.getItem('siteInfo'))
+                if(siteInfo){
+                    that.siteInfo=siteInfo
+                }else {
+                    fetchLogo().then(res=>{
+                        console.log(res)
+                        that.siteInfo=res.data
+                        localStorage.setItem('siteInfo',JSON.stringify(res.data))
+                    })
+                }
+            }
         },
         mounted() {
             // this.$message('这是一条消息提示');
@@ -163,6 +177,7 @@
                 this.formData.popuid=popuid
                 this.disabled=true
             }
+            this.fetchLogo()
         }
     }
 </script>
@@ -232,6 +247,7 @@
                 }
             }
             .center-box2{
+                cursor: pointer;
                 width: 100%;
                 display: flex;
                 flex-direction: row;

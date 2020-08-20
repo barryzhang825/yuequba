@@ -1,7 +1,7 @@
 <template>
     <div class="page">
         <div class="gray">
-            <img class="logo" @click="$router.push('/mobile/home')"  src="../../../public/images/logo.png" alt="">
+            <img class="logo" @click="$router.push('/mobile/home')"  :src="siteInfo.site_logo" alt="">
             <div class="login-box">
                 <el-form label-position="left" :rules="rules" ref="ruleForm" label-width="2.5rem" :model="formData">
                     <el-form-item label="用户名：" prop="username">
@@ -41,7 +41,7 @@
 
 <script>
     import { Notify } from 'vant';
-    import {sendEmail, userRegister} from "../../api/pc/api";
+    import {fetchLogo, sendEmail, userRegister} from "../../api/pc/api";
     import {checkEmail} from "../../utils/utils";
     export default {
         name: "MobileRegister",
@@ -56,6 +56,7 @@
                 }
             };
             return {
+                siteInfo:{},
                 disabled:false,
                 rememberPassword:false,
                 sendTips:'发送验证码',
@@ -148,10 +149,23 @@
                     }
                 })
             },
+            fetchLogo(){
+                let that = this
+                let siteInfo=JSON.parse(localStorage.getItem('siteInfo'))
+                if(siteInfo){
+                    that.siteInfo=siteInfo
+                }else {
+                    fetchLogo().then(res=>{
+                        console.log(res)
+                        that.siteInfo=res.data
+                        localStorage.setItem('siteInfo',JSON.stringify(res.data))
+                    })
+                }
+            }
         },
         mounted() {
             // this.$message('这是一条消息提示');
-
+            this.fetchLogo()
             let clientWidth = document.documentElement.clientWidth;
             document.documentElement.style.fontSize = clientWidth/10+'px';
             let popuid=this.$route.query.popuid
