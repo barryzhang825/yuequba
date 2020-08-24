@@ -14,6 +14,8 @@
                         <span>{{item.money}}</span>RMB/{{item.mony==1?'月':item.mony==2?'季度':item.mony==3?'半年':item.mony==4?'年':''}}
                         <br>
                         (约{{item.taibi}}台币)
+                        <br>
+                        <a style="text-decoration: line-through;font-size: 14px" v-if="item.pre_money>0">原价{{item.pre_money}}RMB</a>
                     </div>
                     <div class="line3">海量资源无限下载</div>
                     <img class="check" v-if="selectedIndex==index" src="../../../public/images/check.png" alt="">
