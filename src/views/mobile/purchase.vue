@@ -10,9 +10,9 @@
                         <br>
                         (约{{item.taibi}}台币)
                         <br>
-                        <a style="text-decoration: line-through;font-size: 0.187rem" v-if="item.pre_money>0">原价{{item.pre_money}}RMB</a>
+                        <a style="text-decoration: line-through;font-size: 0.3rem" v-if="item.pre_money>0">原价{{item.pre_money}}RMB</a>
                     </div>
-                    <div class="line3">全站资源无限下载</div>
+                    <div class="line3">海量资源无限下载</div>
                     <img class="check" v-if="selectedIndex==index" src="../../../public/images/check.png" alt="">
 <!--                    <div class="tag" v-if="item.mony==4">包年精选福利</div>-->
                     <div class="all-year" v-if="item.mony==4">
@@ -21,10 +21,10 @@
                     </div>
                     <div class="cheap-box" v-if="item.type==1">
                         <img src="../../../public/images/cheap.png" alt="">
-                        <div class="text">限时立减{{item.cheap}}元，
+                        <div class="text">
                             <van-count-down :time="item.pre_end_time_num" @finish="timeFinish">
                                 <template v-slot="timeData">
-                                    <span class="block">{{ timeData.days }}天</span>
+                                    <span class="block">限时立减{{item.cheap}}元，{{ timeData.days }}天</span>
                                     <span class="block">{{ timeData.hours }}时</span>
                                     <span class="block">{{ timeData.minutes }}分</span>
                                     <span class="block">{{ timeData.seconds }}秒</span>
@@ -136,12 +136,12 @@
                     display: flex;
                     flex-direction: column;
                     justify-content: space-around;
+                    align-items: center;
                     padding: 0.4rem;
                     box-sizing: border-box;
                     position: relative;
                     .line1{
                         font-size:0.32rem;
-                        font-weight:400;
                         color:rgba(51,51,51,1);
                         text-align: center;
                         font-weight: bold;
@@ -189,8 +189,8 @@
                         align-items: center;
                     }
                     .all-year {
-                        width: 1.5rem;
-                        height: 1.5rem;
+                        width: 1.3rem;
+                        height: 1.3rem;
                         position: absolute;
                         left: -0.293rem;
                         bottom: -0.307rem;
@@ -202,23 +202,23 @@
                         text-align: center;
 
                         img {
-                            width: 1.5rem;
-                            height: 1.5rem;
+                            width: 1.3rem;
+                            height: 1.3rem;
                             position: absolute;
                         }
 
                         .text {
                             z-index: 1;
-                            font-size: 0.213rem;
+                            font-size: 0.25rem;
                             color: #ffffff;
                         }
                     }
 
                     .cheap-box {
-                        width:6.5rem;
-                        height: 1rem;
+                        width:6rem;
+                        height: .8rem;
                         position: absolute;
-                        top: -0.6rem;
+                        top: -0.4rem;
                         display: flex;
                         justify-content: center;
                         align-items: center;
@@ -227,22 +227,22 @@
                         text-align: center;
 
                         img {
-                            width: 6.5rem;
-                            height: 1rem;
+                            width: 6rem;
+                            height: .8rem;
                             position: absolute;
                         }
 
                         .text {
                             z-index: 1;
-                            font-size: 0.213rem;
+                            font-size: 0.3rem;
                             color: #ffffff;
                             display: flex;
                             align-items: center;
                             .van-count-down{
-                                line-height: unset;
+                                line-height: unset !important;
                             }
                             .block{
-                                font-size: 0.213rem;
+                                font-size: 0.25rem;
                                 color: #ffffff;
                             }
                         }
