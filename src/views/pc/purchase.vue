@@ -17,11 +17,11 @@
                         <br>
                         <a style="text-decoration: line-through;font-size: 14px" v-if="item.pre_money>0">原价{{item.pre_money}}RMB</a>
                     </div>
-                    <div class="line3">海量资源无限下载</div>
+                    <div class="line3">{{item.idt_name}}</div>
                     <img class="check" v-if="selectedIndex==index" src="../../../public/images/check.png" alt="">
                     <!--<div class="tag">包年精选福利</div>-->
                     <div class="all-year" v-if="item.mony==4">
-                        <img src="../../../public/images/year-all.png" alt="">
+                        <img src="../../../public/images/bbb.png" alt="">
                         <div class="text">包年精选福利</div>
                     </div>
                     <div class="cheap-box" v-if="item.type==1">
@@ -198,11 +198,12 @@
 
                     .line3 {
                         border-top: 1px solid rgba(232, 232, 232, 1);
-                        font-size: 18px;
+                        font-size: 16px;
                         font-weight: 400;
                         color: rgba(51, 51, 51, 1);
                         text-align: center;
-                        padding-top: 20px;
+                        padding-top: 10px;
+                        padding-bottom: 30px;
                         box-sizing: border-box;
                     }
 
@@ -230,11 +231,11 @@
                     }
 
                     .all-year {
-                        width: 84px;
-                        height: 86px;
+                        width: 162px;
+                        height: 43px;
                         position: absolute;
-                        left: -22px;
-                        bottom: -23px;
+                        left: 0;
+                        bottom: 0;
                         display: flex;
                         justify-content: center;
                         align-items: center;
@@ -243,14 +244,14 @@
                         text-align: center;
 
                         img {
-                            width: 84px;
-                            height: 86px;
+                            width: 162px;
+                            height: 43px;
                             position: absolute;
                         }
 
                         .text {
                             z-index: 1;
-                            font-size: 16px;
+                            font-size: 15px;
                             color: #ffffff;
                         }
                     }

@@ -20,12 +20,15 @@
                         <el-input v-model="formData.code"></el-input>
                         <div class="button" @click="checkSend">{{sendTips}}</div>
                     </el-form-item>
-                    <el-form-item label="推广码：">
-                        <el-input v-model="formData.popuid" :disabled="disabled"></el-input>
-                    </el-form-item>
+<!--                    <el-form-item label="推广码：">-->
+<!--                        <el-input v-model="formData.popuid" :disabled="disabled"></el-input>-->
+<!--                    </el-form-item>-->
                     <el-form-item>
                         <div class="center-box">
                             <el-button type="primary" @click="submitForm('ruleForm')">注册</el-button>
+                            <div class="baidu">
+                                <img src="../../../public/images/baidu.png" @click="loginWithBaidu" alt="">
+                            </div>
                         </div>
                     </el-form-item>
                 </el-form>
@@ -40,7 +43,7 @@
 </template>
 
 <script>
-    import {fetchLogo, sendEmail, userRegister} from "../../api/pc/api";
+    import {fetchBaiduCode, fetchLogo, sendEmail, userRegister} from "../../api/pc/api";
     import {checkEmail} from "../../utils/utils";
 
     export default {
@@ -93,6 +96,12 @@
             }
         },
         methods:{
+            loginWithBaidu(){
+                fetchBaiduCode().then(res=>{
+                    console.log(res.url)
+                    window.open(res.url,'_blank')
+                })
+            },
             checkSend(){
                 if(this.canSend){
                     if(checkEmail(this.formData.email)){
@@ -188,7 +197,7 @@
         height: 100%;
         min-height: 700px;
         position: absolute;
-        background-image: url("../../../public/images/login-back.png");
+        background-image: url("../../../public/images/login-back.jpg");
         background-size: cover;
         background-position: center center;
         z-index: -1;
@@ -222,6 +231,16 @@
                     width: 100%;
                     display: flex;
                     justify-content: center;
+                    .baidu{
+                        margin-left: 50px;
+                        display: flex;
+                        align-items: center;
+                        img{
+                            cursor: pointer;
+                            width: 25px;
+                            height: 25px;
+                        }
+                    }
                     .register{
                         cursor: pointer;
                         font-size:15px;

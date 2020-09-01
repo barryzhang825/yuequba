@@ -12,11 +12,11 @@
                         <br>
                         <a style="text-decoration: line-through;font-size: 0.3rem" v-if="item.pre_money>0">原价{{item.pre_money}}RMB</a>
                     </div>
-                    <div class="line3">海量资源无限下载</div>
+                    <div class="line3">{{item.idt_name}}</div>
                     <img class="check" v-if="selectedIndex==index" src="../../../public/images/check.png" alt="">
 <!--                    <div class="tag" v-if="item.mony==4">包年精选福利</div>-->
                     <div class="all-year" v-if="item.mony==4">
-                        <img src="../../../public/images/year-all.png" alt="">
+                        <img src="../../../public/images/bbb.png" alt="">
                         <div class="text">包年精选福利</div>
                     </div>
                     <div class="cheap-box" v-if="item.type==1">
@@ -130,7 +130,7 @@
                     margin-bottom: 0.5rem;
                     cursor: pointer;
                     width:7.467rem;
-                    height:3.6rem;
+                    height:3.8rem;
                     border:1px solid rgba(230,230,230,1);
                     border-radius:0.25rem;
                     display: flex;
@@ -158,12 +158,14 @@
                         }
                     }
                     .line3{
+                        width: 100%;
                         border-top: 1px solid rgba(232,232,232,1);
                         font-size:0.24rem;
                         font-weight:400;
                         color:rgba(51,51,51,1);
                         text-align: center;
                         padding-top: 0.267rem;
+                        padding-bottom: 0.267rem;
                         box-sizing: border-box;
                     }
                     .check{
@@ -189,11 +191,11 @@
                         align-items: center;
                     }
                     .all-year {
-                        width: 1.3rem;
-                        height: 1.3rem;
+                        width: 2.4rem;
+                        height: 0.64rem;
                         position: absolute;
-                        left: -0.293rem;
-                        bottom: -0.307rem;
+                        left: 0;
+                        bottom: 0;
                         display: flex;
                         justify-content: center;
                         align-items: center;
@@ -202,8 +204,8 @@
                         text-align: center;
 
                         img {
-                            width: 1.3rem;
-                            height: 1.3rem;
+                            width: 2.4rem;
+                            height: 0.64rem;
                             position: absolute;
                         }
 
@@ -215,7 +217,7 @@
                     }
 
                     .cheap-box {
-                        width:6rem;
+                        width:7rem;
                         height: .8rem;
                         position: absolute;
                         top: -0.4rem;
@@ -227,11 +229,10 @@
                         text-align: center;
 
                         img {
-                            width: 6rem;
+                            width: 7rem;
                             height: .8rem;
                             position: absolute;
                         }
-
                         .text {
                             z-index: 1;
                             font-size: 0.3rem;
@@ -249,11 +250,7 @@
                     }
                 }
                 .selected{
-                    width:7.467rem;
-                    height:3.6rem;
                     border:2px solid rgba(255,49,88,1);
-                    border-radius:0.25rem;
-
                 }
                 .button-box{
                     width: 100%;

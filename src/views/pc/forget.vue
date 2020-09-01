@@ -97,7 +97,7 @@
         height: 100%;
         min-height: 700px;
         position: absolute;
-        /*background-image: url("../../../public/images/login-back.png");*/
+        /*background-image: url("../../../public/images/login-back.jpg");*/
         background-size: cover;
         background-position: center center;
         z-index: -1;

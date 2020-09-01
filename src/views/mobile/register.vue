@@ -20,12 +20,15 @@
                         <el-input v-model="formData.code"></el-input>
                         <div class="button" @click="checkSend">{{sendTips}}</div>
                     </el-form-item>
-                    <el-form-item label="推广码：">
-                        <el-input v-model="formData.popuid" :disabled="disabled"></el-input>
-                    </el-form-item>
+<!--                    <el-form-item label="推广码：">-->
+<!--                        <el-input v-model="formData.popuid" :disabled="disabled"></el-input>-->
+<!--                    </el-form-item>-->
                     <el-form-item>
                         <div class="center-box">
                             <el-button type="primary" @click="submitForm('ruleForm')">注册</el-button>
+                            <div class="baidu">
+                                <img src="../../../public/images/baidu.png" @click="loginWithBaidu" alt="">
+                            </div>
                         </div>
                     </el-form-item>
                 </el-form>
@@ -41,7 +44,7 @@
 
 <script>
     import { Notify } from 'vant';
-    import {fetchLogo, sendEmail, userRegister} from "../../api/pc/api";
+    import {fetchBaiduCode, fetchLogo, sendEmail, userRegister} from "../../api/pc/api";
     import {checkEmail} from "../../utils/utils";
     export default {
         name: "MobileRegister",
@@ -93,6 +96,11 @@
             }
         },
         methods:{
+            loginWithBaidu(){
+                fetchBaiduCode().then(res=>{
+                    window.location.replace(res.url)
+                })
+            },
             submitForm(formName) {
                 let that = this
                 this.$refs[formName].validate((valid) => {
@@ -217,6 +225,16 @@
                     display: flex;
                     justify-content: flex-start;
                     margin-top: 0.267rem;
+                    .baidu{
+                        margin-left: 0.667rem;
+                        display: flex;
+                        align-items: center;
+                        img{
+                            cursor: pointer;
+                            width: 25px;
+                            height: 25px;
+                        }
+                    }
                     .register{
                         cursor: pointer;
                         font-size:15px;
