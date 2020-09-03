@@ -283,7 +283,8 @@
                 let yearList = await getArticleList({
                     page: 1,
                     limit: 4,
-                    category: 4
+                    category: 4,
+                    ttd: 1
                 })
                 this.yearList = yearList.data.list
                 let recommendList = await getArticleList({
