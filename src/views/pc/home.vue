@@ -2,7 +2,15 @@
     <div class="page">
         <Header :menu="1"></Header>
         <div class="center-box">
-            <div class="swiper" v-if="showBanner">
+            <div class="teachText" @click="goToTeach">
+                <img src="../../../public/images/notify.png" alt="">
+                <div class="notice-main">
+                    <span class="notice">
+                         {{teachList.title}}{{teachList.post_excerpt}}
+                    </span>
+                </div>
+            </div>
+            <div class="swiper" v-show="parseInt(siteInfo.site_banner_status)">
                 <div class="swiper-container">
                     <div class="swiper-wrapper">
                         <div class="swiper-slide" v-for="item in bannerList">
@@ -16,18 +24,9 @@
                     <div class="swiper-button-next"></div>
                 </div>
             </div>
-            <div class="teachText" @click="goToTeach">
-                <img src="../../../public/images/notify.png" alt="">
-                <div class="notice-main">
-                    <span class="notice">
-                         {{teachList.title}}{{teachList.post_excerpt}}
-                    </span>
-                </div>
-
-            </div>
             <div class="class">
                 <div class="item" v-if="index < 4" :style="'background-image: url('+baseUrl+item.more.thumbnail+')'"
-                     v-for="(item,index) in recommendList"
+                     v-for="(item,index) in classList"
                      @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)">
                     <div class="text">
                         <a>{{item.post_excerpt}}</a>
@@ -190,7 +189,7 @@
     import Header from '@/components/pc/Header'
     import Footer from '@/components/pc/Footer'
     import ToTop from '@/components/pc/ToTop'
-    import {getArticleList, getBannerList, getTagList, getTeachList} from "../../api/pc/api";
+    import {fetchLogo, getArticleList, getBannerList, getClassList, getTagList, getTeachList} from "../../api/pc/api";
     import {formatTime, formatTimeThree} from "../../utils/utils";
 
     export default {
@@ -211,6 +210,9 @@
         },
         data() {
             return {
+                siteInfo: {
+                    site_banner_status:'0'
+                },
                 showBanner: false,//是否展示轮播图
                 device: localStorage.getItem('device'),
                 baseUrl: this.$baseUrl,
@@ -245,14 +247,16 @@
                 recommendList: [],//推荐文章
                 specialList: [],//精选文章
                 teachList: [],//解压教程
+                classList: [],//四篇文章
 
             }
         },
         methods: {
             goToTeach(){
-              this.$router.push({
-                  path:'/teach-detail'
-              })
+              // this.$router.push({
+              //     path:'/teach-detail'
+              // })
+                window.open(this.siteInfo.site_play_software,'_blank')
             },
             handleSizeChange(val) {
                 console.log(`每页 ${val} 条`);
@@ -263,8 +267,16 @@
             },
             async fetchData() {
                 let that = this
+
+                fetchLogo().then(res=>{
+                    that.siteInfo=res.data
+                    localStorage.setItem('siteInfo',JSON.stringify(res.data))
+                })
+
+
                 let bannerList = await getBannerList()
                 this.bannerList = bannerList.data
+                console.log(this.bannerList,'2222')
 
                 let teachList = await getTeachList({
                     icon_name: 'home_top_course'
@@ -293,6 +305,11 @@
                     ttd: 1
                 })
                 this.recommendList = recommendList.data.list
+
+                let classList = await getClassList({
+                })
+                this.classList = classList.data
+
                 let specialList = await getArticleList({
                     page: 1,
                     limit: 4,
@@ -511,9 +528,10 @@
                 width: 100%;
                 margin-top: 20px;
                 display: flex;
-                justify-content: space-between;
+                justify-content: flex-start;
 
                 .item {
+                    margin: 0 10px;
                     cursor: pointer;
                     width: 280px;
                     height: 230px;

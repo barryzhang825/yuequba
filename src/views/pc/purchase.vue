@@ -6,6 +6,25 @@
                 <div class="img" :style="'background-image: url('+baseUrl+user_info.avatar+')'"></div>
                 <span>{{user_info.user_nickname}}，请选择VIP会员服务</span>
             </div>
+            <div class="limit-time" v-if="leftTime>0">
+                <img src="../../../public/images/limit.png" alt="">
+                <div class="time-num-box">
+                    <van-count-down :time="leftTime" >
+                        <template v-slot="timeData">
+                            <div class="time-num">
+                                <div class="num">{{ timeData.days }}</div>
+                                <div class="text">天</div>
+                                <div class="num">{{ timeData.hours }}</div>
+                                <div class="text">时</div>
+                                <div class="num">{{ timeData.minutes }}</div>
+                                <div class="text">分</div>
+                                <div class="num">{{ timeData.seconds }}</div>
+                                <div class="text">秒</div>
+                            </div>
+                        </template>
+                    </van-count-down>
+                </div>
+            </div>
             <div class="select-box">
                 <div class="item" :class="selectedIndex==index?'selected':''" @click="selectedIndex=index"
                      v-for="(item,index) in vipList">
@@ -14,29 +33,16 @@
                         <span>{{item.money}}</span>RMB/{{item.mony==1?'月':item.mony==2?'季度':item.mony==3?'半年':item.mony==4?'年':''}}
                         <br>
                         (约{{item.taibi}}台币)
-                        <br>
-                        <a style="text-decoration: line-through;font-size: 14px" v-if="item.pre_money>0">原价{{item.pre_money}}RMB</a>
+<!--                        <br>-->
+<!--                        <a style="text-decoration: line-through;font-size: 14px" v-if="item.pre_money>0">原价{{item.pre_money}}RMB</a>-->
                     </div>
                     <div class="line3">{{item.idt_name}}</div>
                     <img class="check" v-if="selectedIndex==index" src="../../../public/images/check.png" alt="">
-                    <!--<div class="tag">包年精选福利</div>-->
-                    <div class="all-year" v-if="item.mony==4">
-                        <img src="../../../public/images/bbb.png" alt="">
-                        <div class="text">包年精选福利</div>
-                    </div>
-                    <div class="cheap-box" v-if="item.type==1">
-                        <img src="../../../public/images/cheap.png" alt="">
-                        <div class="text">限时立减{{item.cheap}}元，
-                            <van-count-down :time="item.pre_end_time_num" @finish="timeFinish">
-                                <template v-slot="timeData">
-                                    <span class="block">{{ timeData.days }}天</span>
-                                    <span class="block">{{ timeData.hours }}时</span>
-                                    <span class="block">{{ timeData.minutes }}分</span>
-                                    <span class="block">{{ timeData.seconds }}秒</span>
-                                </template>
-                            </van-count-down>
-                        </div>
-                    </div>
+                    <div class="tag" v-if="item.mony==4">包年精选福利</div>
+<!--                    <div class="all-year" v-if="item.mony==4">-->
+<!--                        <img src="../../../public/images/bbb.png" alt="">-->
+<!--                        <div class="text">包年精选福利</div>-->
+<!--                    </div>-->
                 </div>
 
             </div>
@@ -51,7 +57,7 @@
 <script>
     import Header from '@/components/pc/Header'
     import Footer from '@/components/pc/Footer'
-    import {buyVip, getVipList} from "../../api/pc/api";
+    import {buyVip, fetchLogo, getVipList} from "../../api/pc/api";
     import {saveOneDecimal, saveTwoDecimal} from "../../utils/utils";
 
     export default {
@@ -66,14 +72,14 @@
                 imgUrl: require('../../../public/images/avatar.gif'),
                 selectedIndex: 0,
                 vipList: [],
-                user_info: ''
+                user_info: '',
+                siteInfo:null,
+                leftTime:0
             }
         },
         methods: {
-            timeFinish(){
-                this.fetchData()
-            },
             fetchData() {
+                let that = this
                 getVipList().then(res => {
                     let vipList = res.data.reverse()
                     for (const key in vipList) {
@@ -85,6 +91,12 @@
                         }
                     }
                     this.vipList = vipList
+                })
+                fetchLogo().then(res=>{
+                    that.siteInfo=res.data
+                    localStorage.setItem('siteInfo',JSON.stringify(res.data))
+                    let leftTime=Date.parse(res.data.site_vipendtime)-Date.now()
+                    that.leftTime=leftTime
                 })
             },
             buyVip() {
@@ -131,6 +143,39 @@
             background-color: #ffffff;
             box-shadow: 0px 0px 10px 0px rgba(204, 204, 204, 0.5);
             border-radius: 10px;
+            .limit-time{
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                .time-num-box{
+                    margin-top: 35px;
+                    margin-bottom: 10px;
+                    .time-num{
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                        .text{
+                            font-size: 24px;
+                            font-weight: 400;
+                            color:#000000;
+                        }
+                        .num{
+                            margin: 0 3px;
+                            min-width: 36px;
+                            min-height: 36px;
+                            background: #FF3158;
+                            border-radius: 6px;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            font-size: 24px;
+                            font-weight: 400;
+                            color:#ffffff;
+                        }
+                    }
+                }
+            }
 
             .user-info {
                 width: 100%;
@@ -216,11 +261,12 @@
                     .tag {
                         padding: 0 15px;
                         height: 42px;
-                        background: rgba(255, 49, 88, 1);
+                        /*background: rgba(255, 49, 88, 1);*/
                         border-radius: 20px 0px 20px 0px;
                         position: absolute;
                         top: -10px;
                         left: 0;
+                        background-image: linear-gradient(to right, #FF9600 , #FF3158);
 
                         font-size: 18px;
                         font-weight: 400;

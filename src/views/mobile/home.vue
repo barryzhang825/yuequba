@@ -23,7 +23,16 @@
             </div>
         </van-overlay>
         <div class="center-box">
-            <div class="swiper" v-if="showBanner">
+            <div class="teachText" @click="goToTeach">
+                <img src="../../../public/images/notify.png" alt="">
+                <div class="notice-main">
+                    <span class="notice">
+                         {{teachList.title}}{{teachList.post_excerpt}}
+                    </span>
+                </div>
+
+            </div>
+            <div class="swiper" v-show="parseInt(siteInfo.site_banner_status)">
                 <div class="swiper-container">
                     <div class="swiper-wrapper">
                         <div class="swiper-slide" v-for="item in bannerList">
@@ -33,15 +42,6 @@
                     <!-- 如果需要分页器 -->
                     <div class="swiper-pagination"></div>
                 </div>
-            </div>
-            <div class="teachText" @click="goToTeach">
-                <img src="../../../public/images/notify.png" alt="">
-                <div class="notice-main">
-                    <span class="notice">
-                         {{teachList.title}}{{teachList.post_excerpt}}
-                    </span>
-                </div>
-
             </div>
             <div class="hotMenu">
                 <div class="hotMenu-item">
@@ -70,7 +70,7 @@
                     <div class="pics-item" v-if="index<4"
                          @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)"
                          :style="'background-image: url('+baseUrl+item.more.thumbnail+')'"
-                         v-for="(item,index) in specialList">
+                         v-for="(item,index) in classList">
                         <div class="gray">
                             <div class="text">{{item.post_excerpt}}</div>
                         </div>
@@ -145,7 +145,7 @@
     import MobileHeader from '@/components/mobile/Header'
     import MobileFooter from '@/components/mobile/Footer'
     import MobileToTop from '@/components/mobile/ToTop'
-    import {getArticleList, getBannerList, getTagList, getTeachList} from "../../api/pc/api";
+    import {fetchLogo, getArticleList, getBannerList, getClassList, getTagList, getTeachList} from "../../api/pc/api";
     import {formatTime, formatTimeThree} from "../../utils/utils";
 
     export default {
@@ -166,6 +166,9 @@
         },
         data() {
             return {
+                siteInfo: {
+                    site_banner_status:'0'
+                },
                 showBanner:false,
                 baseUrl: this.$baseUrl,
                 imgUrl: require('../../../public/images/avatar.gif'),
@@ -200,6 +203,7 @@
                 recommendList: [],//推荐文章
                 specialList: [],//精选文章
                 teachList: [],//解压教程
+                classList: [],//四篇文章
             }
         },
         methods: {
@@ -233,6 +237,12 @@
             },
             async fetchData() {
                 let that = this
+
+                fetchLogo().then(res=>{
+                    that.siteInfo=res.data
+                    localStorage.setItem('siteInfo',JSON.stringify(res.data))
+                })
+
                 let bannerList = await getBannerList()
                 this.bannerList = bannerList.data
 
@@ -262,6 +272,11 @@
                     ttd: 1
                 })
                 this.recommendList = recommendList.data.list
+
+                let classList = await getClassList({
+                })
+                this.classList = classList.data
+
                 let specialList = await getArticleList({
                     page: 1,
                     limit: 4,
@@ -423,7 +438,6 @@
                 display: none;
             }
             .teachText {
-                margin-bottom: 0.5rem;
                 font-size: 0.267rem;
                 display: flex;
                 align-items: center;

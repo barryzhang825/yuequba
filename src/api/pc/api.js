@@ -113,6 +113,14 @@ export function getTagList(data) {
         params:data
     })
 }
+
+export function getClassList(data) {
+    return request({
+        url: '/home/article/topCategoryArticle',
+        method: 'get',
+        params:data
+    })
+}
 export function getArticleList(data) {
     return request({
         url: '/home/article/index',

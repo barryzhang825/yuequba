@@ -43,7 +43,7 @@
         background-color: rgba(31,31,31,1);
         display: flex;
         align-items: center;
-        height: 119px;
+        height: 70px;
         .center{
             margin: 0 auto;
             width: 1200px;
