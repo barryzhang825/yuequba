@@ -6,7 +6,10 @@
                 <img src="../../../public/images/notify.png" alt="">
                 <div class="notice-main">
                     <span class="notice">
-                         {{teachList.title}}{{teachList.post_excerpt}}
+<!--                         {{teachList.title}}-->
+<!--                        {{teachList.post_excerpt}}-->
+                        包年精选会员独享
+                        <a>（播放软件下载）</a>
                     </span>
                 </div>
             </div>
@@ -480,14 +483,17 @@
 
                 .notice {
                     display: block;
-                    -moz-animation: move 50s infinite linear;
-                    -webkit-animation: move 50s infinite linear;
-                    animation: move 50s infinite linear;
+                    /*-moz-animation: move 50s infinite linear;*/
+                    /*-webkit-animation: move 50s infinite linear;*/
+                    /*animation: move 50s infinite linear;*/
                     white-space: nowrap;
                 }
 
                 .notice > span {
                     color: #FFD460;
+                }
+                .notice > a{
+                    color: rgba(0,41,255,0.72);
                 }
 
                 @-moz-keyframes move {

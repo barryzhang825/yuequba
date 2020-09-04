@@ -45,6 +45,8 @@
         align-items: center;
         height: 70px;
         .center{
+            padding-top: 10px;
+            text-align: center;
             margin: 0 auto;
             width: 1200px;
             font-size:16px;

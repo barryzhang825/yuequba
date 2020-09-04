@@ -33,24 +33,24 @@
                         <img src="../../../public/images/more2.png" alt="">
                     </div>
                 </div>
-                <div class="item" @click="$router.push('/mobile/user/recommend-register')">
-                    <div class="left">
-                        <img class="img3"  src="../../../public/images/n3.png" alt="">
-                        <span>推广注册</span>
-                    </div>
-                    <div class="right">
-                        <img src="../../../public/images/more2.png" alt="">
-                    </div>
-                </div>
-                <div class="item" @click="$router.push('/mobile/user/recommend-vip')">
-                    <div class="left">
-                        <img class="img4"  src="../../../public/images/n4.png" alt="">
-                        <span>推广VIP</span>
-                    </div>
-                    <div class="right">
-                        <img src="../../../public/images/more2.png" alt="">
-                    </div>
-                </div>
+<!--                <div class="item" @click="$router.push('/mobile/user/recommend-register')">-->
+<!--                    <div class="left">-->
+<!--                        <img class="img3"  src="../../../public/images/n3.png" alt="">-->
+<!--                        <span>推广注册</span>-->
+<!--                    </div>-->
+<!--                    <div class="right">-->
+<!--                        <img src="../../../public/images/more2.png" alt="">-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="item" @click="$router.push('/mobile/user/recommend-vip')">-->
+<!--                    <div class="left">-->
+<!--                        <img class="img4"  src="../../../public/images/n4.png" alt="">-->
+<!--                        <span>推广VIP</span>-->
+<!--                    </div>-->
+<!--                    <div class="right">-->
+<!--                        <img src="../../../public/images/more2.png" alt="">-->
+<!--                    </div>-->
+<!--                </div>-->
                 <div class="item" @click="$router.push('/mobile/user/user-password')">
                     <div class="left">
                         <img class="img5"  src="../../../public/images/n5.png" alt="">

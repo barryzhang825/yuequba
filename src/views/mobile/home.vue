@@ -468,17 +468,18 @@
                 }
 
                 .teachText {
-                    width: 342px;
-                    height: 24px;
-                    line-height: 24px;
-                    margin: 0 auto 15px;
+                    width: 4.56rem;
+                    height: 0.32rem;
+                    line-height: 0.32rem;
+                    margin: 0 auto 0.2rem;
                     color: #fff;
-                    font-size: 12px;
+                    font-size: 0.16rem;
                     overflow: hidden;
                 }
 
                 .notice-main {
                     overflow: hidden;
+                    width: calc(100% - 0.267rem);
                 }
 
                 .notice {
