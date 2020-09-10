@@ -274,21 +274,22 @@
             </div>
         </div>
         <el-dialog
-                title="提示"
+                title="资源下载"
                 :visible.sync="dialogVisible"
                 width="30%"
                 :before-close="handleClose">
             <div class="downloadTip">
-                <div class="line1">点击确定跳转下载地址</div>
-                <div class="line2">
-                    <span>资源提取密码：{{resource_pass}}</span>
-                    <div class="copy" v-clipboard:copy="resource_pass" v-clipboard:success="onResourceCopy">复制</div>
+                <div class="line1"></div>
+                <div class="line2" v-for="(item,index) in resource_url">
+                    <span>资源{{index+1}} &nbsp;提取密码：{{item.pass}}</span>
+                    <div class="copy" v-clipboard:copy="item.pass" v-clipboard:success="onResourceCopy">复制</div>
+                    <div class="copy" @click="goResource(item.url)">打开链接</div>
                 </div>
             </div>
 
             <span slot="footer" class="dialog-footer">
     <el-button @click="dialogVisible = false">取 消</el-button>
-    <el-button type="primary" @click="goResource">确 定</el-button>
+    <el-button @click="dialogVisible = false" type="primary" >确 定</el-button>
   </span>
         </el-dialog>
         <Footer></Footer>
@@ -404,9 +405,9 @@
                 console.log(this.$router)
                 console.log(window.location.href)
             },
-            goResource() {
+            goResource(url) {
                 this.dialogVisible = false
-                window.open(this.resource_url)
+                window.open(url)
             },
             getResource() {
                 let that = this
