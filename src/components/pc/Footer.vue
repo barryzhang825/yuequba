@@ -24,7 +24,7 @@
                     that.siteInfo=siteInfo
                 }else {
                     fetchLogo().then(res=>{
-                        console.log(res)
+                        //console.log(res)
                         that.siteInfo=res.data
                         localStorage.setItem('siteInfo',JSON.stringify(res.data))
                     })

@@ -111,7 +111,7 @@
             toSearch(){
                 if(this.searchWord!=''){
                     this.searchShow=false
-                    console.log(this.searchWord)
+                    //console.log(this.searchWord)
                     this.$router.push({
                         path:'/result?keyword='+this.searchWord
                     })

@@ -69,6 +69,7 @@
             </div>
 
         </div>
+        <Contact></Contact>
         <Footer></Footer>
     </div>
 </template>
@@ -153,7 +154,7 @@
 
                     });
                 } else {
-                    console.log(that.vipList[that.selectedIndex])
+                    //console.log(that.vipList[that.selectedIndex])
                     buyVip({
                         token: localStorage.getItem('token'),
                         id: that.vipList[that.selectedIndex].id
@@ -166,7 +167,7 @@
                 this.selectedIndex=index
                 this.notifyUrl=this.hookBaseUrl+'?goodsid='+this.vipList[index].id+'&token='+this.token
                 this.payAmount=this.vipList[this.selectedIndex].taibi
-                console.log( this.notifyUrl)
+                //console.log( this.notifyUrl)
             },
 
             paypalClick(){
@@ -191,12 +192,12 @@
 
             paymentAuthorized(data) {
                 // 授权完成的回调，可以拿到订单id
-                console.log(data,'授权完成的回调');
+                //console.log(data,'授权完成的回调');
             },
 
             paymentCompleted(data) {
                 // 用户支付完成的回调，可以拿到订单id
-                console.log(data,'用户支付完成的回调');
+                //console.log(data,'用户支付完成的回调');
                 this.$message({
                     message:'支付成功！',
                     type:'success'
@@ -205,7 +206,7 @@
 
             paymentCancelled(data) {
                 // 用户取消交易的回调
-                console.log(data,'用户取消交易的回调');
+                //console.log(data,'用户取消交易的回调');
             }
         },
         mounted() {

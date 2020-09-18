@@ -118,7 +118,7 @@
                             that.dialogFormVisible = false
                         })
                     } else {
-                        console.log('error submit!!');
+                        //console.log('error submit!!');
                         return false;
                     }
                 });
@@ -128,7 +128,7 @@
                 getUserinfo({
                     token:localStorage.getItem('token')
                 }).then(res=>{
-                    console.log(res,999)
+                    //console.log(res,999)
                     localStorage.setItem('user_info',JSON.stringify(res.data))
                     that.userInfo=res.data
                     that.formData=res.data

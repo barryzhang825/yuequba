@@ -82,10 +82,10 @@
         },
         methods: {
             handleSizeChange(val) {
-                console.log(`每页 ${val} 条`);
+                //console.log(`每页 ${val} 条`);
             },
             handleCurrentChange(val) {
-                console.log(`当前页: ${val}`);
+                //console.log(`当前页: ${val}`);
                 this.fetchData(val)
             },
             fetchData(pageNum = 1) {
@@ -95,7 +95,7 @@
                     token: localStorage.getItem('token'),
                     page: pageNum
                 }).then(res => {
-                    console.log(res)
+                    //console.log(res)
                     if (res.data.list && res.data.list.length > 0) {
                         that.totalNum = res.data.count
                         that.itemList = res.data.list

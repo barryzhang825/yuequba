@@ -283,7 +283,7 @@
                     boutique: 1
                 })
                 this.specialList = specialList.data.list
-                console.log(specialList, 'specialList')
+                //console.log(specialList, 'specialList')
             },
             changeDevice(e) {
                 if (e) {

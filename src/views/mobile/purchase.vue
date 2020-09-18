@@ -113,7 +113,7 @@
             fetchData() {
                 let that = this
                 getVipList().then(res => {
-                    console.log(res)
+                    //console.log(res)
                     let vipList = res.data.reverse()
                     for (const key in vipList) {
                         vipList[key].money = saveTwoDecimal(vipList[key].money)
@@ -151,7 +151,7 @@
                             // on cancel
                         });
                 } else {
-                    console.log(that.vipList[that.selectedIndex])
+                    //console.log(that.vipList[that.selectedIndex])
                     window.open(that.vipList[that.selectedIndex].ext_link)
                 }
             },
@@ -159,7 +159,7 @@
                 this.selectedIndex=index
                 this.notifyUrl=this.hookBaseUrl+'?goodsid='+this.vipList[index].id+'&token='+this.token
                 this.payAmount=this.vipList[this.selectedIndex].taibi
-                console.log( this.notifyUrl)
+                //console.log( this.notifyUrl)
             },
 
             paypalClick(){
@@ -189,18 +189,18 @@
 
             paymentAuthorized(data) {
                 // 授权完成的回调，可以拿到订单id
-                console.log(data,'授权完成的回调');
+                //console.log(data,'授权完成的回调');
             },
 
             paymentCompleted(data) {
                 // 用户支付完成的回调，可以拿到订单id
-                console.log(data,'用户支付完成的回调');
+                //console.log(data,'用户支付完成的回调');
                 Notify({ type: 'success', message: '支付成功' });
             },
 
             paymentCancelled(data) {
                 // 用户取消交易的回调
-                console.log(data,'用户取消交易的回调');
+                //console.log(data,'用户取消交易的回调');
             }
         },
         mounted() {

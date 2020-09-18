@@ -130,6 +130,7 @@
                 </div>
             </div>
         </div>
+        <Contact></Contact>
         <Footer></Footer>
         <ToTop></ToTop>
     </div>
@@ -215,10 +216,10 @@
                 this.$router.push('/result?tagId='+this.tagValue)
             },
             handleSizeChange(val) {
-                console.log(`每页 ${val} 条`);
+                //console.log(`每页 ${val} 条`);
             },
             handleCurrentChange(val) {
-                console.log(`当前页: ${val}`);
+                //console.log(`当前页: ${val}`);
                 this.fetchArticle(val)
             },
             async fetchData() {
@@ -285,7 +286,7 @@
                 setTimeout(() => {
                     this.artLoading = false
                 }, 500)
-                console.log(artList, 'artList')
+                //console.log(artList, 'artList')
                 that.totalNum = artList.data.count
                 that.artList = artList.data.list
             },

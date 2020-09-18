@@ -292,6 +292,7 @@
     <el-button @click="dialogVisible = false" type="primary" >确 定</el-button>
   </span>
         </el-dialog>
+        <Contact></Contact>
         <Footer></Footer>
         <ToTop></ToTop>
     </div>
@@ -394,16 +395,16 @@
                     });
             },
             handleSizeChange(val) {
-                console.log(`每页 ${val} 条`);
+                //console.log(`每页 ${val} 条`);
             },
             handleCurrentChange(val) {
-                console.log(`当前页: ${val}`);
+                //console.log(`当前页: ${val}`);
             },
             onCopy() {
                 this.$message.success('复制链接成功，去粘贴分享吧~')
-                console.log(this.$route)
-                console.log(this.$router)
-                console.log(window.location.href)
+                //console.log(this.$route)
+                //console.log(this.$router)
+                //console.log(window.location.href)
             },
             goResource(url) {
                 this.dialogVisible = false
@@ -439,7 +440,7 @@
                 } else if (res.msg == '您已赞过啦！') {
                     this.$message.info('您已赞过啦！')
                 }
-                console.log(res, 'res')
+                //console.log(res, 'res')
             },
             async fetchData() {
                 let that = this
@@ -503,7 +504,7 @@
 
             replyComment(item) {
                 this.commentContent = ''
-                console.log(item)
+                //console.log(item)
                 this.placeholder = '回复@' + item.user_name
                 this.parent_id = item.id
                 this.$refs['commentIpnut'].focus()
@@ -524,9 +525,9 @@
                             parent_id: that.parent_id
                         }
                     }
-                    console.log(formdata)
+                    //console.log(formdata)
                     doComment(formdata).then(res => {
-                        console.log(res)
+                        //console.log(res)
                         that.fetchComment()
                     })
                     // this.commentList.push(this.commentContent)
@@ -535,7 +536,7 @@
                 this.showEmoji = false
             },
             selectEmoji(code) {
-                console.log('select', this.showEmoji)
+                //console.log('select', this.showEmoji)
                 // this.showEmoji = false
                 this.commentContent += code
             },

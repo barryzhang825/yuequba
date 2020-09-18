@@ -98,7 +98,7 @@
         methods:{
             loginWithBaidu(){
                 fetchBaiduCode().then(res=>{
-                    console.log(res.url)
+                    //console.log(res.url)
                     window.open(res.url,'_blank')
                 })
             },
@@ -117,7 +117,7 @@
                 sendEmail({
                     user_email:this.formData.email
                 }).then((res)=>{
-                    console.log(res)
+                    //console.log(res)
                     if(res.code=200){
                         let that = this
                         this.$message.success('验证码已发送！')
@@ -151,7 +151,7 @@
                         if(that.formData.popuid){
                             formData.popuid=that.formData.popuid
                         }
-                        console.log(formData)
+                        //console.log(formData)
                         userRegister(formData).then(res=>{
                             this.$message({
                                 message: '注册成功！',
@@ -160,7 +160,7 @@
                             that.$router.push('/login')
                         })
                     } else {
-                        console.log('error submit!!');
+                        //console.log('error submit!!');
                         return false;
                     }
                 });
@@ -172,7 +172,7 @@
                     that.siteInfo=siteInfo
                 }else {
                     fetchLogo().then(res=>{
-                        console.log(res)
+                        //console.log(res)
                         that.siteInfo=res.data
                         localStorage.setItem('siteInfo',JSON.stringify(res.data))
                     })

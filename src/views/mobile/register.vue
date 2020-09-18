@@ -137,7 +137,7 @@
                 sendEmail({
                     user_email:this.formData.email
                 }).then((res)=>{
-                    console.log(res)
+                    //console.log(res)
                     if(res.code=200){
                         let that = this
                         Notify({ type: 'success', message: '验证码已发送！' });
@@ -164,7 +164,7 @@
                     that.siteInfo=siteInfo
                 }else {
                     fetchLogo().then(res=>{
-                        console.log(res)
+                        //console.log(res)
                         that.siteInfo=res.data
                         localStorage.setItem('siteInfo',JSON.stringify(res.data))
                     })

@@ -193,7 +193,13 @@ export function sendEmail(data) {
         data
     })
 }
-
+export function fetchEWM(data) {
+    return request({
+        url: '/home/index/getSiteinfo',
+        method: 'get',
+        params:data
+    })
+}
 
 
 

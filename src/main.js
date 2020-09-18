@@ -27,6 +27,9 @@ Vue.prototype.$baseUrl = 'http://yuequba.zhengshangwl.com/upload/'
 //项目地址Host
 Vue.prototype.$baseHost = 'http://yuequba.zhengshangwl.com'
 
+import Contact from "./components/pc/Contact";
+Vue.component('Contact', Contact)
+
 new Vue({
   router,
   store,

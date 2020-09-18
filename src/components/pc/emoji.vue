@@ -39,7 +39,7 @@ export default {
   },
   methods: {
     changeActive (index) {
-      console.log(index,111)
+      //console.log(index,111)
       this.activeIndex = index
     },
     getPureName (name) {

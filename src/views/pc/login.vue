@@ -61,7 +61,7 @@
         methods:{
             loginWithBaidu(){
                 fetchBaiduCode().then(res=>{
-                    console.log(res.url)
+                    //console.log(res.url)
                     window.open(res.url,'_blank')
                 })
             },
@@ -87,7 +87,7 @@
                             that.$router.push('/home')
                         })
                     } else {
-                        console.log('error submit!!');
+                        //console.log('error submit!!');
                         return false;
                     }
                 });
@@ -99,7 +99,7 @@
                     that.siteInfo=siteInfo
                 }else {
                     fetchLogo().then(res=>{
-                        console.log(res)
+                        //console.log(res)
                         that.siteInfo=res.data
                         localStorage.setItem('siteInfo',JSON.stringify(res.data))
                     })
@@ -111,11 +111,11 @@
             let that = this
             let code = this.$route.query.code
             if(code){
-                console.log(code,'CODE')
+                //console.log(code,'CODE')
                 loginWithBaidu({
                     code:code
                 }).then(res=>{
-                    console.log(res)
+                    //console.log(res)
                     if(res.code == 200){
                         this.$message({
                             message: '登录成功！',

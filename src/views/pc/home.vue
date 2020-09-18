@@ -181,6 +181,7 @@
                 </div>
             </div>
         </div>
+        <Contact></Contact>
         <Footer></Footer>
         <ToTop></ToTop>
     </div>
@@ -262,7 +263,7 @@
                 window.open(this.siteInfo.site_play_software,'_blank')
             },
             handleSizeChange(val) {
-                console.log(`每页 ${val} 条`);
+                //console.log(`每页 ${val} 条`);
             },
             handleCurrentChange(val) {
 
@@ -279,7 +280,7 @@
 
                 let bannerList = await getBannerList()
                 this.bannerList = bannerList.data
-                console.log(this.bannerList,'2222')
+                //console.log(this.bannerList,'2222')
 
                 let teachList = await getTeachList({
                     icon_name: 'home_top_course'
@@ -319,7 +320,7 @@
                     boutique: 1
                 })
                 this.specialList = specialList.data.list
-                console.log(specialList, 'specialList')
+                //console.log(specialList, 'specialList')
             },
             async fetchArticle(pageNum = 1) {
                 this.artLoading = true
