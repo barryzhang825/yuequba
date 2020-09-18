@@ -9,7 +9,7 @@
             <div class="limit-time" v-if="leftTime>0">
                 <img src="../../../public/images/limit.png" alt="">
                 <div class="time-num-box">
-                    <van-count-down :time="leftTime" >
+                    <van-count-down :time="leftTime">
                         <template v-slot="timeData">
                             <div class="time-num">
                                 <div class="num">{{ timeData.days }}</div>
@@ -26,29 +26,48 @@
                 </div>
             </div>
             <div class="select-box">
-                <div class="item" :class="selectedIndex==index?'selected':''" @click="selectedIndex=index"
+                <div class="item" :class="selectedIndex==index?'selected':''" @click="selectVip(index)"
                      v-for="(item,index) in vipList">
                     <div class="line1">{{item.name}}</div>
                     <div class="line2">
                         <span>{{item.money}}</span>RMB/{{item.mony==1?'月':item.mony==2?'季度':item.mony==3?'半年':item.mony==4?'年':''}}
                         <br>
                         (约{{item.taibi}}台币)
-<!--                        <br>-->
-<!--                        <a style="text-decoration: line-through;font-size: 14px" v-if="item.pre_money>0">原价{{item.pre_money}}RMB</a>-->
+                        <!--                        <br>-->
+                        <!--                        <a style="text-decoration: line-through;font-size: 14px" v-if="item.pre_money>0">原价{{item.pre_money}}RMB</a>-->
                     </div>
                     <div class="line3">{{item.idt_name}}</div>
                     <img class="check" v-if="selectedIndex==index" src="../../../public/images/check.png" alt="">
                     <div class="tag" v-if="item.mony==4">包年精选福利</div>
-<!--                    <div class="all-year" v-if="item.mony==4">-->
-<!--                        <img src="../../../public/images/bbb.png" alt="">-->
-<!--                        <div class="text">包年精选福利</div>-->
-<!--                    </div>-->
+                    <!--                    <div class="all-year" v-if="item.mony==4">-->
+                    <!--                        <img src="../../../public/images/bbb.png" alt="">-->
+                    <!--                        <div class="text">包年精选福利</div>-->
+                    <!--                    </div>-->
                 </div>
 
             </div>
             <div class="button-box">
                 <el-button type="primary" @click="buyVip">立即购买</el-button>
             </div>
+
+            <div class="paypal-box">
+                <div class="center" v-show="!showPayPal" v-loading="showPayPalLoading" @click="paypalClick">
+                    用<img src="../../../public/images/paypal.png" alt="">付款
+                </div>
+                <PayPal
+                        v-show="showPayPal"
+                        :amount="payAmount"
+                        currency="TWD"
+                        :client="credentials"
+                        env="sandbox"
+                        :button-style="buttonStyle"
+                        :notify-url="notifyUrl"
+                        @payment-authorized="paymentAuthorized"
+                        @payment-completed="paymentCompleted"
+                        @payment-cancelled="paymentCancelled">
+                </PayPal>
+            </div>
+
         </div>
         <Footer></Footer>
     </div>
@@ -59,12 +78,14 @@
     import Footer from '@/components/pc/Footer'
     import {buyVip, fetchLogo, getVipList} from "../../api/pc/api";
     import {saveOneDecimal, saveTwoDecimal} from "../../utils/utils";
+    import PayPal from 'vue-paypal-checkout'
 
     export default {
         name: "Purchase",
         components: {
             Header: Header,
             Footer: Footer,
+            PayPal
         },
         data() {
             return {
@@ -72,12 +93,30 @@
                 imgUrl: require('../../../public/images/avatar.gif'),
                 selectedIndex: 0,
                 vipList: [],
+                token:'',
                 user_info: '',
-                siteInfo:null,
-                leftTime:0
+                siteInfo: null,
+                leftTime: 0,
+
+                notifyUrl:this.hookBaseUrl,
+                hookBaseUrl:'http://yuequba.zhengshangwl.com/home/pay/paypalreturnurl',
+                payAmount:'0',
+                showPayPal:localStorage.getItem('token')?true:false,
+                showPayPalLoading:false,
+                credentials: {
+                    sandbox: 'AWbB35er5_gd3sVwwFfXh4ma_J4vwXgfOQUxYJIpXGDki-DyLhenlA17gUIXH_qIJXF6APtCOgsvMC0B',
+                    production: 'AS4bSmYH4MLmnuF6ObGKYMtu0T_XeeZa67fMoQ4ivhEnZ66RoH76--MX0AWoGgdKhVQlUpFY_EfqI15v'
+                },
+                buttonStyle: {
+                    label: 'pay',
+                    size: 'large',
+                    shape: 'rect',
+                    color: 'silver'
+                },
             }
         },
         methods: {
+
             fetchData() {
                 let that = this
                 getVipList().then(res => {
@@ -87,17 +126,20 @@
                         vipList[key].pre_money = saveTwoDecimal(vipList[key].pre_money)
                         if (vipList[key].type == 1) {
                             vipList[key].cheap = saveTwoDecimal(vipList[key].pre_money - vipList[key].money)
-                            vipList[key].pre_end_time_num = 1000*vipList[key].pre_end_time_num
+                            vipList[key].pre_end_time_num = 1000 * vipList[key].pre_end_time_num
                         }
                     }
                     this.vipList = vipList
+                    this.notifyUrl=this.hookBaseUrl+'?goodsid='+this.vipList[this.selectedIndex].id+'&token='+this.token
+                    this.payAmount=this.vipList[this.selectedIndex].taibi
                 })
-                fetchLogo().then(res=>{
-                    that.siteInfo=res.data
-                    localStorage.setItem('siteInfo',JSON.stringify(res.data))
-                    let leftTime=Date.parse(res.data.site_vipendtime)-Date.now()
-                    that.leftTime=leftTime
+                fetchLogo().then(res => {
+                    that.siteInfo = res.data
+                    localStorage.setItem('siteInfo', JSON.stringify(res.data))
+                    let leftTime = Date.parse(res.data.site_vipendtime) - Date.now()
+                    that.leftTime = leftTime
                 })
+
             },
             buyVip() {
                 let that = this
@@ -119,12 +161,60 @@
                         window.open(that.vipList[that.selectedIndex].ext_link)
                     })
                 }
+            },
+            selectVip(index){
+                this.selectedIndex=index
+                this.notifyUrl=this.hookBaseUrl+'?goodsid='+this.vipList[index].id+'&token='+this.token
+                this.payAmount=this.vipList[this.selectedIndex].taibi
+                console.log( this.notifyUrl)
+            },
+
+            paypalClick(){
+                let that = this
+                that.showPayPalLoading=true
+                setTimeout(()=>{
+                    let token = localStorage.getItem('token')
+                    if (!token) {
+                        this.$confirm('请先去登录').then(_ => {
+                            that.$router.push({
+                                path: '/login'
+                            })
+                        }).catch(_ => {
+
+                        });
+                    } else {
+                        that.showPayPal=true
+                    }
+                    that.showPayPalLoading=false
+                },500)
+            },
+
+            paymentAuthorized(data) {
+                // 授权完成的回调，可以拿到订单id
+                console.log(data,'授权完成的回调');
+            },
+
+            paymentCompleted(data) {
+                // 用户支付完成的回调，可以拿到订单id
+                console.log(data,'用户支付完成的回调');
+                this.$message({
+                    message:'支付成功！',
+                    type:'success'
+                })
+            },
+
+            paymentCancelled(data) {
+                // 用户取消交易的回调
+                console.log(data,'用户取消交易的回调');
             }
         },
         mounted() {
             this.fetchData()
             if (localStorage.getItem('user_info')) {
                 this.user_info = JSON.parse(localStorage.getItem('user_info'))
+            }
+            if(localStorage.getItem('token')){
+                this.token=localStorage.getItem('token')
             }
         }
     }
@@ -143,24 +233,30 @@
             background-color: #ffffff;
             box-shadow: 0px 0px 10px 0px rgba(204, 204, 204, 0.5);
             border-radius: 10px;
-            .limit-time{
+            text-align: center;
+
+            .limit-time {
                 width: 100%;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                .time-num-box{
+
+                .time-num-box {
                     margin-top: 35px;
                     margin-bottom: 10px;
-                    .time-num{
+
+                    .time-num {
                         display: flex;
                         flex-direction: row;
                         align-items: center;
-                        .text{
+
+                        .text {
                             font-size: 24px;
                             font-weight: 400;
-                            color:#000000;
+                            color: #000000;
                         }
-                        .num{
+
+                        .num {
                             margin: 0 3px;
                             min-width: 36px;
                             min-height: 36px;
@@ -171,7 +267,7 @@
                             align-items: center;
                             font-size: 24px;
                             font-weight: 400;
-                            color:#ffffff;
+                            color: #ffffff;
                         }
                     }
                 }
@@ -266,7 +362,7 @@
                         position: absolute;
                         top: -10px;
                         left: 0;
-                        background-image: linear-gradient(to right, #FF9600 , #FF3158);
+                        background-image: linear-gradient(to right, #FF9600, #FF3158);
 
                         font-size: 18px;
                         font-weight: 400;
@@ -326,10 +422,12 @@
                             color: #ffffff;
                             display: flex;
                             align-items: center;
-                            .van-count-down{
+
+                            .van-count-down {
                                 line-height: unset;
                             }
-                            .block{
+
+                            .block {
                                 font-size: 16px;
                                 color: #ffffff;
                             }
@@ -361,6 +459,27 @@
                     font-size: 18px;
                     font-weight: 400;
                     color: rgba(255, 255, 255, 1);
+                }
+            }
+
+            .paypal-box{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                .center{
+                    cursor: pointer;
+                    width: 120px;
+                    background-color: #eeeeee;
+                    border-radius: 5px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    padding: 8px 0;
+                    font-size: 13px;
+                    img{
+                        width: 50px;
+                        margin: 0 5px;
+                    }
                 }
             }
         }

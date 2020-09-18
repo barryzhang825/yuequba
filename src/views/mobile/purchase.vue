@@ -43,6 +43,23 @@
                 <div class="button-box">
                     <el-button type="primary" @click="buyVip">立即购买</el-button>
                 </div>
+                <div class="paypal-box">
+                    <div class="center" v-show="!showPayPal" v-loading="showPayPalLoading" @click="paypalClick">
+                        用<img src="../../../public/images/paypal.png" alt="">付款
+                    </div>
+                    <PayPal
+                            v-show="showPayPal"
+                            :amount="payAmount"
+                            currency="TWD"
+                            :client="credentials"
+                            env="sandbox"
+                            :button-style="buttonStyle"
+                            :notify-url="notifyUrl"
+                            @payment-authorized="paymentAuthorized"
+                            @payment-completed="paymentCompleted"
+                            @payment-cancelled="paymentCancelled">
+                    </PayPal>
+                </div>
             </div>
 
         </div>
@@ -55,17 +72,38 @@
     import {fetchLogo, getVipList} from "../../api/pc/api";
     import {Dialog} from 'vant';
     import {saveTwoDecimal} from "../../utils/utils";
+    import PayPal from 'vue-paypal-checkout'
+
+
 
     export default {
         name: "MobilePurchase",
         components: {
-            MobileTitle
+            MobileTitle,
+            PayPal
         },
         data() {
             return {
                 selectedIndex: 0,
                 vipList: [],
-                leftTime:0
+                leftTime:0,
+                token:'',
+
+                notifyUrl:this.hookBaseUrl,
+                hookBaseUrl:'http://yuequba.zhengshangwl.com/home/pay/paypalreturnurl',
+                payAmount:'0',
+                showPayPal:localStorage.getItem('token')?true:false,
+                showPayPalLoading:false,
+                credentials: {
+                    sandbox: 'AWbB35er5_gd3sVwwFfXh4ma_J4vwXgfOQUxYJIpXGDki-DyLhenlA17gUIXH_qIJXF6APtCOgsvMC0B',
+                    production: 'AS4bSmYH4MLmnuF6ObGKYMtu0T_XeeZa67fMoQ4ivhEnZ66RoH76--MX0AWoGgdKhVQlUpFY_EfqI15v'
+                },
+                buttonStyle: {
+                    label: 'pay',
+                    size: 'small',
+                    shape: 'rect',
+                    color: 'silver'
+                },
             }
         },
         methods: {
@@ -86,6 +124,8 @@
                         }
                     }
                     this.vipList = vipList
+                    this.notifyUrl=this.hookBaseUrl+'?goodsid='+this.vipList[this.selectedIndex].id+'&token='+this.token
+                    this.payAmount=this.vipList[this.selectedIndex].taibi
                 })
                 fetchLogo().then(res=>{
                     that.siteInfo=res.data
@@ -114,6 +154,53 @@
                     console.log(that.vipList[that.selectedIndex])
                     window.open(that.vipList[that.selectedIndex].ext_link)
                 }
+            },
+            selectVip(index){
+                this.selectedIndex=index
+                this.notifyUrl=this.hookBaseUrl+'?goodsid='+this.vipList[index].id+'&token='+this.token
+                this.payAmount=this.vipList[this.selectedIndex].taibi
+                console.log( this.notifyUrl)
+            },
+
+            paypalClick(){
+                let that = this
+                that.showPayPalLoading=true
+                setTimeout(()=>{
+                    let token = localStorage.getItem('token')
+                    if (!token) {
+                        Dialog.confirm({
+                            title: '标题',
+                            message: '请先去登录',
+                        })
+                            .then(() => {
+                                that.$router.push({
+                                    path: '/login'
+                                })
+                            })
+                            .catch(() => {
+                                // on cancel
+                            });
+                    } else {
+                        that.showPayPal=true
+                    }
+                    that.showPayPalLoading=false
+                },500)
+            },
+
+            paymentAuthorized(data) {
+                // 授权完成的回调，可以拿到订单id
+                console.log(data,'授权完成的回调');
+            },
+
+            paymentCompleted(data) {
+                // 用户支付完成的回调，可以拿到订单id
+                console.log(data,'用户支付完成的回调');
+                Notify({ type: 'success', message: '支付成功' });
+            },
+
+            paymentCancelled(data) {
+                // 用户取消交易的回调
+                console.log(data,'用户取消交易的回调');
             }
         },
         mounted() {
@@ -339,6 +426,27 @@
                         font-size: 0.24rem;
                         font-weight: 400;
                         color: rgba(255, 255, 255, 1);
+                    }
+                }
+                .paypal-box{
+                    margin-top: 0.4rem;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    .center{
+                        cursor: pointer;
+                        width: 3.2rem;
+                        background-color: #eeeeee;
+                        border-radius: 5px;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        padding: 8px 0;
+                        font-size: 13px;
+                        img{
+                            width: 50px;
+                            margin: 0 5px;
+                        }
                     }
                 }
 
