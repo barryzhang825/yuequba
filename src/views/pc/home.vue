@@ -500,8 +500,8 @@
                     font-weight: 500;
                     font-size: 16px;
                     span{
-                        color: #abeaf7;
-                        background-image: -webkit-linear-gradient(180deg, #abeaf7, #f41392);
+                        color: #53d2e7;
+                        background-image: -webkit-linear-gradient(180deg, #53d2e7, #f41392);
                         -webkit-background-clip: text;
                         -webkit-text-fill-color: transparent;
                         -webkit-animation: change 2s infinite linear;

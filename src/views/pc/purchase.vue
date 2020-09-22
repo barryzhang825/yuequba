@@ -34,16 +34,10 @@
                             <span>{{item.money}}</span>RMB/{{item.mony==1?'月':item.mony==2?'季度':item.mony==3?'半年':item.mony==4?'年':''}}
                             <br>
                             (约{{item.taibi}}台币)
-                            <!--                        <br>-->
-                            <!--                        <a style="text-decoration: line-through;font-size: 14px" v-if="item.pre_money>0">原价{{item.pre_money}}RMB</a>-->
                         </div>
                         <div class="line3">{{item.idt_name}}</div>
                         <img class="check" v-if="selectedIndex==index" src="../../../public/images/check.png" alt="">
-                        <div class="tag" v-if="item.mony==4">独享包年精选福利</div>
-                        <!--                    <div class="all-year" v-if="item.mony==4">-->
-                        <!--                        <img src="../../../public/images/bbb.png" alt="">-->
-                        <!--                        <div class="text">包年精选福利</div>-->
-                        <!--                    </div>-->
+                        <div class="tag" v-if="item.mony==4"><span>独享包年精选福利</span></div>
                     </div>
 
                 </div>
@@ -107,6 +101,10 @@
                         @payment-completed="paymentCompleted"
                         @payment-cancelled="paymentCancelled">
                 </PayPal>
+
+                <div class="charge-balance" @click="chargeBalance">
+                    台币充值支付宝与QQ币
+                </div>
             </div>
         </div>
         <Contact ref="contact"></Contact>
@@ -169,7 +167,9 @@
             }
         },
         methods: {
-
+            chargeBalance(){
+                window.open('https://www.ibuy711.com/g7.html','_blank')
+            },
             fetchData() {
                 let that = this
                 getVipList().then(res => {
@@ -430,21 +430,36 @@
                         }
 
                         .tag {
-                            padding: 0 15px;
+                            padding: 0 20px;
                             height: 42px;
-                            /*background: rgba(255, 49, 88, 1);*/
                             border-radius: 20px 0px 20px 0px;
                             position: absolute;
-                            top: -10px;
+                            top: -20px;
                             left: 0;
                             background-image: linear-gradient(to right, #FF9600, #FF3158);
-
                             font-size: 18px;
                             font-weight: 400;
                             color: rgba(255, 255, 255, 1);
                             display: flex;
                             justify-content: center;
                             align-items: center;
+                            span{
+                                font-weight: 600;
+                                color:#d2e737;
+                                background-image: -webkit-linear-gradient(180deg, #d2e737, #00e7e7);
+                                -webkit-background-clip: text;
+                                -webkit-text-fill-color: transparent;
+                                -webkit-animation: change 2s infinite linear;
+                                @-webkit-keyframes change {
+                                    from {
+                                        -webkit-filter: hue-rotate(0deg);
+                                    }
+                                    to {
+                                        -webkit-filter: hue-rotate(-360deg);
+                                    }
+                                }
+                            }
+
                         }
 
                         .all-year {
@@ -635,6 +650,16 @@
                 .paypal-box{
                     margin-top: 30px;
                 }
+
+                .charge-balance{
+                    margin-top: 30px;
+                    margin-left: 95px;
+                    cursor: pointer;
+                    text-decoration: underline;
+                }
+                .charge-balance:hover{
+                    color: #f78d1d;
+                }
             }
 
 
@@ -642,3 +667,11 @@
     }
 
 </style>
+
+
+
+
+
+
+
+

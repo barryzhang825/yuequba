@@ -34,32 +34,12 @@
                     </div>
                     <div class="line3">{{item.idt_name}}</div>
                     <img class="check" v-if="selectedIndex==index" src="../../../public/images/check.png" alt="">
-                    <div class="tag" v-if="item.mony==4">独享包年精选福利</div>
-                    <!--                    <div class="all-year" v-if="item.mony==4">-->
-                    <!--                        <img src="../../../public/images/bbb.png" alt="">-->
-                    <!--                        <div class="text">包年精选福利</div>-->
-                    <!--                    </div>-->
+                    <div class="tag" v-if="item.mony==4"><span>独享包年精选福利</span></div>
                 </div>
                 <div class="button-box">
                     <el-button type="primary" @click="checkLogin">立即购买</el-button>
                 </div>
-<!--                <div class="paypal-box">-->
-<!--                    <div class="center" v-show="!showPayPal" v-loading="showPayPalLoading" @click="paypalClick">-->
-<!--                        用<img src="../../../public/images/paypal.png" alt="">付款-->
-<!--                    </div>-->
-<!--                    <PayPal-->
-<!--                            v-show="showPayPal"-->
-<!--                            :amount="payAmount"-->
-<!--                            currency="TWD"-->
-<!--                            :client="credentials"-->
-<!--                            env="sandbox"-->
-<!--                            :button-style="buttonStyle"-->
-<!--                            :notify-url="notifyUrl"-->
-<!--                            @payment-authorized="paymentAuthorized"-->
-<!--                            @payment-completed="paymentCompleted"-->
-<!--                            @payment-cancelled="paymentCancelled">-->
-<!--                    </PayPal>-->
-<!--                </div>-->
+
             </div>
             <div class="payment-list" v-if="toPay">
                 <div class="line1" v-if="siteInfo.site_pay_status_one==1">
@@ -117,6 +97,10 @@
                         @payment-completed="paymentCompleted"
                         @payment-cancelled="paymentCancelled">
                 </PayPal>
+
+                <div class="charge-balance" @click="chargeBalance">
+                    台币充值支付宝与QQ币
+                </div>
             </div>
         </div>
     </div>
@@ -176,6 +160,9 @@
             }
         },
         methods: {
+            chargeBalance(){
+                window.open('https://www.ibuy711.com/g7.html','_blank')
+            },
             timeFinish() {
                 this.fetchData()
             },
@@ -432,6 +419,22 @@
                         display: flex;
                         justify-content: center;
                         align-items: center;
+                        span{
+                            font-weight: 600;
+                            color:#d2e737;
+                            background-image: -webkit-linear-gradient(180deg, #d2e737, #00e7e7);
+                            -webkit-background-clip: text;
+                            -webkit-text-fill-color: transparent;
+                            -webkit-animation: change 2s infinite linear;
+                            @-webkit-keyframes change {
+                                from {
+                                    -webkit-filter: hue-rotate(0deg);
+                                }
+                                to {
+                                    -webkit-filter: hue-rotate(-360deg);
+                                }
+                            }
+                        }
                     }
 
                     .all-year {
@@ -616,6 +619,15 @@
 
                 .paypal-box{
                     margin:  0.4rem auto;
+                }
+
+                .charge-balance{
+                    width: 100%;
+                    text-align: center;
+                    font-size: 0.267rem;
+                    margin-top: 0.4rem;
+                    cursor: pointer;
+                    text-decoration: underline;
                 }
             }
         }
