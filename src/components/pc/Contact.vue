@@ -1,11 +1,5 @@
 <template>
     <div class="contact" >
-        <div class="box" @click="contactUs">
-            <img src="../../../public/images/kf.png" alt="">
-            <div class="text">联系客服</div>
-        </div>
-
-
         <van-popup v-model="show">
             <div class="content-box">
                 <van-image width="200" height="200" :src="img" />
@@ -49,34 +43,6 @@
 
 <style scoped lang="scss">
     .contact{
-        z-index: 999999999999999999999;
-        cursor: pointer;
-        position: fixed;
-        bottom: 200px;
-        right: 0;
-        width: 80px;
-        height: 80px;
-        border-top-left-radius: 10px;
-        border-bottom-left-radius: 10px;
-        background-color: #ffc231;
-        padding: 7px 0;
-
-        .box{
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            img{
-                width: 50%;
-            }
-            .text{
-                margin-top: 5px;
-                font-size: 14px;
-                color: #ffffff;
-            }
-        }
 
         .van-popup{
             border-radius: 10px;

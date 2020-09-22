@@ -203,7 +203,6 @@
                 </div>
             </div>
         </div>
-        <Contact></Contact>
         <Footer></Footer>
         <ToTop></ToTop>
     </div>
@@ -948,5 +947,4 @@
             }
         }
     }
-
 </style>

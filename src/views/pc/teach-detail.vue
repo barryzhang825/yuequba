@@ -142,7 +142,6 @@
     <el-button type="primary" @click="goResource">确 定</el-button>
   </span>
         </el-dialog>
-        <Contact></Contact>
         <Footer></Footer>
         <ToTop></ToTop>
     </div>

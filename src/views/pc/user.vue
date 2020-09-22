@@ -33,7 +33,6 @@
                 <router-view class="right-view"></router-view>
             </div>
         </div>
-        <Contact></Contact>
         <Footer></Footer>
     </div>
 </template>

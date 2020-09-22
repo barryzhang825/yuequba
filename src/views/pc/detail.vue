@@ -270,6 +270,23 @@
                             </div>
                         </div>
                     </div>
+                    <div class="block-box" >
+                        <div class="title">浏览历史</div>
+                        <div class="block-content">
+                            <div class="block-items">
+                                <div class="block-item" v-for="(item,index) in historyList" >
+                                    <div class="line1"
+                                         @click="$router.push('/detail?type='+item.category_id+'&id='+item.pp_id)"
+                                         :style="'background-image: url('+baseUrl+item.more.thumbnail+')'"></div>
+                                    <div class="line2">{{item.create_time|timeFormatTwo}}</div>
+                                    <div class="line3"
+                                         @click="$router.push('/detail?type='+item.category_id+'&id='+item.pp_id)">
+                                        {{item.post_title}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -292,7 +309,6 @@
     <el-button @click="dialogVisible = false" type="primary" >确 定</el-button>
   </span>
         </el-dialog>
-        <Contact></Contact>
         <Footer></Footer>
         <ToTop></ToTop>
     </div>
@@ -308,7 +324,7 @@
         doComment,
         getArticleDetail,
         getArticleList, getArticleResource,
-        getBannerList, getCommentList,
+        getBannerList, getCommentList, getHistoryList,
         getTagList,
         likeArticle
     } from "../../api/pc/api";
@@ -383,6 +399,7 @@
                 shareUrl: '',//分享链接
                 resource_url: '',
                 resource_pass: '',
+                historyList: [],//历史浏览记录
             }
         },
         methods: {
@@ -456,6 +473,11 @@
                     id: that.id
                 })
                 that.articleDetail = articleDetail.data
+
+                let historyList = await getHistoryList({
+
+                })
+                this.historyList = historyList.data.list
 
                 this.loading1 = false
                 that.fetchComment()
