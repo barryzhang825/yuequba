@@ -281,9 +281,9 @@
             <div class="downloadTip">
                 <div class="line1"></div>
                 <div class="line2" v-for="(item,index) in resource_url">
-                    <span>资源{{index+1}} &nbsp;提取密码：{{item.pass}}</span>
-                    <div class="copy" v-clipboard:copy="item.pass" v-clipboard:success="onResourceCopy">复制</div>
-                    <div class="copy" @click="goResource(item.url)">打开链接</div>
+                    <span>资源 - {{index+1}}： &nbsp;</span>
+<!--                    <div class="copy" v-clipboard:copy="item.pass" v-clipboard:success="onResourceCopy">复制提取</div>-->
+                    <div class="copy" @click="goResource(item.url)">下载链接</div>
                 </div>
             </div>
 
@@ -407,7 +407,6 @@
                 //console.log(window.location.href)
             },
             goResource(url) {
-                this.dialogVisible = false
                 window.open(url)
             },
             getResource() {
@@ -426,6 +425,9 @@
                         }
                     }, 1500)
                 })
+                setTimeout(()=>{
+                    that.loading = false
+                },1000)
             },
             onResourceCopy() {
                 this.$message.success('复制成功！')
