@@ -43,9 +43,9 @@
         background-color: rgba(31,31,31,1);
         display: flex;
         align-items: center;
-        height: 70px;
+        height: 40px;
         .center{
-            padding-top: 10px;
+            padding-top: 5px;
             text-align: center;
             margin: 0 auto;
             width: 1200px;

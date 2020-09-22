@@ -2,59 +2,118 @@
     <div class="page">
         <Header :menu="6"></Header>
         <div class="container">
-            <div class="user-info" v-if="user_info">
+            <div class="user-info" v-show="user_info">
                 <div class="img" :style="'background-image: url('+baseUrl+user_info.avatar+')'"></div>
                 <span>{{user_info.user_nickname}}，请选择VIP会员服务</span>
             </div>
-            <div class="limit-time" v-if="leftTime>0">
-                <img src="../../../public/images/limit.png" alt="">
-                <div class="time-num-box">
-                    <van-count-down :time="leftTime">
-                        <template v-slot="timeData">
-                            <div class="time-num">
-                                <div class="num">{{ timeData.days }}</div>
-                                <div class="text">天</div>
-                                <div class="num">{{ timeData.hours }}</div>
-                                <div class="text">时</div>
-                                <div class="num">{{ timeData.minutes }}</div>
-                                <div class="text">分</div>
-                                <div class="num">{{ timeData.seconds }}</div>
-                                <div class="text">秒</div>
-                            </div>
-                        </template>
-                    </van-count-down>
-                </div>
-            </div>
-            <div class="select-box">
-                <div class="item" :class="selectedIndex==index?'selected':''" @click="selectVip(index)"
-                     v-for="(item,index) in vipList">
-                    <div class="line1">{{item.name}}</div>
-                    <div class="line2">
-                        <span>{{item.money}}</span>RMB/{{item.mony==1?'月':item.mony==2?'季度':item.mony==3?'半年':item.mony==4?'年':''}}
-                        <br>
-                        (约{{item.taibi}}台币)
-                        <!--                        <br>-->
-                        <!--                        <a style="text-decoration: line-through;font-size: 14px" v-if="item.pre_money>0">原价{{item.pre_money}}RMB</a>-->
+            <div class="vip-list" v-show="!toPay">
+                <div class="limit-time" v-if="leftTime>0">
+                    <img src="../../../public/images/limit.png" alt="">
+                    <div class="time-num-box">
+                        <van-count-down :time="leftTime">
+                            <template v-slot="timeData">
+                                <div class="time-num">
+                                    <div class="num">{{ timeData.days }}</div>
+                                    <div class="text">天</div>
+                                    <div class="num">{{ timeData.hours }}</div>
+                                    <div class="text">时</div>
+                                    <div class="num">{{ timeData.minutes }}</div>
+                                    <div class="text">分</div>
+                                    <div class="num">{{ timeData.seconds }}</div>
+                                    <div class="text">秒</div>
+                                </div>
+                            </template>
+                        </van-count-down>
                     </div>
-                    <div class="line3">{{item.idt_name}}</div>
-                    <img class="check" v-if="selectedIndex==index" src="../../../public/images/check.png" alt="">
-                    <div class="tag" v-if="item.mony==4">包年精选福利</div>
-                    <!--                    <div class="all-year" v-if="item.mony==4">-->
-                    <!--                        <img src="../../../public/images/bbb.png" alt="">-->
-                    <!--                        <div class="text">包年精选福利</div>-->
-                    <!--                    </div>-->
                 </div>
+                <div class="select-box">
+                    <div class="item" :class="selectedIndex==index?'selected':''" @click="selectVip(index)"
+                         v-for="(item,index) in vipList">
+                        <div class="line1">{{item.name}}</div>
+                        <div class="line2">
+                            <span>{{item.money}}</span>RMB/{{item.mony==1?'月':item.mony==2?'季度':item.mony==3?'半年':item.mony==4?'年':''}}
+                            <br>
+                            (约{{item.taibi}}台币)
+                            <!--                        <br>-->
+                            <!--                        <a style="text-decoration: line-through;font-size: 14px" v-if="item.pre_money>0">原价{{item.pre_money}}RMB</a>-->
+                        </div>
+                        <div class="line3">{{item.idt_name}}</div>
+                        <img class="check" v-if="selectedIndex==index" src="../../../public/images/check.png" alt="">
+                        <div class="tag" v-if="item.mony==4">独享包年精选福利</div>
+                        <!--                    <div class="all-year" v-if="item.mony==4">-->
+                        <!--                        <img src="../../../public/images/bbb.png" alt="">-->
+                        <!--                        <div class="text">包年精选福利</div>-->
+                        <!--                    </div>-->
+                    </div>
 
+                </div>
+                <div class="button-box">
+                    <el-button type="primary" @click="checkLogin">立即购买</el-button>
+                </div>
+<!--                <div class="paypal-box">-->
+<!--                    <div class="center" v-show="!showPayPal" v-loading="showPayPalLoading" @click="paypalClick">-->
+<!--                        用<img src="../../../public/images/paypal.png" alt="">付款-->
+<!--                    </div>-->
+<!--                    <PayPal-->
+<!--                            ref="paypal"-->
+<!--                            v-show="showPayPal"-->
+<!--                            :amount="payAmount"-->
+<!--                            currency="TWD"-->
+<!--                            :client="credentials"-->
+<!--                            env="sandbox"-->
+<!--                            :button-style="buttonStyle"-->
+<!--                            :notify-url="notifyUrl"-->
+<!--                            @payment-authorized="paymentAuthorized"-->
+<!--                            @payment-completed="paymentCompleted"-->
+<!--                            @payment-cancelled="paymentCancelled">-->
+<!--                    </PayPal>-->
+<!--                </div>-->
             </div>
-            <div class="button-box">
-                <el-button type="primary" @click="buyVip">立即购买</el-button>
-            </div>
-
-            <div class="paypal-box">
-                <div class="center" v-show="!showPayPal" v-loading="showPayPalLoading" @click="paypalClick">
-                    用<img src="../../../public/images/paypal.png" alt="">付款
+            <div class="payment-list" v-if="toPay">
+                <div class="line1">
+                    <el-radio v-model="paymentIndex" label="1">
+                        <div class="select-item">
+                            <van-image
+                                    width="100%"
+                                    height="100%"
+                                    fit="cover"
+                                    :src="require('../../../public/images/fk1.png')"
+                            />
+                        </div>
+                    </el-radio>
+                    <div class="text">第三方支付（支付宝、QQ扫码支付）</div>
+                </div>
+                <div class="line2">
+                    <el-radio v-model="paymentIndex" label="2">
+                        <div class="select-item">
+                            <van-image
+                                    width="100%"
+                                    height="100%"
+                                    fit="cover"
+                                    :src="require('../../../public/images/paypal1.png')"
+                            />
+                        </div>
+                    </el-radio>
+                    <div class="text">paypal支付</div>
+                </div>
+                <div class="line3">
+                    <el-radio v-model="paymentIndex" label="3">
+                        <div class="select-item">
+                            <van-image
+                                    width="100%"
+                                    height="100%"
+                                    fit="cover"
+                                    :src="require('../../../public/images/kf1.png')"
+                            />
+                        </div>
+                    </el-radio>
+                    <div class="text">联系客服支付开通</div>
+                </div>
+                <div class="button-box" v-show="!showPayPal">
+                    <el-button type="primary" @click="buyVip">立即购买</el-button>
                 </div>
                 <PayPal
+                        class="paypal-box"
                         v-show="showPayPal"
                         :amount="payAmount"
                         currency="TWD"
@@ -67,9 +126,8 @@
                         @payment-cancelled="paymentCancelled">
                 </PayPal>
             </div>
-
         </div>
-        <Contact></Contact>
+        <Contact ref="contact"></Contact>
         <Footer></Footer>
     </div>
 </template>
@@ -94,16 +152,15 @@
                 imgUrl: require('../../../public/images/avatar.gif'),
                 selectedIndex: 0,
                 vipList: [],
-                token:'',
+                token: '',
                 user_info: '',
                 siteInfo: null,
                 leftTime: 0,
 
-                notifyUrl:this.hookBaseUrl,
-                hookBaseUrl:'http://yuequba.zhengshangwl.com/home/pay/paypalreturnurl',
-                payAmount:'0',
-                showPayPal:localStorage.getItem('token')?true:false,
-                showPayPalLoading:false,
+                notifyUrl: this.hookBaseUrl,
+                hookBaseUrl: 'http://yuequba.zhengshangwl.com/home/pay/paypalreturnurl',
+                payAmount: '0',
+                showPayPalLoading: false,
                 credentials: {
                     sandbox: 'AWbB35er5_gd3sVwwFfXh4ma_J4vwXgfOQUxYJIpXGDki-DyLhenlA17gUIXH_qIJXF6APtCOgsvMC0B',
                     production: 'AS4bSmYH4MLmnuF6ObGKYMtu0T_XeeZa67fMoQ4ivhEnZ66RoH76--MX0AWoGgdKhVQlUpFY_EfqI15v'
@@ -114,6 +171,19 @@
                     shape: 'rect',
                     color: 'silver'
                 },
+                toPay: false,
+                paymentIndex: '1',
+                showEWM: false,
+                showPayPal:false
+            }
+        },
+        watch:{
+            paymentIndex(val){
+                if(val==2){
+                    this.showPayPal=true
+                }else {
+                    this.showPayPal=false
+                }
             }
         },
         methods: {
@@ -131,8 +201,8 @@
                         }
                     }
                     this.vipList = vipList
-                    this.notifyUrl=this.hookBaseUrl+'?goodsid='+this.vipList[this.selectedIndex].id+'&token='+this.token
-                    this.payAmount=this.vipList[this.selectedIndex].taibi
+                    this.notifyUrl = this.hookBaseUrl + '?goodsid=' + this.vipList[this.selectedIndex].id + '&token=' + this.token
+                    this.payAmount = this.vipList[this.selectedIndex].taibi
                 })
                 fetchLogo().then(res => {
                     that.siteInfo = res.data
@@ -142,7 +212,7 @@
                 })
 
             },
-            buyVip() {
+            checkLogin() {
                 let that = this
                 let token = localStorage.getItem('token')
                 if (!token) {
@@ -154,26 +224,37 @@
 
                     });
                 } else {
-                    //console.log(that.vipList[that.selectedIndex])
+                    this.toPay = true
+                }
+            },
+            buyVip() {
+                let that = this
+                if (that.paymentIndex == '1') {
                     buyVip({
                         token: localStorage.getItem('token'),
                         id: that.vipList[that.selectedIndex].id
                     }).then(res => {
                         window.open(that.vipList[that.selectedIndex].ext_link)
                     })
+                } else if (that.paymentIndex == '2') {
+                    if(that.showPayPal==true){
+                        that.$message.info('请点击下方PayPal按钮,以使用PayPal支付')
+                    }
+                    this.showPayPal=true
+                } else {
+                    that.$refs.contact.contactUs()
                 }
             },
-            selectVip(index){
-                this.selectedIndex=index
-                this.notifyUrl=this.hookBaseUrl+'?goodsid='+this.vipList[index].id+'&token='+this.token
-                this.payAmount=this.vipList[this.selectedIndex].taibi
-                //console.log( this.notifyUrl)
+            selectVip(index) {
+                this.selectedIndex = index
+                this.notifyUrl = this.hookBaseUrl + '?goodsid=' + this.vipList[index].id + '&token=' + this.token
+                this.payAmount = this.vipList[this.selectedIndex].taibi
             },
 
-            paypalClick(){
+            paypalClick() {
                 let that = this
-                that.showPayPalLoading=true
-                setTimeout(()=>{
+                that.showPayPalLoading = true
+                setTimeout(() => {
                     let token = localStorage.getItem('token')
                     if (!token) {
                         this.$confirm('请先去登录').then(_ => {
@@ -184,10 +265,10 @@
 
                         });
                     } else {
-                        that.showPayPal=true
+                        that.showPayPal = true
                     }
-                    that.showPayPalLoading=false
-                },500)
+                    that.showPayPalLoading = false
+                }, 500)
             },
 
             paymentAuthorized(data) {
@@ -199,8 +280,8 @@
                 // 用户支付完成的回调，可以拿到订单id
                 //console.log(data,'用户支付完成的回调');
                 this.$message({
-                    message:'支付成功！',
-                    type:'success'
+                    message: '支付成功！',
+                    type: 'success'
                 })
             },
 
@@ -214,8 +295,8 @@
             if (localStorage.getItem('user_info')) {
                 this.user_info = JSON.parse(localStorage.getItem('user_info'))
             }
-            if(localStorage.getItem('token')){
-                this.token=localStorage.getItem('token')
+            if (localStorage.getItem('token')) {
+                this.token = localStorage.getItem('token')
             }
         }
     }
@@ -294,195 +375,279 @@
                 }
             }
 
-            .select-box {
+            .vip-list {
                 width: 100%;
-                display: flex;
-                flex-direction: row;
-                flex-wrap: wrap;
-                margin: 30px 0;
-                padding: 0 150px;
-                box-sizing: border-box;
-                justify-content: space-between;
 
-                .item {
-                    margin-bottom: 50px;
-                    cursor: pointer;
-                    width: 360px;
-                    height: 240px;
-                    border: 1px solid rgba(230, 230, 230, 1);
-                    border-radius: 15px;
+                .select-box {
+                    width: 100%;
                     display: flex;
-                    flex-direction: column;
-                    justify-content: space-around;
-                    padding: 20px 30px;
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                    margin: 30px 0;
+                    padding: 0 150px;
                     box-sizing: border-box;
-                    position: relative;
+                    justify-content: space-between;
 
-                    .line1 {
-                        font-size: 24px;
-                        font-weight: 400;
-                        color: rgba(51, 51, 51, 1);
-                        text-align: center;
-                    }
+                    .item {
+                        margin-bottom: 50px;
+                        cursor: pointer;
+                        width: 360px;
+                        height: 240px;
+                        border: 1px solid rgba(230, 230, 230, 1);
+                        border-radius: 15px;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-around;
+                        padding: 20px 30px;
+                        box-sizing: border-box;
+                        position: relative;
 
-                    .line2 {
-                        white-space: pre-line;
-                        font-size: 16px;
-                        font-weight: 400;
-                        color: #333333;
-                        text-align: center;
-
-                        span {
-                            color: rgba(255, 49, 88, 1);
-                            font-size: 48px;
+                        .line1 {
+                            font-size: 24px;
+                            font-weight: 400;
+                            color: rgba(51, 51, 51, 1);
+                            text-align: center;
                         }
-                    }
 
-                    .line3 {
-                        border-top: 1px solid rgba(232, 232, 232, 1);
-                        font-size: 16px;
-                        font-weight: 400;
-                        color: rgba(51, 51, 51, 1);
-                        text-align: center;
-                        padding-top: 10px;
-                        padding-bottom: 30px;
-                        box-sizing: border-box;
-                    }
+                        .line2 {
+                            white-space: pre-line;
+                            font-size: 16px;
+                            font-weight: 400;
+                            color: #333333;
+                            text-align: center;
 
-                    .check {
-                        position: absolute;
-                        right: 0;
-                        bottom: 0;
-                    }
+                            span {
+                                color: rgba(255, 49, 88, 1);
+                                font-size: 48px;
+                            }
+                        }
 
-                    .tag {
-                        padding: 0 15px;
-                        height: 42px;
-                        /*background: rgba(255, 49, 88, 1);*/
-                        border-radius: 20px 0px 20px 0px;
-                        position: absolute;
-                        top: -10px;
-                        left: 0;
-                        background-image: linear-gradient(to right, #FF9600, #FF3158);
+                        .line3 {
+                            border-top: 1px solid rgba(232, 232, 232, 1);
+                            font-size: 16px;
+                            font-weight: 400;
+                            color: rgba(51, 51, 51, 1);
+                            text-align: center;
+                            padding-top: 10px;
+                            padding-bottom: 30px;
+                            box-sizing: border-box;
+                        }
 
-                        font-size: 18px;
-                        font-weight: 400;
-                        color: rgba(255, 255, 255, 1);
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                    }
+                        .check {
+                            position: absolute;
+                            right: 0;
+                            bottom: 0;
+                        }
 
-                    .all-year {
-                        width: 162px;
-                        height: 43px;
-                        position: absolute;
-                        left: 0;
-                        bottom: 0;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        padding: 15px;
-                        box-sizing: border-box;
-                        text-align: center;
+                        .tag {
+                            padding: 0 15px;
+                            height: 42px;
+                            /*background: rgba(255, 49, 88, 1);*/
+                            border-radius: 20px 0px 20px 0px;
+                            position: absolute;
+                            top: -10px;
+                            left: 0;
+                            background-image: linear-gradient(to right, #FF9600, #FF3158);
 
-                        img {
+                            font-size: 18px;
+                            font-weight: 400;
+                            color: rgba(255, 255, 255, 1);
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                        }
+
+                        .all-year {
                             width: 162px;
                             height: 43px;
                             position: absolute;
-                        }
-
-                        .text {
-                            z-index: 1;
-                            font-size: 15px;
-                            color: #ffffff;
-                        }
-                    }
-
-                    .cheap-box {
-                        width: 316px;
-                        height: 62px;
-                        position: absolute;
-                        top: -35px;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        padding: 15px;
-                        box-sizing: border-box;
-                        text-align: center;
-
-                        img {
-                            width: 316px;
-                            height: 62px;
-                            position: absolute;
-                        }
-
-                        .text {
-                            z-index: 1;
-                            font-size: 16px;
-                            color: #ffffff;
+                            left: 0;
+                            bottom: 0;
                             display: flex;
+                            justify-content: center;
                             align-items: center;
+                            padding: 15px;
+                            box-sizing: border-box;
+                            text-align: center;
 
-                            .van-count-down {
-                                line-height: unset;
+                            img {
+                                width: 162px;
+                                height: 43px;
+                                position: absolute;
                             }
 
-                            .block {
-                                font-size: 16px;
+                            .text {
+                                z-index: 1;
+                                font-size: 15px;
                                 color: #ffffff;
                             }
                         }
 
+                        .cheap-box {
+                            width: 316px;
+                            height: 62px;
+                            position: absolute;
+                            top: -35px;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            padding: 15px;
+                            box-sizing: border-box;
+                            text-align: center;
+
+                            img {
+                                width: 316px;
+                                height: 62px;
+                                position: absolute;
+                            }
+
+                            .text {
+                                z-index: 1;
+                                font-size: 16px;
+                                color: #ffffff;
+                                display: flex;
+                                align-items: center;
+
+                                .van-count-down {
+                                    line-height: unset;
+                                }
+
+                                .block {
+                                    font-size: 16px;
+                                    color: #ffffff;
+                                }
+                            }
+
+                        }
+                    }
+
+                    .selected {
+                        width: 360px;
+                        height: 240px;
+                        border: 2px solid rgba(255, 49, 88, 1);
+                        border-radius: 15px;
+
                     }
                 }
 
-                .selected {
-                    width: 360px;
-                    height: 240px;
-                    border: 2px solid rgba(255, 49, 88, 1);
-                    border-radius: 15px;
-
-                }
-            }
-
-            .button-box {
-                display: flex;
-                justify-content: center;
-                margin-bottom: 50px;
-
-                .el-button {
-                    width: 240px;
-                    height: 72px;
-                    background: rgba(255, 194, 49, 1);
-                    border-radius: 10px;
-
-                    font-size: 18px;
-                    font-weight: 400;
-                    color: rgba(255, 255, 255, 1);
-                }
-            }
-
-            .paypal-box{
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                .center{
-                    cursor: pointer;
-                    width: 120px;
-                    background-color: #eeeeee;
-                    border-radius: 5px;
+                .button-box {
                     display: flex;
                     justify-content: center;
+                    margin-bottom: 50px;
+
+                    .el-button {
+                        width: 240px;
+                        height: 72px;
+                        background: rgba(255, 194, 49, 1);
+                        border-radius: 10px;
+
+                        font-size: 18px;
+                        font-weight: 400;
+                        color: rgba(255, 255, 255, 1);
+                    }
+                }
+
+                .paypal-box {
+                    display: flex;
+                    flex-direction: column;
                     align-items: center;
-                    padding: 8px 0;
-                    font-size: 13px;
-                    img{
-                        width: 50px;
-                        margin: 0 5px;
+
+                    .center {
+                        cursor: pointer;
+                        width: 120px;
+                        background-color: #eeeeee;
+                        border-radius: 5px;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        padding: 8px 0;
+                        font-size: 13px;
+
+                        img {
+                            width: 50px;
+                            margin: 0 5px;
+                        }
                     }
                 }
             }
+
+            .payment-list {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                padding-left: 30%;
+                padding-top: 50px;
+                box-sizing: border-box;
+
+                .line1, .line2, .line3 {
+                    margin: 20px 0;
+                    display: flex;
+                    align-items: center;
+
+                    ::v-deep .el-radio {
+                        display: flex;
+                        align-items: center;
+
+                        .el-radio__inner {
+                            width: 20px;
+                            height: 20px;
+                        }
+
+                        .el-radio__inner:after {
+                            width: 5px;
+                            height: 5px;
+                        }
+                    }
+
+                    .is-checked {
+                        .select-item {
+                            border: 1px solid #ffc231;
+                        }
+                    }
+
+                    .select-item {
+                        width: 291px;
+                        height: 110px;
+                        border: solid 1px #e5e5e5;
+                        padding: 20px;
+                        box-sizing: border-box;
+                    }
+
+                    .text {
+                        font-size: 18px;
+                        font-weight: normal;
+                        font-stretch: normal;
+                        letter-spacing: 0px;
+                        color: #333333;
+                    }
+                }
+
+                .button-box {
+                    margin-top: 30px;
+                    margin-left: 60px;
+                    display: flex;
+                    justify-content: center;
+                    margin-bottom: 30px;
+
+                    .el-button {
+                        width: 240px;
+                        height: 72px;
+                        background: rgba(255, 194, 49, 1);
+                        border-radius: 10px;
+
+                        font-size: 18px;
+                        font-weight: 400;
+                        color: rgba(255, 255, 255, 1);
+                    }
+                }
+
+                .paypal-box{
+                    margin-top: 30px;
+                }
+            }
+
+
         }
     }
 

@@ -3,7 +3,6 @@
         <Header :menu="1"></Header>
         <div class="center-box">
             <div class="teachText" @click="goToTeach">
-                <img src="../../../public/images/notify.png" alt="">
                 <div class="notice-main">
                     <span class="notice">
 <!--                         {{teachList.title}}-->
@@ -12,6 +11,7 @@
                         <a>（播放软件下载）</a>
                     </span>
                 </div>
+                <img src="../../../public/images/notify.png" alt="">
             </div>
             <div class="swiper" v-show="parseInt(siteInfo.site_banner_status)">
                 <div class="swiper-container">

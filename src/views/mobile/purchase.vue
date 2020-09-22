@@ -2,7 +2,7 @@
     <div class="page">
         <MobileTitle title="购买专区"></MobileTitle>
         <div class="container">
-            <div class="white">
+            <div class="white" v-show="!toPay">
                 <div class="limit-time" v-if="leftTime>0">
                     <img src="../../../public/images/limit.png" alt="">
                     <div class="time-num-box">
@@ -34,34 +34,90 @@
                     </div>
                     <div class="line3">{{item.idt_name}}</div>
                     <img class="check" v-if="selectedIndex==index" src="../../../public/images/check.png" alt="">
-                    <div class="tag" v-if="item.mony==4">包年精选福利</div>
+                    <div class="tag" v-if="item.mony==4">独享包年精选福利</div>
                     <!--                    <div class="all-year" v-if="item.mony==4">-->
                     <!--                        <img src="../../../public/images/bbb.png" alt="">-->
                     <!--                        <div class="text">包年精选福利</div>-->
                     <!--                    </div>-->
                 </div>
                 <div class="button-box">
+                    <el-button type="primary" @click="checkLogin">立即购买</el-button>
+                </div>
+<!--                <div class="paypal-box">-->
+<!--                    <div class="center" v-show="!showPayPal" v-loading="showPayPalLoading" @click="paypalClick">-->
+<!--                        用<img src="../../../public/images/paypal.png" alt="">付款-->
+<!--                    </div>-->
+<!--                    <PayPal-->
+<!--                            v-show="showPayPal"-->
+<!--                            :amount="payAmount"-->
+<!--                            currency="TWD"-->
+<!--                            :client="credentials"-->
+<!--                            env="sandbox"-->
+<!--                            :button-style="buttonStyle"-->
+<!--                            :notify-url="notifyUrl"-->
+<!--                            @payment-authorized="paymentAuthorized"-->
+<!--                            @payment-completed="paymentCompleted"-->
+<!--                            @payment-cancelled="paymentCancelled">-->
+<!--                    </PayPal>-->
+<!--                </div>-->
+            </div>
+            <div class="payment-list" v-if="toPay">
+                <div class="line1">
+                    <el-radio v-model="paymentIndex" label="1">
+                        <div class="select-item">
+                            <van-image
+                                    width="100%"
+                                    height="100%"
+                                    fit="cover"
+                                    :src="require('../../../public/images/fk1.png')"
+                            />
+                        </div>
+                    </el-radio>
+                    <div class="text">第三方支付（支付宝、QQ扫码支付）</div>
+                </div>
+                <div class="line2">
+                    <el-radio v-model="paymentIndex" label="2">
+                        <div class="select-item">
+                            <van-image
+                                    width="100%"
+                                    height="100%"
+                                    fit="cover"
+                                    :src="require('../../../public/images/paypal1.png')"
+                            />
+                        </div>
+                    </el-radio>
+                    <div class="text">paypal支付</div>
+                </div>
+<!--                <div class="line3">-->
+<!--                    <el-radio v-model="paymentIndex" label="3">-->
+<!--                        <div class="select-item">-->
+<!--                            <van-image-->
+<!--                                    width="100%"-->
+<!--                                    height="100%"-->
+<!--                                    fit="cover"-->
+<!--                                    :src="require('../../../public/images/kf1.png')"-->
+<!--                            />-->
+<!--                        </div>-->
+<!--                    </el-radio>-->
+<!--                    <div class="text">联系客服支付开通</div>-->
+<!--                </div>-->
+                <div class="button-box" v-show="!showPayPal">
                     <el-button type="primary" @click="buyVip">立即购买</el-button>
                 </div>
-                <div class="paypal-box">
-                    <div class="center" v-show="!showPayPal" v-loading="showPayPalLoading" @click="paypalClick">
-                        用<img src="../../../public/images/paypal.png" alt="">付款
-                    </div>
-                    <PayPal
-                            v-show="showPayPal"
-                            :amount="payAmount"
-                            currency="TWD"
-                            :client="credentials"
-                            env="sandbox"
-                            :button-style="buttonStyle"
-                            :notify-url="notifyUrl"
-                            @payment-authorized="paymentAuthorized"
-                            @payment-completed="paymentCompleted"
-                            @payment-cancelled="paymentCancelled">
-                    </PayPal>
-                </div>
+                <PayPal
+                        class="paypal-box"
+                        v-show="showPayPal"
+                        :amount="payAmount"
+                        currency="TWD"
+                        :client="credentials"
+                        env="sandbox"
+                        :button-style="buttonStyle"
+                        :notify-url="notifyUrl"
+                        @payment-authorized="paymentAuthorized"
+                        @payment-completed="paymentCompleted"
+                        @payment-cancelled="paymentCancelled">
+                </PayPal>
             </div>
-
         </div>
     </div>
 </template>
@@ -69,7 +125,7 @@
 <script>
     import MobileTitle from '@/components/mobile/Title'
     import {Notify} from 'vant';
-    import {fetchLogo, getVipList} from "../../api/pc/api";
+    import {buyVip, fetchLogo, getVipList} from "../../api/pc/api";
     import {Dialog} from 'vant';
     import {saveTwoDecimal} from "../../utils/utils";
     import PayPal from 'vue-paypal-checkout'
@@ -92,7 +148,6 @@
                 notifyUrl:this.hookBaseUrl,
                 hookBaseUrl:'http://yuequba.zhengshangwl.com/home/pay/paypalreturnurl',
                 payAmount:'0',
-                showPayPal:localStorage.getItem('token')?true:false,
                 showPayPalLoading:false,
                 credentials: {
                     sandbox: 'AWbB35er5_gd3sVwwFfXh4ma_J4vwXgfOQUxYJIpXGDki-DyLhenlA17gUIXH_qIJXF6APtCOgsvMC0B',
@@ -104,6 +159,20 @@
                     shape: 'rect',
                     color: 'silver'
                 },
+
+                toPay: false,
+                paymentIndex: '1',
+                showEWM: false,
+                showPayPal:false
+            }
+        },
+        watch:{
+            paymentIndex(val){
+                if(val==2){
+                    this.showPayPal=true
+                }else {
+                    this.showPayPal=false
+                }
             }
         },
         methods: {
@@ -134,25 +203,37 @@
                     that.leftTime=leftTime
                 })
             },
-            buyVip() {
+            checkLogin() {
                 let that = this
                 let token = localStorage.getItem('token')
                 if (!token) {
-                    Dialog.confirm({
-                        title: '标题',
-                        message: '请先去登录',
-                    })
-                        .then(() => {
-                            that.$router.push({
-                                path: '/login'
-                            })
+                    this.$confirm('请先去登录').then(_ => {
+                        that.$router.push({
+                            path: '/login'
                         })
-                        .catch(() => {
-                            // on cancel
-                        });
+                    }).catch(_ => {
+
+                    });
                 } else {
-                    //console.log(that.vipList[that.selectedIndex])
-                    window.open(that.vipList[that.selectedIndex].ext_link)
+                    this.toPay = true
+                }
+            },
+            buyVip() {
+                let that = this
+                if (that.paymentIndex == '1') {
+                    buyVip({
+                        token: localStorage.getItem('token'),
+                        id: that.vipList[that.selectedIndex].id
+                    }).then(res => {
+                        window.open(that.vipList[that.selectedIndex].ext_link)
+                    })
+                } else if (that.paymentIndex == '2') {
+                    if(that.showPayPal==true){
+                        that.$message.info('请点击下方PayPal按钮,以使用PayPal支付')
+                    }
+                    this.showPayPal=true
+                } else {
+                    that.$refs.contact.contactUs()
                 }
             },
             selectVip(index){
@@ -450,6 +531,86 @@
                     }
                 }
 
+            }
+            .payment-list {
+                width: 100%;
+                background: rgba(255, 255, 255, 1);
+                border-radius: 0.133rem;
+                padding: 0.267rem;
+                box-sizing: border-box;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                box-sizing: border-box;
+                padding-top: 0.667rem;
+
+                .line1, .line2, .line3 {
+                    width: 100%;
+                    margin: 0.267rem 0;
+                    display: flex;
+                    align-items: center;
+
+                    ::v-deep .el-radio {
+                        display: flex;
+                        align-items: center;
+
+                        .el-radio__inner {
+                            width: 0.4rem;
+                            height: 0.4rem;
+                        }
+
+                        .el-radio__inner:after {
+                            width: 0.15rem;
+                            height: 0.15rem;
+                        }
+                    }
+
+                    .is-checked {
+                        .select-item {
+                            border: 1px solid #ffc231;
+                        }
+                    }
+
+                    .select-item {
+                        width: 3.88rem;
+                        height: 1.467rem;
+                        border: solid 1px #e5e5e5;
+                        padding: 0.267rem;
+                        box-sizing: border-box;
+                    }
+
+                    .text {
+                        font-size: 0.24rem;
+                        font-weight: normal;
+                        font-stretch: normal;
+                        letter-spacing: 0px;
+                        color: #333333;
+                    }
+                }
+
+                .button-box {
+                    width: 100%;
+                    margin-top: 0.4rem;
+                    display: flex;
+                    justify-content: center;
+                    margin-bottom: 0.4rem;
+
+                    .el-button {
+                        width: 3rem;
+                        height: 0.96rem;
+                        background: rgba(255, 194, 49, 1);
+                        border-radius: 0.133rem;
+
+                        font-size: 0.24rem;
+                        font-weight: 400;
+                        color: rgba(255, 255, 255, 1);
+                    }
+                }
+
+                .paypal-box{
+                    margin:  0.4rem auto;
+                }
             }
         }
 
