@@ -133,11 +133,11 @@
                             <div class="block-items">
                                 <div class="block-item" v-for="(item,index) in historyList" >
                                     <div class="line1"
-                                         @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)"
+                                         @click="$router.push('/detail?type='+item.category_id+'&id='+item.pp_id)"
                                          :style="'background-image: url('+baseUrl+item.more.thumbnail+')'"></div>
                                     <div class="line2">{{item.create_time|timeFormatTwo}}</div>
                                     <div class="line3"
-                                         @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)">
+                                         @click="$router.push('/detail?type='+item.category_id+'&id='+item.pp_id)">
                                         {{item.post_title}}
                                     </div>
                                 </div>
