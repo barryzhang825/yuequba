@@ -127,6 +127,23 @@
                             </div>
                         </div>
                     </div>
+                    <div class="block-box" >
+                        <div class="title">浏览历史</div>
+                        <div class="block-content">
+                            <div class="block-items">
+                                <div class="block-item" v-for="(item,index) in historyList" >
+                                    <div class="line1"
+                                         @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)"
+                                         :style="'background-image: url('+baseUrl+item.more.thumbnail+')'"></div>
+                                    <div class="line2">{{item.create_time|timeFormatTwo}}</div>
+                                    <div class="line3"
+                                         @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)">
+                                        {{item.post_title}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -141,7 +158,7 @@
     import 'swiper/dist/css/swiper.min.css';
     import Header from '@/components/pc/Header'
     import Footer from '@/components/pc/Footer'
-    import {getArticleList, getBannerList, getTagList} from "../../api/pc/api";
+    import {getArticleList, getBannerList, getHistoryList, getTagList} from "../../api/pc/api";
     import {formatTime, formatTimeThree} from "../../utils/utils";
     import ToTop from "../../components/pc/ToTop";
 
@@ -196,6 +213,8 @@
                 yearList: [],//包年精选文章
                 recommendList: [],//推荐文章
                 specialList: [],//精选文章
+                historyList: [],//历史浏览记录
+
             }
         },
         watch:{
@@ -244,6 +263,11 @@
                     hot: 1
                 })
                 this.hotList = hotList.data.list
+
+                let historyList = await getHistoryList({
+
+                })
+                this.historyList = historyList.data.list
 
                 let yearList = await getArticleList({
                     page: 1,

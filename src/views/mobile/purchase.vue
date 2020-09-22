@@ -62,7 +62,7 @@
 <!--                </div>-->
             </div>
             <div class="payment-list" v-if="toPay">
-                <div class="line1">
+                <div class="line1" v-if="siteInfo.site_pay_status_one==1">
                     <el-radio v-model="paymentIndex" label="1">
                         <div class="select-item">
                             <van-image
@@ -75,7 +75,7 @@
                     </el-radio>
                     <div class="text">第三方支付（支付宝、QQ扫码支付）</div>
                 </div>
-                <div class="line2">
+                <div class="line2" v-if="siteInfo.site_pay_status_two==1">
                     <el-radio v-model="paymentIndex" label="2">
                         <div class="select-item">
                             <van-image
@@ -198,6 +198,15 @@
                 })
                 fetchLogo().then(res=>{
                     that.siteInfo=res.data
+                    console.log(res.data,'res.data')
+                    if(that.siteInfo.site_pay_status_one==1){
+                        that.paymentIndex='1'
+                    }else if(that.siteInfo.site_pay_status_two==1){
+                        that.paymentIndex='2'
+                    }else {
+                        that.paymentIndex='3'
+                    }
+                    console.log(that.paymentIndex)
                     localStorage.setItem('siteInfo',JSON.stringify(res.data))
                     let leftTime=Date.parse(res.data.site_vipendtime)-Date.now()
                     that.leftTime=leftTime
@@ -242,7 +251,6 @@
                 this.payAmount=this.vipList[this.selectedIndex].taibi
                 //console.log( this.notifyUrl)
             },
-
             paypalClick(){
                 let that = this
                 that.showPayPalLoading=true
@@ -267,18 +275,15 @@
                     that.showPayPalLoading=false
                 },500)
             },
-
             paymentAuthorized(data) {
                 // 授权完成的回调，可以拿到订单id
                 //console.log(data,'授权完成的回调');
             },
-
             paymentCompleted(data) {
                 // 用户支付完成的回调，可以拿到订单id
                 //console.log(data,'用户支付完成的回调');
                 Notify({ type: 'success', message: '支付成功' });
             },
-
             paymentCancelled(data) {
                 // 用户取消交易的回调
                 //console.log(data,'用户取消交易的回调');
@@ -288,6 +293,9 @@
             this.fetchData()
             let clientWidth = document.documentElement.clientWidth;
             document.documentElement.style.fontSize = clientWidth / 10 + 'px';
+
+
+
         }
     }
 </script>
@@ -538,11 +546,9 @@
                 border-radius: 0.133rem;
                 padding: 0.267rem;
                 box-sizing: border-box;
-                width: 100%;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                box-sizing: border-box;
                 padding-top: 0.667rem;
 
                 .line1, .line2, .line3 {

@@ -2,16 +2,21 @@
     <div class="page">
         <Header :menu="1"></Header>
         <div class="center-box">
-            <div class="teachText" @click="goToTeach">
-                <div class="notice-main">
+            <div class="teachText2">
+                <div class="left" @click="goToTeach(siteInfo.site_play_software)">
+                    <div class="notice-main">
                     <span class="notice">
-<!--                         {{teachList.title}}-->
-<!--                        {{teachList.post_excerpt}}-->
-                        包年精选会员独享
-                        <a>（播放软件下载）</a>
+                        <a>{{siteInfo.site_play_software_name}}</a>
                     </span>
+                    </div>
+                    <img class="voice" src="../../../public/images/notify.png" alt="">
                 </div>
-                <img src="../../../public/images/notify.png" alt="">
+                <div class="center" @click="$router.push('/category?type=4')">
+                    <span>{{siteInfo.site_hometop_title}}</span>
+                </div>
+                <div class="right" @click="goToTeach(siteInfo.site_duandianxc_software)">
+                    <div class="text">{{siteInfo.site_duandianxc_software_name}}</div>
+                </div>
             </div>
             <div class="swiper" v-show="parseInt(siteInfo.site_banner_status)">
                 <div class="swiper-container">
@@ -178,6 +183,23 @@
                             </div>
                         </div>
                     </div>
+                    <div class="block-box" >
+                        <div class="title">浏览历史</div>
+                        <div class="block-content">
+                            <div class="block-items">
+                                <div class="block-item" v-for="(item,index) in historyList" >
+                                    <div class="line1"
+                                         @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)"
+                                         :style="'background-image: url('+baseUrl+item.more.thumbnail+')'"></div>
+                                    <div class="line2">{{item.create_time|timeFormatTwo}}</div>
+                                    <div class="line3"
+                                         @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)">
+                                        {{item.post_title}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -193,7 +215,15 @@
     import Header from '@/components/pc/Header'
     import Footer from '@/components/pc/Footer'
     import ToTop from '@/components/pc/ToTop'
-    import {fetchLogo, getArticleList, getBannerList, getClassList, getTagList, getTeachList} from "../../api/pc/api";
+    import {
+        fetchLogo,
+        getArticleList,
+        getBannerList,
+        getClassList,
+        getHistoryList,
+        getTagList,
+        getTeachList
+    } from "../../api/pc/api";
     import {formatTime, formatTimeThree} from "../../utils/utils";
 
     export default {
@@ -252,15 +282,17 @@
                 specialList: [],//精选文章
                 teachList: [],//解压教程
                 classList: [],//四篇文章
+                historyList: [],//历史浏览记录
 
             }
         },
         methods: {
-            goToTeach(){
+            goToTeach(url){
               // this.$router.push({
               //     path:'/teach-detail'
               // })
-                window.open(this.siteInfo.site_play_software,'_blank')
+              //   window.open(this.siteInfo.site_play_software,'_blank')
+                window.open(url,'_blank')
             },
             handleSizeChange(val) {
                 //console.log(`每页 ${val} 条`);
@@ -286,6 +318,11 @@
                     icon_name: 'home_top_course'
                 })
                 this.teachList = teachList.data
+
+                let historyList = await getHistoryList({
+
+                })
+                this.historyList = historyList.data.list
 
                 let tagList = await getTagList()
                 this.tagList = tagList.data
@@ -438,97 +475,52 @@
             .teachText::-webkit-scrollbar {
                 display: none;
             }
-            .teachText {
+            .teachText2{
                 display: flex;
                 align-items: center;
-                padding: 10px;
+                padding: 10px 20px;
                 margin-top: 20px;
                 background-color: #ffffff;
                 border-radius: 10px;
                 box-shadow: 0px 0px 10px 0px rgba(179, 179, 179, 0.35);
-                -ms-overflow-style: none; //ie下隐藏滚动条
-                padding-left: 50px;
                 position: relative;
-                cursor: pointer;
-
-
-                .box {
-                    margin: 0 10px;
-                    cursor: pointer;
-                    height: 100%;
+                justify-content: space-between;
+                .left{
                     display: flex;
-                    flex-wrap: nowrap;
+                    flex-direction: row;
                     align-items: center;
-                }
-
-                img {
-                    position: absolute;
-                    left: 10px;
-                    width: 25px;
-                    height: 25px;
-                }
-
-                .teachText {
-                    width: 342px;
-                    height: 24px;
-                    line-height: 24px;
-                    margin: 0 auto 15px;
-                    color: #fff;
-                    font-size: 12px;
-                    overflow: hidden;
-                }
-
-                .notice-main {
-                    overflow: hidden;
-                }
-
-                .notice {
-                    display: block;
-                    /*-moz-animation: move 50s infinite linear;*/
-                    /*-webkit-animation: move 50s infinite linear;*/
-                    /*animation: move 50s infinite linear;*/
-                    white-space: nowrap;
-                }
-
-                .notice > span {
-                    color: #FFD460;
-                }
-                .notice > a{
-                    color: rgba(0,41,255,0.72);
-                }
-
-                @-moz-keyframes move {
-                    0% {
-                        transform: translateX(100%);
-                    }
-                    50% {
-                        transform: translateX(0);
-                    }
-                    100% {
-                        transform: translateX(-100%);
+                    cursor: pointer;
+                    .voice{
+                        width: 25px;
+                        height: 25px;
+                        margin-left: 10px;
                     }
                 }
-                @-webkit-keyframes move {
-                    0% {
-                        transform: translateX(100%);
-                    }
-                    50% {
-                        transform: translateX(0);
-                    }
-                    100% {
-                        transform: translateX(-100%);
+                .center{
+                    cursor: pointer;
+                    font-weight: 500;
+                    font-size: 16px;
+                    span{
+                        color: #abeaf7;
+                        background-image: -webkit-linear-gradient(180deg, #abeaf7, #f41392);
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                        -webkit-animation: change 2s infinite linear;
+                        @-webkit-keyframes change {
+                            from {
+                                -webkit-filter: hue-rotate(0deg);
+                            }
+                            to {
+                                -webkit-filter: hue-rotate(-360deg);
+                            }
+                        }
                     }
                 }
-                @keyframes move {
-                    0% {
-                        transform: translateX(100%);
-                    }
-                    50% {
-                        transform: translateX(0);
-                    }
-                    100% {
-                        transform: translateX(-100%);
-                    }
+                .right{
+                    cursor: pointer;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
                 }
             }
             .class {

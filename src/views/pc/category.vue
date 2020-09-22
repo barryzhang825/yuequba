@@ -128,6 +128,23 @@
                             </div>
                         </div>
                     </div>
+                    <div class="block-box" >
+                        <div class="title">浏览历史</div>
+                        <div class="block-content">
+                            <div class="block-items">
+                                <div class="block-item" v-for="(item,index) in historyList" >
+                                    <div class="line1"
+                                         @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)"
+                                         :style="'background-image: url('+baseUrl+item.more.thumbnail+')'"></div>
+                                    <div class="line2">{{item.create_time|timeFormatTwo}}</div>
+                                    <div class="line3"
+                                         @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)">
+                                        {{item.post_title}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -143,7 +160,7 @@
     import Header from '@/components/pc/Header'
     import Footer from '@/components/pc/Footer'
     import ToTop from "@/components/pc/ToTop";
-    import {getArticleList, getBannerList, getTagList} from "../../api/pc/api";
+    import {getArticleList, getBannerList, getHistoryList, getTagList} from "../../api/pc/api";
     import {formatTime, formatTimeThree} from "../../utils/utils";
 
     export default {
@@ -197,6 +214,8 @@
                 hotList: [],//热门文章
                 yearList: [],//包年精选文章
                 specialList: [],//包年精选文章
+                historyList: [],//历史浏览记录
+
             }
         },
         methods: {
@@ -233,6 +252,11 @@
                     hot:1
                 })
                 this.hotList=hotList.data.list
+
+                let historyList = await getHistoryList({
+
+                })
+                this.historyList = historyList.data.list
 
                 let yearList=await getArticleList({
                     page:1,

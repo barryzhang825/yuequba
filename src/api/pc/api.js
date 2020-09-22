@@ -200,6 +200,13 @@ export function fetchEWM(data) {
         params:data
     })
 }
+export function getHistoryList(data) {
+    return request({
+        url: '/home/History_browse/getLog',
+        method: 'get',
+        params:data
+    })
+}
 
 
 

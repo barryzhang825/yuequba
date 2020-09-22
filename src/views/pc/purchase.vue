@@ -50,27 +50,9 @@
                 <div class="button-box">
                     <el-button type="primary" @click="checkLogin">立即购买</el-button>
                 </div>
-<!--                <div class="paypal-box">-->
-<!--                    <div class="center" v-show="!showPayPal" v-loading="showPayPalLoading" @click="paypalClick">-->
-<!--                        用<img src="../../../public/images/paypal.png" alt="">付款-->
-<!--                    </div>-->
-<!--                    <PayPal-->
-<!--                            ref="paypal"-->
-<!--                            v-show="showPayPal"-->
-<!--                            :amount="payAmount"-->
-<!--                            currency="TWD"-->
-<!--                            :client="credentials"-->
-<!--                            env="sandbox"-->
-<!--                            :button-style="buttonStyle"-->
-<!--                            :notify-url="notifyUrl"-->
-<!--                            @payment-authorized="paymentAuthorized"-->
-<!--                            @payment-completed="paymentCompleted"-->
-<!--                            @payment-cancelled="paymentCancelled">-->
-<!--                    </PayPal>-->
-<!--                </div>-->
             </div>
             <div class="payment-list" v-if="toPay">
-                <div class="line1">
+                <div class="line1" v-if="siteInfo.site_pay_status_one==1">
                     <el-radio v-model="paymentIndex" label="1">
                         <div class="select-item">
                             <van-image
@@ -83,7 +65,7 @@
                     </el-radio>
                     <div class="text">第三方支付（支付宝、QQ扫码支付）</div>
                 </div>
-                <div class="line2">
+                <div class="line2" v-if="siteInfo.site_pay_status_two==1">
                     <el-radio v-model="paymentIndex" label="2">
                         <div class="select-item">
                             <van-image
@@ -96,7 +78,7 @@
                     </el-radio>
                     <div class="text">paypal支付</div>
                 </div>
-                <div class="line3">
+                <div class="line3" v-if="siteInfo.site_pay_status_three==1">
                     <el-radio v-model="paymentIndex" label="3">
                         <div class="select-item">
                             <van-image
@@ -206,6 +188,13 @@
                 })
                 fetchLogo().then(res => {
                     that.siteInfo = res.data
+                    if(that.siteInfo.site_pay_status_one==1){
+                        that.paymentIndex='1'
+                    }else if(that.siteInfo.site_pay_status_two==1){
+                        that.paymentIndex='2'
+                    }else {
+                        that.paymentIndex='3'
+                    }
                     localStorage.setItem('siteInfo', JSON.stringify(res.data))
                     let leftTime = Date.parse(res.data.site_vipendtime) - Date.now()
                     that.leftTime = leftTime
@@ -309,6 +298,7 @@
 
         .container {
             width: 1200px;
+            min-height: 1000px;
             margin: 30px auto;
             padding: 30px;
             box-sizing: border-box;
