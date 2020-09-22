@@ -15,6 +15,10 @@
                 <div v-if="userInfo.create_time" class="right">{{userInfo.create_time|timeFormat}}</div>
             </div>
             <div class="line">
+                <div class="left">流量余额：</div>
+                <div v-if="userInfo.kb" class="right">{{userInfo.kb}}</div>
+            </div>
+            <div class="line">
                 <div class="left">邮箱：</div>
                 <div v-if="userInfo.user_email" class="right">{{userInfo.user_email||'-'}}</div>
             </div>

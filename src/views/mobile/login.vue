@@ -4,7 +4,7 @@
             <img class="logo" @click="$router.push('/mobile/home')" :src="siteInfo.site_logo" alt="">
             <div class="login-box">
                 <el-form label-position="left" :rules="rules" ref="ruleForm" label-width="80px" :model="formData">
-                    <el-form-item label="用户名：" prop="username">
+                    <el-form-item label="邮箱：" prop="username">
                         <el-input v-model="formData.username"></el-input>
                     </el-form-item>
                     <el-form-item label="密 码：" prop="password">
@@ -48,7 +48,7 @@
                 },
                 rules: {
                     username: [
-                        {required: true, message: '请输入用户名', trigger: 'blur'}
+                        {required: true, message: '请输入邮箱', trigger: 'blur'}
                     ],
                     password: [
                         {required: true, message: '请输入密码', trigger: 'blur'}
@@ -68,7 +68,7 @@
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         userLogin({
-                            user_login:that.formData.username,
+                            user_email:that.formData.username,
                             user_pass:that.formData.password,
                         }).then(res=>{
                             localStorage.setItem('token',res.data.token)

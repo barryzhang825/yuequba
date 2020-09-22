@@ -20,10 +20,10 @@
 <!--                        <img class="alert" src="../../../public/images/alert.png" alt="">-->
 <!--                    </el-badge>-->
 <!--                </div>-->
-                <div class="link" v-if="!user_nickname"><router-link to="/login">登录</router-link> | <router-link to="/register">注册</router-link></div>
-                <div class="userinfo" v-if="user_nickname">
+                <div class="link" v-if="!user_email"><router-link to="/login">登录</router-link> | <router-link to="/register">注册</router-link></div>
+                <div class="userinfo" v-if="user_email">
                     <div class="userinfo-left">
-                        <router-link to="/user">{{user_nickname}}</router-link>
+                        <router-link to="/user" class="user-email">{{user_email}}</router-link>
                         <div class="time-left" v-if="vipEndTime">{{vipEndTime}} VIP到期</div>
                     </div>
                     <div class="userinfo-middle">
@@ -67,7 +67,8 @@
                 vipEndTime:0,
                 searchShow:false,
                 searchWord:"",
-                user_nickname:''
+                user_nickname:'',
+                user_email:''
             }
         },
         methods: {
@@ -138,6 +139,7 @@
         mounted() {
             if(localStorage.getItem('user_info')){
                 this.user_nickname=JSON.parse(localStorage.getItem('user_info')).user_nickname
+                this.user_email=JSON.parse(localStorage.getItem('user_info')).user_email
                 let endTime=JSON.parse(localStorage.getItem('user_info')).vip_end_time
                 if(endTime>0){
                     this.vipEndTime=formatTimeThree(endTime)
@@ -267,6 +269,12 @@
                             text-decoration: none;
                             font-size: 10px;
                             margin-top: 5px;
+                        }
+                        .user-email{
+                            word-wrap: break-word;
+                            word-break: normal;
+                            max-width: 120px;
+                            @include line-hidden(1);
                         }
                     }
                     .userinfo-middle{

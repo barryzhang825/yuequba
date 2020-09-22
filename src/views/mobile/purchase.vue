@@ -34,10 +34,15 @@
                     </div>
                     <div class="line3">{{item.idt_name}}</div>
                     <img class="check" v-if="selectedIndex==index" src="../../../public/images/check.png" alt="">
-                    <div class="tag" v-if="item.mony==4"><span>独享包年精选福利</span></div>
+                    <div class="tag" v-if="item.mony==4"><span>独享包年精选区福利</span></div>
                 </div>
                 <div class="button-box">
                     <el-button type="primary" @click="checkLogin">立即购买</el-button>
+                </div>
+                <div class="button-box charge-box" >
+                    <el-button type="primary" @click="chargeBalance">
+                        <span>台币充值支付宝与QQ币</span>
+                    </el-button>
                 </div>
 
             </div>
@@ -53,7 +58,7 @@
                             />
                         </div>
                     </el-radio>
-                    <div class="text">第三方支付（支付宝、QQ扫码支付）</div>
+                    <div class="text">会员充值</div>
                 </div>
                 <div class="line2" v-if="siteInfo.site_pay_status_two==1">
                     <el-radio v-model="paymentIndex" label="2">
@@ -97,10 +102,14 @@
                         @payment-completed="paymentCompleted"
                         @payment-cancelled="paymentCancelled">
                 </PayPal>
-
-                <div class="charge-balance" @click="chargeBalance">
-                    台币充值支付宝与QQ币
+                <div class="button-box charge-box">
+                    <el-button type="primary" @click="chargeBalance">
+                        <span>台币充值支付宝与QQ币</span>
+                    </el-button>
                 </div>
+<!--                <div class="charge-balance" @click="chargeBalance">-->
+<!--                    台币充值支付宝与QQ币-->
+<!--                </div>-->
             </div>
         </div>
     </div>
@@ -510,7 +519,7 @@
                     justify-content: center;
 
                     .el-button {
-                        width: 3.2rem;
+                        width: 4rem;
                         height: 0.96rem;
                         background: rgba(255, 194, 49, 1);
                         border-radius: 0.133rem;
@@ -519,6 +528,30 @@
                         font-weight: 400;
                         color: rgba(255, 255, 255, 1);
                     }
+                }
+                .charge-box{
+                    margin-top: 0.267rem;
+                    .el-button{
+                        width: 4rem !important;
+                        background: none !important;
+                        border: 2px solid rgba(8,122,247,0.58);
+                        span{
+                            color: #53d2e7 !important;
+                            background-image: -webkit-linear-gradient(180deg, #53d2e7, #f41392);
+                            -webkit-background-clip: text;
+                            -webkit-text-fill-color: transparent;
+                            -webkit-animation: change 2s infinite linear;
+                            @-webkit-keyframes change {
+                                from {
+                                    -webkit-filter: hue-rotate(0deg);
+                                }
+                                to {
+                                    -webkit-filter: hue-rotate(-360deg);
+                                }
+                            }
+                        }
+                    }
+
                 }
                 .paypal-box{
                     margin-top: 0.4rem;
@@ -606,7 +639,7 @@
                     margin-bottom: 0.4rem;
 
                     .el-button {
-                        width: 3rem;
+                        width: 4rem;
                         height: 0.96rem;
                         background: rgba(255, 194, 49, 1);
                         border-radius: 0.133rem;
@@ -619,6 +652,29 @@
 
                 .paypal-box{
                     margin:  0.4rem auto;
+                }
+                .charge-box{
+                    margin-top: 0.267rem;
+                    .el-button{
+                        background: none !important;
+                        border: 2px solid rgba(8,122,247,0.58);
+                        span{
+                            color: #53d2e7 !important;
+                            background-image: -webkit-linear-gradient(180deg, #53d2e7, #f41392);
+                            -webkit-background-clip: text;
+                            -webkit-text-fill-color: transparent;
+                            -webkit-animation: change 2s infinite linear;
+                            @-webkit-keyframes change {
+                                from {
+                                    -webkit-filter: hue-rotate(0deg);
+                                }
+                                to {
+                                    -webkit-filter: hue-rotate(-360deg);
+                                }
+                            }
+                        }
+                    }
+
                 }
 
                 .charge-balance{

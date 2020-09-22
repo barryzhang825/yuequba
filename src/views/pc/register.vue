@@ -4,17 +4,14 @@
             <img class="logo" @click="$router.push('/home')" :src="siteInfo.site_logo" alt="">
             <div class="login-box">
                 <el-form label-position="left" :rules="rules" ref="ruleForm" label-width="100px" :model="formData">
-                    <el-form-item label="用户名：" prop="username">
-                        <el-input v-model="formData.username"></el-input>
+                    <el-form-item label="邮箱：" prop="email">
+                        <el-input v-model="formData.email"></el-input>
                     </el-form-item>
                     <el-form-item label="密 码：" prop="password">
                         <el-input type="password" show-password v-model="formData.password"></el-input>
                     </el-form-item>
                     <el-form-item label="确认密码：" prop="rePassword">
                         <el-input type="password" show-password v-model="formData.rePassword"></el-input>
-                    </el-form-item>
-                    <el-form-item label="邮箱：" prop="email">
-                        <el-input v-model="formData.email"></el-input>
                     </el-form-item>
                     <el-form-item label="验证码：" prop="code" class="email">
                         <el-input v-model="formData.code"></el-input>
@@ -26,9 +23,15 @@
                     <el-form-item>
                         <div class="center-box">
                             <el-button type="primary" @click="submitForm('ruleForm')">注册</el-button>
+                            <el-button type="primary" style="margin-left: 30px" plain @click="$router.push('/login')">登录</el-button>
                             <div class="baidu">
                                 <img src="../../../public/images/baidu.png" @click="loginWithBaidu" alt="">
                             </div>
+                        </div>
+                    </el-form-item>
+
+                    <el-form-item>
+                        <div class="center-box">
                         </div>
                     </el-form-item>
                 </el-form>
@@ -66,7 +69,6 @@
                 canSend:true,
                 timeNum:60,
                 formData: {
-                    username: '',
                     password: '',
                     rePassword:'',
                     popuid:'',
@@ -74,10 +76,6 @@
                     email:''
                 },
                 rules: {
-                    username: [
-                        {required: true, message: '请输入用户名', trigger: 'blur'},
-                        { min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }
-                    ],
                     password: [
                         {required: true, message: '请输入密码', trigger: 'blur'},
                         { min: 6, max: 18, message: '长度在 6 到 18 个字符', trigger: 'blur' }
@@ -142,7 +140,6 @@
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         let formData={
-                            user_login:that.formData.username,
                             user_pass:that.formData.password,
                             user_email:that.formData.email,
                             code:that.formData.code,

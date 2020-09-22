@@ -31,6 +31,14 @@
                     readonly
             />
             <van-field
+                    v-model="formData.kb"
+                    label="流量余额"
+                    placeholder="-"
+                    input-align="right"
+                    right-icon="none"
+                    readonly
+            />
+            <van-field
                     v-model="formData.user_email"
                     label="邮箱"
                     placeholder="输入邮箱"
