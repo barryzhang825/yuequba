@@ -62,7 +62,7 @@
 
 <script>
     import {formatTimeThree} from "../../utils/utils";
-    import {fetchLogo} from "../../api/pc/api";
+    import {fetchLogo, getUserinfo} from "../../api/pc/api";
 
     export default {
         name: "Header",
@@ -89,6 +89,7 @@
                     this.$router.push('/user/info')
                 }
             },
+
             goTo(num) {
                 let path = ''
                 switch (num) {
@@ -151,6 +152,21 @@
                         localStorage.setItem('siteInfo',JSON.stringify(res.data))
                     })
                 }
+            },
+            refreshUserInfo(){
+                let that = this
+                getUserinfo({
+                    token:localStorage.getItem('token')
+                }).then(res=>{
+                    localStorage.setItem('user_info',JSON.stringify(res.data))
+                    this.user_nickname=JSON.parse(localStorage.getItem('user_info')).user_nickname
+                    this.user_email=JSON.parse(localStorage.getItem('user_info')).user_email
+                    this.kb=JSON.parse(localStorage.getItem('user_info')).kb||0
+                    let endTime=JSON.parse(localStorage.getItem('user_info')).vip_end_time
+                    if(endTime>0){
+                        this.vipEndTime=formatTimeThree(endTime)
+                    }
+                })
             }
         },
         mounted() {

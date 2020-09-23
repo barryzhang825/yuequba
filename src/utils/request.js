@@ -4,7 +4,7 @@ import {getToken, hasToken} from "./auth";
 import {Message, MessageBox} from 'element-ui'
 import qs from 'qs'
 import router from '../router/index'
-import { Dialog } from 'vant';
+import {Dialog, Notify} from 'vant';
 
 //axios全局配置
 const instance = axios.create({
@@ -103,11 +103,17 @@ instance.interceptors.response.use(
 
             return
         } else {
-            Message({
-                message: response.data.msg || 'Error',
-                type: 'error',
-                duration: 5 * 1000
-            })
+            const isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
+            if(isMobile){
+                Notify({ type: 'danger', message:  response.data.msg});
+            }else {
+                Message({
+                    message: response.data.msg || 'Error',
+                    type: 'error',
+                    duration: 5 * 1000
+                })
+            }
+
             return Promise.reject(new Error(response.data.msg || 'Error'))
         }
     },

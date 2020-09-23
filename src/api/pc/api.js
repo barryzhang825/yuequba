@@ -207,7 +207,13 @@ export function getHistoryList(data) {
         params:data
     })
 }
-
+export function chargeVIP(data) {
+    return request({
+        url: '/home/card/searchCard',
+        method: 'post',
+        data
+    })
+}
 
 
 

@@ -1,6 +1,6 @@
 <template>
     <div class="page">
-        <Header :menu="6"></Header>
+        <Header :menu="6" ref="pageHeader"></Header>
         <div class="container">
             <div class="user-info" v-show="user_info">
                 <div class="img" :style="'background-image: url('+baseUrl+user_info.avatar+')'"></div>
@@ -63,7 +63,9 @@
                             />
                         </div>
                     </el-radio>
-                    <div class="text">会员充值</div>
+                    <div class="text">
+                        会员充值(购买后，<a @click="chargeVIP">点击这里</a>卡密充值)
+                    </div>
                 </div>
                 <div class="line2" v-if="siteInfo.site_pay_status_two==1">
                     <el-radio v-model="paymentIndex" label="2">
@@ -115,9 +117,6 @@
                         </span>
                     </el-button>
                 </div>
-<!--                <div class="charge-balance" @click="chargeBalance">-->
-<!--                    台币充值支付宝与QQ币-->
-<!--                </div>-->
             </div>
         </div>
         <Contact ref="contact"></Contact>
@@ -128,8 +127,8 @@
 <script>
     import Header from '@/components/pc/Header'
     import Footer from '@/components/pc/Footer'
-    import {buyVip, fetchLogo, getVipList} from "../../api/pc/api";
-    import {saveOneDecimal, saveTwoDecimal} from "../../utils/utils";
+    import {buyVip, chargeVIP, fetchLogo, getUserinfo, getVipList} from "../../api/pc/api";
+    import {formatTime, saveOneDecimal, saveTwoDecimal} from "../../utils/utils";
     import PayPal from 'vue-paypal-checkout'
 
     export default {
@@ -180,6 +179,42 @@
             }
         },
         methods: {
+            fetchUserInfo(){
+               this.$refs.pageHeader.refreshUserInfo()
+            },
+            chargeVIP(){
+                let that = this
+                this.$prompt('请输入卡号', '卡密充值', {
+                    confirmButtonText: '下一步',
+                    cancelButtonText: '取消',
+                    inputPattern: /\S/,
+                    inputErrorMessage: '卡号不能为空'
+                }).then((value1) => {
+                    this.$prompt('请输入卡密', '卡密充值', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        inputPattern: /\S/,
+                        inputErrorMessage: '卡密不能为空'
+                    }).then((value2) => {
+                        chargeVIP({
+                            card_name:value1.value,
+                            card_pass:value2.value
+                        }).then(res=>{
+                            if(res.code == 200){
+                                that.$message({
+                                    type: 'success',
+                                    message: res.msg
+                                });
+                                that.fetchUserInfo()
+                            }
+                        })
+                    }).catch(() => {
+
+                    });
+                }).catch(() => {
+
+                });
+            },
             chargeBalance(){
                 window.open('https://www.ibuy711.com/g7.html','_blank')
             },
@@ -232,12 +267,13 @@
             buyVip() {
                 let that = this
                 if (that.paymentIndex == '1') {
-                    buyVip({
-                        token: localStorage.getItem('token'),
-                        id: that.vipList[that.selectedIndex].id
-                    }).then(res => {
-                        window.open(that.vipList[that.selectedIndex].ext_link)
-                    })
+                    // buyVip({
+                    //     token: localStorage.getItem('token'),
+                    //     id: that.vipList[that.selectedIndex].id
+                    // }).then(res => {
+                    //     window.open(that.vipList[that.selectedIndex].ext_link)
+                    // })
+                    window.open(that.vipList[that.selectedIndex].ext_link)
                 } else if (that.paymentIndex == '2') {
                     if(that.showPayPal==true){
                         that.$message.info('请点击下方PayPal按钮,以使用PayPal支付')
@@ -282,7 +318,7 @@
                 // 用户支付完成的回调，可以拿到订单id
                 //console.log(data,'用户支付完成的回调');
                 this.$message({
-                    message: '支付成功！',
+                    message: '支付成功！请重新登录查看VIP开通状态',
                     type: 'success'
                 })
             },
@@ -660,6 +696,14 @@
                         font-stretch: normal;
                         letter-spacing: 0px;
                         color: #333333;
+                    }
+                }
+
+                .line1{
+                    a{
+                        cursor: pointer;
+                        color: #fd8106;
+                        text-decoration: underline;
                     }
                 }
 

@@ -199,6 +199,7 @@
             }
             .right{
                 width: 971px;
+                min-height: 800px;
                 background-color: #ffffff;
                 .right-view{
                     width: 100%;

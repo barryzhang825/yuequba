@@ -2,7 +2,7 @@
     <div class="page">
         <MobileTitle title="购买专区"></MobileTitle>
         <div class="container">
-            <div class="white" v-show="!toPay">
+            <div class="white" v-show="!toPay && !toCharge">
                 <div class="limit-time" v-if="leftTime>0">
                     <img src="../../../public/images/limit.png" alt="">
                     <div class="time-num-box">
@@ -29,8 +29,6 @@
                         <span>{{item.money}}</span>RMB/{{item.mony==1?'月':item.mony==2?'季度':item.mony==3?'半年':item.mony==4?'年':''}}
                         <br>
                         (约{{item.taibi}}台币)
-                        <!--                        <br>-->
-                        <!--                        <a style="text-decoration: line-through;font-size: 0.3rem" v-if="item.pre_money>0">原价{{item.pre_money}}RMB</a>-->
                     </div>
                     <div class="line3">{{item.idt_name}}</div>
                     <img class="check" v-if="selectedIndex==index" src="../../../public/images/check.png" alt="">
@@ -46,7 +44,7 @@
                 </div>
 
             </div>
-            <div class="payment-list" v-if="toPay">
+            <div class="payment-list" v-if="toPay && !toCharge">
                 <div class="line1" v-if="siteInfo.site_pay_status_one==1">
                     <el-radio v-model="paymentIndex" label="1">
                         <div class="select-item">
@@ -58,7 +56,9 @@
                             />
                         </div>
                     </el-radio>
-                    <div class="text">会员充值</div>
+                    <div class="text">
+                        会员充值(购买后，请点击下方卡密充值，进行VIP充值)
+                    </div>
                 </div>
                 <div class="line2" v-if="siteInfo.site_pay_status_two==1">
                     <el-radio v-model="paymentIndex" label="2">
@@ -102,6 +102,11 @@
                         @payment-completed="paymentCompleted"
                         @payment-cancelled="paymentCancelled">
                 </PayPal>
+                <div class="button-box charge-box" v-show="!showPayPal">
+                    <el-button type="primary" @click="toCharge=true">
+                        <span>卡密充值</span>
+                    </el-button>
+                </div>
                 <div class="button-box charge-box">
                     <el-button type="primary" @click="chargeBalance">
                         <span>台币充值支付宝与QQ币</span>
@@ -111,6 +116,19 @@
 <!--                    台币充值支付宝与QQ币-->
 <!--                </div>-->
             </div>
+            <div class="charge-vip" v-if="toCharge">
+                <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="50px" class="demo-ruleForm">
+                    <el-form-item label="卡号" prop="card_name">
+                        <el-input v-model="ruleForm.card_name"></el-input>
+                    </el-form-item>
+                    <el-form-item label="卡密" prop="card_pass">
+                        <el-input type="password" v-model="ruleForm.card_pass"></el-input>
+                    </el-form-item>
+                </el-form>
+                <div class="button-box">
+                    <el-button type="primary" @click="submitForm('ruleForm')">充值</el-button>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -118,9 +136,9 @@
 <script>
     import MobileTitle from '@/components/mobile/Title'
     import {Notify} from 'vant';
-    import {buyVip, fetchLogo, getVipList} from "../../api/pc/api";
+    import {buyVip, chargeVIP, fetchLogo, getUserinfo, getVipList} from "../../api/pc/api";
     import {Dialog} from 'vant';
-    import {saveTwoDecimal} from "../../utils/utils";
+    import {formatTimeThree, saveTwoDecimal} from "../../utils/utils";
     import PayPal from 'vue-paypal-checkout'
 
 
@@ -132,6 +150,7 @@
             PayPal
         },
         data() {
+
             return {
                 selectedIndex: 0,
                 vipList: [],
@@ -156,7 +175,23 @@
                 toPay: false,
                 paymentIndex: '1',
                 showEWM: false,
-                showPayPal:false
+                showPayPal:false,
+                toCharge:false,
+                card_name:'',
+                card_pass:'',
+
+                ruleForm: {
+                    card_name: '',
+                    card_pass: '',
+                },
+                rules: {
+                    card_name: [
+                        { required: true, message: '请输入卡号', trigger: 'blur' },
+                    ],
+                    card_pass: [
+                        { required: true, message: '请输入卡密', trigger: 'blur' }
+                    ],
+                }
             }
         },
         watch:{
@@ -169,6 +204,42 @@
             }
         },
         methods: {
+            fetchUserInfo(){
+                let that = this
+                getUserinfo({
+                    token:localStorage.getItem('token')
+                }).then(res=>{
+                    localStorage.setItem('user_info',JSON.stringify(res.data))
+                })
+            },
+            submitForm(formName) {
+                let that = this
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        chargeVIP({
+                            card_name:that.ruleForm.card_name,
+                            card_pass:that.ruleForm.card_pass
+                        }).then(res=>{
+                            if(res.code == 200){
+                                Notify({ type: 'success', message:  res.msg });
+                                that.fetchUserInfo()
+                                setTimeout(()=>{
+                                    that.toCharge=false
+                                    that.toPay=false
+                                    that.ruleForm.card_name=''
+                                    that.ruleForm.card_pass=''
+                                },1000)
+                            }
+                        })
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
+                });
+            },
+            resetForm(formName) {
+                this.$refs[formName].resetFields();
+            },
             chargeBalance(){
                 window.open('https://www.ibuy711.com/g7.html','_blank')
             },
@@ -194,7 +265,7 @@
                 })
                 fetchLogo().then(res=>{
                     that.siteInfo=res.data
-                    console.log(res.data,'res.data')
+                    // console.log(res.data,'res.data')
                     if(that.siteInfo.site_pay_status_one==1){
                         that.paymentIndex='1'
                     }else if(that.siteInfo.site_pay_status_two==1){
@@ -202,7 +273,7 @@
                     }else {
                         that.paymentIndex='3'
                     }
-                    console.log(that.paymentIndex)
+                    // console.log(that.paymentIndex)
                     localStorage.setItem('siteInfo',JSON.stringify(res.data))
                     let leftTime=Date.parse(res.data.site_vipendtime)-Date.now()
                     that.leftTime=leftTime
@@ -226,12 +297,13 @@
             buyVip() {
                 let that = this
                 if (that.paymentIndex == '1') {
-                    buyVip({
-                        token: localStorage.getItem('token'),
-                        id: that.vipList[that.selectedIndex].id
-                    }).then(res => {
-                        window.open(that.vipList[that.selectedIndex].ext_link)
-                    })
+                    // buyVip({
+                    //     token: localStorage.getItem('token'),
+                    //     id: that.vipList[that.selectedIndex].id
+                    // }).then(res => {
+                    //     window.open(that.vipList[that.selectedIndex].ext_link)
+                    // })
+                    window.open(that.vipList[that.selectedIndex].ext_link)
                 } else if (that.paymentIndex == '2') {
                     if(that.showPayPal==true){
                         that.$message.info('请点击下方PayPal按钮,以使用PayPal支付')
@@ -306,7 +378,6 @@
             width: 100%;
             padding: 0.267rem;
             box-sizing: border-box;
-
             .white {
                 width: 100%;
                 background: rgba(255, 255, 255, 1);
@@ -519,7 +590,7 @@
                     justify-content: center;
 
                     .el-button {
-                        width: 4rem;
+                        width: 5rem;
                         height: 0.96rem;
                         background: rgba(255, 194, 49, 1);
                         border-radius: 0.133rem;
@@ -532,7 +603,7 @@
                 .charge-box{
                     margin-top: 0.267rem;
                     .el-button{
-                        width: 4rem !important;
+                        width: 5rem !important;
                         background: none !important;
                         border: 2px solid rgba(8,122,247,0.58);
                         span{
@@ -639,7 +710,7 @@
                     margin-bottom: 0.4rem;
 
                     .el-button {
-                        width: 4rem;
+                        width: 5rem;
                         height: 0.96rem;
                         background: rgba(255, 194, 49, 1);
                         border-radius: 0.133rem;
@@ -686,12 +757,55 @@
                     text-decoration: underline;
                 }
             }
+            .charge-vip{
+                width: 100%;
+                background: rgba(255, 255, 255, 1);
+                border-radius: 0.133rem;
+                padding: 0.267rem 0;
+                box-sizing: border-box;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding-top: 0.667rem;
+
+                .button-box {
+                    width: 100%;
+                    margin-top: 0.4rem;
+                    display: flex;
+                    justify-content: center;
+                    margin-bottom: 0.4rem;
+
+                    .el-button {
+                        width: 5rem;
+                        height: 0.96rem;
+                        background: rgba(255, 194, 49, 1);
+                        border-radius: 0.133rem;
+
+                        font-size: 0.24rem;
+                        font-weight: 400;
+                        color: rgba(255, 255, 255, 1);
+                    }
+                }
+            }
         }
 
 
     }
 
 </style>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
