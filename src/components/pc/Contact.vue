@@ -3,7 +3,7 @@
         <van-popup v-model="show">
             <div class="content-box">
                 <van-image width="200" height="200" :src="img" />
-                <div class="text">加客服微信后，请先付款，告诉客服账号信息，然后客服会在后台为您开通相应的VIP套餐。</div>
+                <div class="text">加客服好友后，请先付款，告诉人工客服账号信息，然后人工客服会在后台为您开通相应的VIP套餐。</div>
             </div>
         </van-popup>
     </div>
@@ -58,7 +58,7 @@
 
             .text{
                 width: 200px;
-                font-size: 13px;
+                font-size: 15px;
                 margin-top: 20px;
             }
 
