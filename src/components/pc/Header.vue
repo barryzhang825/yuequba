@@ -15,16 +15,27 @@
             </div>
             <div class="right">
                 <img class="search" @click="searchShow = true" src="../../../public/images/search.png" alt="">
-<!--                <div class="alert-box">-->
-<!--                    <el-badge :value="1" class="item">-->
-<!--                        <img class="alert" src="../../../public/images/alert.png" alt="">-->
-<!--                    </el-badge>-->
-<!--                </div>-->
                 <div class="link" v-if="!user_email"><router-link to="/login">登录</router-link> | <router-link to="/register">注册</router-link></div>
                 <div class="userinfo" v-if="user_email">
                     <div class="userinfo-left">
-                        <router-link to="/user" class="user-email">{{user_email}}</router-link>
-                        <div class="time-left" v-if="vipEndTime">{{vipEndTime}} VIP到期</div>
+<!--                        <router-link to="/user" class="user-email">{{user_email}}</router-link>-->
+                        <el-dropdown trigger="click" @command="handleCommand">
+                            <span class="el-dropdown-link" style="cursor: pointer">
+                                {{user_email}}
+                            </span>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item v-if="vipEndTime">
+                                    <span style="color: #333333">VIP到期：{{vipEndTime}}</span>
+                                </el-dropdown-item>
+                                <el-dropdown-item>
+                                    <span style="color: #333333">剩余流量：{{kb}}</span>
+                                </el-dropdown-item>
+                                <el-dropdown-item divided command="user">
+                                    <span style="color: #333333;width: 100%;text-align: center;display: block;" class="user-email">会员资料</span>
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+<!--                        <div class="time-left" v-if="vipEndTime">{{vipEndTime}} VIP到期</div>-->
                     </div>
                     <div class="userinfo-middle">
                         |
@@ -65,6 +76,7 @@
             return{
                 siteInfo:{},
                 vipEndTime:0,
+                kb:0,
                 searchShow:false,
                 searchWord:"",
                 user_nickname:'',
@@ -72,6 +84,11 @@
             }
         },
         methods: {
+            handleCommand(e){
+                if(e=='user' && this.$route.fullPath!='/user/info'){
+                    this.$router.push('/user/info')
+                }
+            },
             goTo(num) {
                 let path = ''
                 switch (num) {
@@ -140,6 +157,7 @@
             if(localStorage.getItem('user_info')){
                 this.user_nickname=JSON.parse(localStorage.getItem('user_info')).user_nickname
                 this.user_email=JSON.parse(localStorage.getItem('user_info')).user_email
+                this.kb=JSON.parse(localStorage.getItem('user_info')).kb||0
                 let endTime=JSON.parse(localStorage.getItem('user_info')).vip_end_time
                 if(endTime>0){
                     this.vipEndTime=formatTimeThree(endTime)
@@ -207,6 +225,7 @@
                     cursor: pointer;
                     width: 27px;
                     height: 27px;
+                    margin-right: 10px;
                 }
                 .alert-box {
                     cursor: pointer;
