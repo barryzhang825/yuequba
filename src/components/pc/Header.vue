@@ -17,9 +17,9 @@
                 <img class="search" @click="searchShow = true" src="../../../public/images/search.png" alt="">
                 <div class="link" v-if="!user_email"><router-link to="/login">登录</router-link> | <router-link to="/register">注册</router-link></div>
                 <div class="userinfo" v-if="user_email">
-                    <div class="userinfo-left">
+                    <div class="userinfo-left" @click="refreshUserInfo">
 <!--                        <router-link to="/user" class="user-email">{{user_email}}</router-link>-->
-                        <el-dropdown trigger="click" @command="handleCommand">
+                        <el-dropdown trigger="click" @command="handleCommand" >
                             <span class="el-dropdown-link" style="cursor: pointer">
                                 {{user_email}}
                             </span>
@@ -27,10 +27,10 @@
                                 <el-dropdown-item v-if="vipEndTime">
                                     <span style="color: #333333">VIP到期：{{vipEndTime}}</span>
                                 </el-dropdown-item>
-                                <el-dropdown-item>
-                                    <span style="color: #333333">剩余流量：{{kb}}</span>
+                                <el-dropdown-item v-if="vipEndTime">
+                                    <span style="color: #333333">今日剩余流量：{{kb}}</span>
                                 </el-dropdown-item>
-                                <el-dropdown-item divided command="user">
+                                <el-dropdown-item :divided="vipEndTime?true:false" command="user">
                                     <span style="color: #333333;width: 100%;text-align: center;display: block;" class="user-email">会员资料</span>
                                 </el-dropdown-item>
                             </el-dropdown-menu>

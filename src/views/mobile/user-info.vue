@@ -31,20 +31,31 @@
                     readonly
             />
             <van-field
-                    v-model="formData.kb"
-                    label="流量余额"
-                    placeholder="-"
-                    input-align="right"
-                    right-icon="none"
-                    readonly
-            />
-            <van-field
                     v-model="formData.user_email"
                     label="邮箱"
                     placeholder="输入邮箱"
                     input-align="right"
                     right-icon="arrow"
             />
+            <van-field
+                    v-if="formData.vip_end_time"
+                    v-model="formData.vip_end_time"
+                    label="VIP到期时间"
+                    placeholder=""
+                    input-align="right"
+                    right-icon="none"
+                    readonly
+            />
+            <van-field
+                    v-if="formData.vip_end_time"
+                    v-model="formData.kb"
+                    label="今日剩余流量"
+                    placeholder="-"
+                    input-align="right"
+                    right-icon="none"
+                    readonly
+            />
+
             <van-field
                     v-model="formData.user_url"
                     label="网址"
@@ -99,6 +110,7 @@
                     user_url:'',
                     user_nickname:'',
                     create_time:'',
+                    vip_end_time:'',
                 }
             }
         },
@@ -157,6 +169,7 @@
                 }).then(res=>{
                     localStorage.setItem('user_info',JSON.stringify(res.data))
                     res.data.create_time=formatTime(res.data.create_time)
+                    res.data.vip_end_time=formatTime(res.data.vip_end_time)
                     that.formData=res.data
                 })
             }

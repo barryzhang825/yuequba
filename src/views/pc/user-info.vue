@@ -14,9 +14,13 @@
                 <div class="left">注册时间：</div>
                 <div v-if="userInfo.create_time" class="right">{{userInfo.create_time|timeFormat}}</div>
             </div>
-            <div class="line">
-                <div class="left">流量余额：</div>
-                <div v-if="userInfo.kb" class="right">{{userInfo.kb}}</div>
+            <div class="line" v-if="userInfo.vip_end_time">
+                <div class="left">VIP到期时间：</div>
+                <div v-if="userInfo.vip_end_time" class="right">{{userInfo.vip_end_time|timeFormat}}</div>
+            </div>
+            <div class="line" v-if="userInfo.vip_end_time">
+                <div class="left">今日剩余流量：</div>
+                <div  class="right">{{userInfo.kb}}</div>
             </div>
             <div class="line">
                 <div class="left">邮箱：</div>
@@ -143,9 +147,13 @@
         mounted() {
             let that = this
             let user_info = JSON.parse(localStorage.getItem('user_info'))
-            let token = localStorage.getItem('token')
             that.userInfo=user_info
             that.formData=user_info
+            let token = localStorage.getItem('token')
+            if(token){
+                this.fetchData()
+            }
+
         }
     }
 </script>
@@ -189,7 +197,7 @@
                 margin: 15px 0;
 
                 .left {
-                    width: 100px;
+                    width: 130px;
                     text-align: right;
                     font-size: 14px;
                     font-weight: 400;
