@@ -214,7 +214,13 @@ export function chargeVIP(data) {
         data
     })
 }
-
+export function checkVipCardNumber(data) {
+    return request({
+        url: '/home/card/cardLegitimate',
+        method: 'get',
+        params:data
+    })
+}
 
 
 

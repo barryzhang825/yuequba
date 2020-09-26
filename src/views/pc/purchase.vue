@@ -64,7 +64,7 @@
                         </div>
                     </el-radio>
                     <div class="text">
-                        会员充值(购买后，<a @click="chargeVIP">点击这里</a>卡密充值)
+                        支付宝或QQ币会员充值<br/>(购买后，<a @click="chargeVIP">点击这里</a>卡密充值)
                     </div>
                 </div>
                 <div class="line2" v-if="siteInfo.site_pay_status_two==1">
@@ -127,7 +127,7 @@
 <script>
     import Header from '@/components/pc/Header'
     import Footer from '@/components/pc/Footer'
-    import {buyVip, chargeVIP, fetchLogo, getUserinfo, getVipList} from "../../api/pc/api";
+    import {buyVip, chargeVIP, checkVipCardNumber, fetchLogo, getUserinfo, getVipList} from "../../api/pc/api";
     import {formatTime, saveOneDecimal, saveTwoDecimal} from "../../utils/utils";
     import PayPal from 'vue-paypal-checkout'
 
@@ -184,33 +184,39 @@
             },
             chargeVIP(){
                 let that = this
-                this.$prompt('请输入卡号', '卡密充值', {
+                this.$prompt('请输入卡号','卡密充值('+this.vipList[this.selectedIndex].name+','+this.user_info.user_email+')', {
                     confirmButtonText: '下一步',
                     cancelButtonText: '取消',
                     inputPattern: /\S/,
                     inputErrorMessage: '卡号不能为空'
                 }).then((value1) => {
-                    this.$prompt('请输入卡密', '卡密充值', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        inputPattern: /\S/,
-                        inputErrorMessage: '卡密不能为空'
-                    }).then((value2) => {
-                        chargeVIP({
-                            card_name:value1.value,
-                            card_pass:value2.value
-                        }).then(res=>{
-                            if(res.code == 200){
-                                that.$message({
-                                    type: 'success',
-                                    message: res.msg
-                                });
-                                that.fetchUserInfo()
-                            }
-                        })
-                    }).catch(() => {
+                    checkVipCardNumber({
+                        card_name:value1.value,
+                        vipid:this.vipList[this.selectedIndex].id
+                    }).then(res=>{
+                        if(res.code == 200){
+                            this.$prompt('请输入卡密', '卡密充值', {
+                                confirmButtonText: '确定',
+                                cancelButtonText: '取消',
+                                inputPattern: /\S/,
+                                inputErrorMessage: '卡密不能为空'
+                            }).then((value2) => {
+                                chargeVIP({
+                                    card_name:value1.value,
+                                    card_pass:value2.value
+                                }).then(res=>{
+                                    if(res.code == 200){
+                                        that.$message({
+                                            type: 'success',
+                                            message: res.msg
+                                        });
+                                        that.fetchUserInfo()
+                                    }
+                                })
+                            }).catch(() => {});
+                        }
+                    })
 
-                    });
                 }).catch(() => {
 
                 });
@@ -274,6 +280,7 @@
                     //     window.open(that.vipList[that.selectedIndex].ext_link)
                     // })
                     window.open(that.vipList[that.selectedIndex].ext_link)
+                    this.chargeVIP()
                 } else if (that.paymentIndex == '2') {
                     if(that.showPayPal==true){
                         that.$message.info('请点击下方PayPal按钮,以使用PayPal支付')
@@ -700,11 +707,16 @@
                 }
 
                 .line1{
-                    a{
-                        cursor: pointer;
-                        color: #fd8106;
-                        text-decoration: underline;
+                    .text{
+                        text-align: left;
+                        line-height: 2;
+                        a{
+                            cursor: pointer;
+                            color: #fd8106;
+                            text-decoration: underline;
+                        }
                     }
+
                 }
 
                 .button-box {
