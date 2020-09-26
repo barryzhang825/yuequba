@@ -117,13 +117,22 @@
 <!--                </div>-->
             </div>
             <div class="charge-vip" v-if="toCharge">
+
+                <div class="label-item">
+                    <div class="label">账号:</div>
+                    <div class="text"> {{user_info.user_email}}</div>
+                </div>
+                <div class="label-item">
+                    <div class="label">套餐类型:</div>
+                    <div class="text">{{vipList[selectedIndex].name}}</div>
+                </div>
                 <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="50px" class="demo-ruleForm">
                     <el-form-item label="卡号" prop="card_name">
                         <el-input v-model="ruleForm.card_name"></el-input>
                     </el-form-item>
-                    <el-form-item label="卡密" prop="card_pass">
-                        <el-input type="password" v-model="ruleForm.card_pass"></el-input>
-                    </el-form-item>
+<!--                    <el-form-item label="卡密" prop="card_pass">-->
+<!--                        <el-input type="password" v-model="ruleForm.card_pass"></el-input>-->
+<!--                    </el-form-item>-->
                 </el-form>
                 <div class="button-box">
                     <el-button type="primary" @click="submitForm('ruleForm')">充值</el-button>
@@ -136,7 +145,7 @@
 <script>
     import MobileTitle from '@/components/mobile/Title'
     import {Notify} from 'vant';
-    import {buyVip, chargeVIP, fetchLogo, getUserinfo, getVipList} from "../../api/pc/api";
+    import {buyVip, chargeVIP, checkVipCardNumber, fetchLogo, getUserinfo, getVipList} from "../../api/pc/api";
     import {Dialog} from 'vant';
     import {formatTimeThree, saveTwoDecimal} from "../../utils/utils";
     import PayPal from 'vue-paypal-checkout'
@@ -156,7 +165,7 @@
                 vipList: [],
                 leftTime:0,
                 token:'',
-
+                user_info:{},
                 notifyUrl:this.hookBaseUrl,
                 hookBaseUrl:'http://yuequba.zhengshangwl.com/home/pay/paypalreturnurl',
                 payAmount:'0',
@@ -186,10 +195,8 @@
                 },
                 rules: {
                     card_name: [
-                        { required: true, message: '请输入卡号', trigger: 'blur' },
-                    ],
-                    card_pass: [
-                        { required: true, message: '请输入卡密', trigger: 'blur' }
+                        {required: true, message: '请输入卡号', trigger: 'blur'},
+                        {min: 14, max: 14, message: '请输入正确的14位卡号', trigger: 'blur'}
                     ],
                 }
             }
@@ -210,15 +217,17 @@
                     token:localStorage.getItem('token')
                 }).then(res=>{
                     localStorage.setItem('user_info',JSON.stringify(res.data))
+                    this.user_info=res.data
+
                 })
             },
             submitForm(formName) {
                 let that = this
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        chargeVIP({
+                        checkVipCardNumber({
                             card_name:that.ruleForm.card_name,
-                            card_pass:that.ruleForm.card_pass
+                            vipid:that.vipList[that.selectedIndex].id
                         }).then(res=>{
                             if(res.code == 200){
                                 Notify({ type: 'success', message:  res.msg });
@@ -361,9 +370,7 @@
             this.fetchData()
             let clientWidth = document.documentElement.clientWidth;
             document.documentElement.style.fontSize = clientWidth / 10 + 'px';
-
-
-
+            this.fetchUserInfo()
         }
     }
 </script>
@@ -767,6 +774,19 @@
                 flex-direction: column;
                 align-items: center;
                 padding-top: 0.667rem;
+                .label-item{
+                    width: 100%;
+                    display: flex;
+                    align-items: center;
+                    font-size: 0.3rem;
+                    margin-bottom: 0.4rem;
+                    .label{
+                        width: 2.9rem;
+                        text-align: right;
+                        padding-right: 0.4rem;
+                        box-sizing: border-box;
+                    }
+                }
 
                 .button-box {
                     width: 100%;

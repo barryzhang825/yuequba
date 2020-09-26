@@ -119,6 +119,28 @@
                 </div>
             </div>
         </div>
+        <el-dialog
+                title="账号充值"
+                :visible.sync="dialogVisible"
+                width="500px">
+            <el-row style="display: flex;align-items: center;margin-bottom: 10px">
+                <div class="label" style="width: 100px;text-align: right;padding-right: 10px;box-sizing: border-box"> 账号:</div>
+               {{user_info.user_email}}
+            </el-row>
+            <el-row style="display: flex;align-items: center;margin-bottom: 10px">
+                <div class="label" style="width: 100px;text-align: right;padding-right: 10px;box-sizing: border-box"> 套餐类型:</div>
+                {{vipList[selectedIndex].name}}
+            </el-row>
+            <el-form :model="formData" :rules="rules" ref="ruleForm">
+                <el-form-item label="请输入卡号" :label-width="'100px'" prop="card_name">
+                    <el-input v-model="formData.card_name" ></el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
+            </span>
+        </el-dialog>
         <Contact ref="contact"></Contact>
         <Footer></Footer>
     </div>
@@ -127,7 +149,15 @@
 <script>
     import Header from '@/components/pc/Header'
     import Footer from '@/components/pc/Footer'
-    import {buyVip, chargeVIP, checkVipCardNumber, fetchLogo, getUserinfo, getVipList} from "../../api/pc/api";
+    import {
+        buyVip,
+        chargeVIP,
+        checkVipCardNumber,
+        fetchLogo,
+        getUserinfo,
+        getVipList,
+        updateUserinfo
+    } from "../../api/pc/api";
     import {formatTime, saveOneDecimal, saveTwoDecimal} from "../../utils/utils";
     import PayPal from 'vue-paypal-checkout'
 
@@ -143,7 +173,7 @@
                 baseUrl: this.$baseUrl,
                 imgUrl: require('../../../public/images/avatar.gif'),
                 selectedIndex: 0,
-                vipList: [],
+                vipList: [{name:''}],
                 token: '',
                 user_info: '',
                 siteInfo: null,
@@ -166,63 +196,61 @@
                 toPay: false,
                 paymentIndex: '1',
                 showEWM: false,
-                showPayPal:false
+                showPayPal: false,
+                dialogVisible: false,
+                formData:{
+                    card_name:''
+                },
+                rules: {
+                    card_name: [
+                        {required: true, message: '请输入卡号', trigger: 'blur'},
+                        {min: 14, max: 14, message: '请输入正确的14位卡号', trigger: 'blur'}
+                    ],
+                }
             }
         },
-        watch:{
-            paymentIndex(val){
-                if(val==2){
-                    this.showPayPal=true
-                }else {
-                    this.showPayPal=false
+        watch: {
+            paymentIndex(val) {
+                if (val == 2) {
+                    this.showPayPal = true
+                } else {
+                    this.showPayPal = false
                 }
             }
         },
         methods: {
-            fetchUserInfo(){
-               this.$refs.pageHeader.refreshUserInfo()
+            fetchUserInfo() {
+                this.$refs.pageHeader.refreshUserInfo()
             },
-            chargeVIP(){
+            chargeVIP() {
+                this.dialogVisible = true
+            },
+            submitForm(formName){
                 let that = this
-                this.$prompt('请输入卡号','卡密充值('+this.vipList[this.selectedIndex].name+','+this.user_info.user_email+')', {
-                    confirmButtonText: '下一步',
-                    cancelButtonText: '取消',
-                    inputPattern: /\S/,
-                    inputErrorMessage: '卡号不能为空'
-                }).then((value1) => {
-                    checkVipCardNumber({
-                        card_name:value1.value,
-                        vipid:this.vipList[this.selectedIndex].id
-                    }).then(res=>{
-                        if(res.code == 200){
-                            this.$prompt('请输入卡密', '卡密充值', {
-                                confirmButtonText: '确定',
-                                cancelButtonText: '取消',
-                                inputPattern: /\S/,
-                                inputErrorMessage: '卡密不能为空'
-                            }).then((value2) => {
-                                chargeVIP({
-                                    card_name:value1.value,
-                                    card_pass:value2.value
-                                }).then(res=>{
-                                    if(res.code == 200){
-                                        that.$message({
-                                            type: 'success',
-                                            message: res.msg
-                                        });
-                                        that.fetchUserInfo()
-                                    }
-                                })
-                            }).catch(() => {});
-                        }
-                    })
-
-                }).catch(() => {
-
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        checkVipCardNumber({
+                            card_name: that.formData.card_name,
+                            vipid: this.vipList[this.selectedIndex].id
+                        }).then(res=>{
+                            if (res.code == 200) {
+                                that.$message({
+                                    type: 'success',
+                                    message: res.msg
+                                });
+                                that.fetchUserInfo()
+                            }
+                        })
+                    } else {
+                        //console.log('error submit!!');
+                        return false;
+                    }
                 });
+                this.dialogVisible=false
+                this.formData.card_name=''
             },
-            chargeBalance(){
-                window.open('https://www.ibuy711.com/g7.html','_blank')
+            chargeBalance() {
+                window.open('https://www.ibuy711.com/g7.html', '_blank')
             },
             fetchData() {
                 let that = this
@@ -242,12 +270,12 @@
                 })
                 fetchLogo().then(res => {
                     that.siteInfo = res.data
-                    if(that.siteInfo.site_pay_status_one==1){
-                        that.paymentIndex='1'
-                    }else if(that.siteInfo.site_pay_status_two==1){
-                        that.paymentIndex='2'
-                    }else {
-                        that.paymentIndex='3'
+                    if (that.siteInfo.site_pay_status_one == 1) {
+                        that.paymentIndex = '1'
+                    } else if (that.siteInfo.site_pay_status_two == 1) {
+                        that.paymentIndex = '2'
+                    } else {
+                        that.paymentIndex = '3'
                     }
                     localStorage.setItem('siteInfo', JSON.stringify(res.data))
                     let leftTime = Date.parse(res.data.site_vipendtime) - Date.now()
@@ -282,10 +310,10 @@
                     window.open(that.vipList[that.selectedIndex].ext_link)
                     this.chargeVIP()
                 } else if (that.paymentIndex == '2') {
-                    if(that.showPayPal==true){
+                    if (that.showPayPal == true) {
                         that.$message.info('请点击下方PayPal按钮,以使用PayPal支付')
                     }
-                    this.showPayPal=true
+                    this.showPayPal = true
                 } else {
                     that.$refs.contact.contactUs()
                 }
@@ -499,9 +527,10 @@
                             display: flex;
                             justify-content: center;
                             align-items: center;
-                            span{
+
+                            span {
                                 font-weight: 600;
-                                color:#d2e737;
+                                color: #d2e737;
                                 background-image: -webkit-linear-gradient(180deg, #d2e737, #00e7e7);
                                 -webkit-background-clip: text;
                                 -webkit-text-fill-color: transparent;
@@ -607,11 +636,13 @@
                         color: rgba(255, 255, 255, 1);
                     }
                 }
-                .charge-box{
-                    .el-button{
+
+                .charge-box {
+                    .el-button {
                         background: none !important;
-                        border: 2px solid rgba(8,122,247,0.58);
-                        span{
+                        border: 2px solid rgba(8, 122, 247, 0.58);
+
+                        span {
                             color: #53d2e7;
                             background-image: -webkit-linear-gradient(180deg, #53d2e7, #f41392);
                             -webkit-background-clip: text;
@@ -706,11 +737,12 @@
                     }
                 }
 
-                .line1{
-                    .text{
+                .line1 {
+                    .text {
                         text-align: left;
                         line-height: 2;
-                        a{
+
+                        a {
                             cursor: pointer;
                             color: #fd8106;
                             text-decoration: underline;
@@ -739,15 +771,16 @@
                 }
 
 
-                .paypal-box{
+                .paypal-box {
                     margin-top: 30px;
                 }
 
-                .charge-box{
-                    .el-button{
+                .charge-box {
+                    .el-button {
                         background: none !important;
-                        border: 2px solid rgba(8,122,247,0.58);
-                        span{
+                        border: 2px solid rgba(8, 122, 247, 0.58);
+
+                        span {
                             color: #53d2e7;
                             background-image: -webkit-linear-gradient(180deg, #53d2e7, #f41392);
                             -webkit-background-clip: text;
