@@ -124,11 +124,11 @@
                 :visible.sync="dialogVisible"
                 width="500px">
             <el-row style="display: flex;align-items: center;margin-bottom: 10px">
-                <div class="label" style="width: 100px;text-align: right;padding-right: 10px;box-sizing: border-box"> 账号:</div>
+                <div class="label" style="width: 100px;text-align: left;padding-right: 10px;box-sizing: border-box;padding-left: 18px"> 账号:</div>
                {{user_info.user_email}}
             </el-row>
             <el-row style="display: flex;align-items: center;margin-bottom: 10px">
-                <div class="label" style="width: 100px;text-align: right;padding-right: 10px;box-sizing: border-box"> 套餐类型:</div>
+                <div class="label" style="width: 100px;text-align: left;padding-right: 10px;box-sizing: border-box;padding-left: 18px"> 套餐类型:</div>
                 {{vipList[selectedIndex].name}}
             </el-row>
             <el-form :model="formData" :rules="rules" ref="ruleForm">
