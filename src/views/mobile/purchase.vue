@@ -71,7 +71,7 @@
                             />
                         </div>
                     </el-radio>
-                    <div class="text">paypal支付</div>
+                    <div class="text">paypal支付（不需要Paypal账号 ,直接点击下方“扣帐卡或用信卡付款"付款后会线上开通付费会员）</div>
                 </div>
 <!--                <div class="line3">-->
 <!--                    <el-radio v-model="paymentIndex" label="3">-->
@@ -124,7 +124,9 @@
                 </div>
                 <div class="label-item">
                     <div class="label">套餐类型:</div>
-                    <div class="text">{{vipList[selectedIndex].name}}</div>
+                    <div class="text">
+                        <span>{{vipList[selectedIndex].name}}</span>
+                    </div>
                 </div>
                 <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="50px" class="demo-ruleForm">
                     <el-form-item label="卡号" prop="card_name">
@@ -785,6 +787,22 @@
                         text-align: right;
                         padding-right: 0.4rem;
                         box-sizing: border-box;
+                    }
+                    span{
+                        font-weight: bold;
+                        color: #53d2e7;
+                        background-image: -webkit-linear-gradient(180deg, #53d2e7, #f41392);
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                        -webkit-animation: change 2s infinite linear;
+                        @-webkit-keyframes change {
+                            from {
+                                -webkit-filter: hue-rotate(0deg);
+                            }
+                            to {
+                                -webkit-filter: hue-rotate(-360deg);
+                            }
+                        }
                     }
                 }
 

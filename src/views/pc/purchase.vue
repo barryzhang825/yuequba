@@ -78,7 +78,7 @@
                             />
                         </div>
                     </el-radio>
-                    <div class="text">paypal支付</div>
+                    <div class="text">paypal支付（不需要Paypal账号 ,直接点击下方“扣帐卡或用信卡付款"付款后会<span style="color: red">线上开通</span>付费会员）</div>
                 </div>
                 <div class="line3" v-if="siteInfo.site_pay_status_three==1">
                     <el-radio v-model="paymentIndex" label="3">
@@ -120,20 +120,23 @@
             </div>
         </div>
         <el-dialog
+                class="dialog-box"
                 title="账号充值"
                 :visible.sync="dialogVisible"
-                width="500px">
-            <el-row style="display: flex;align-items: center;margin-bottom: 10px">
-                <div class="label" style="width: 100px;text-align: left;padding-right: 10px;box-sizing: border-box;padding-left: 18px"> 账号:</div>
-               {{user_info.user_email}}
+                width="700px">
+            <el-row class="row-line" >
+                <div class="label">账号:</div>
+                {{user_info.user_email}}
             </el-row>
-            <el-row style="display: flex;align-items: center;margin-bottom: 10px">
-                <div class="label" style="width: 100px;text-align: left;padding-right: 10px;box-sizing: border-box;padding-left: 18px"> 套餐类型:</div>
-                {{vipList[selectedIndex].name}}
+            <el-row class="row-line" >
+                <div class="label" > 套餐类型:</div>
+                <span>
+                    {{vipList[selectedIndex].name}}
+                </span>
             </el-row>
             <el-form :model="formData" :rules="rules" ref="ruleForm">
-                <el-form-item label="请输入卡号" :label-width="'100px'" prop="card_name">
-                    <el-input v-model="formData.card_name" ></el-input>
+                <el-form-item label="请输入卡号" :label-width="'120px'" prop="card_name">
+                    <el-input v-model="formData.card_name"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -173,7 +176,7 @@
                 baseUrl: this.$baseUrl,
                 imgUrl: require('../../../public/images/avatar.gif'),
                 selectedIndex: 0,
-                vipList: [{name:''}],
+                vipList: [{name: ''}],
                 token: '',
                 user_info: '',
                 siteInfo: null,
@@ -198,8 +201,8 @@
                 showEWM: false,
                 showPayPal: false,
                 dialogVisible: false,
-                formData:{
-                    card_name:''
+                formData: {
+                    card_name: ''
                 },
                 rules: {
                     card_name: [
@@ -225,14 +228,14 @@
             chargeVIP() {
                 this.dialogVisible = true
             },
-            submitForm(formName){
+            submitForm(formName) {
                 let that = this
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         checkVipCardNumber({
                             card_name: that.formData.card_name,
                             vipid: this.vipList[this.selectedIndex].id
-                        }).then(res=>{
+                        }).then(res => {
                             if (res.code == 200) {
                                 that.$message({
                                     type: 'success',
@@ -246,8 +249,8 @@
                         return false;
                     }
                 });
-                this.dialogVisible=false
-                this.formData.card_name=''
+                this.dialogVisible = false
+                this.formData.card_name = ''
             },
             chargeBalance() {
                 window.open('https://www.ibuy711.com/g7.html', '_blank')
@@ -698,6 +701,7 @@
                     margin: 20px 0;
                     display: flex;
                     align-items: center;
+                    text-align:left;
 
                     ::v-deep .el-radio {
                         display: flex;
@@ -800,6 +804,48 @@
                 }
             }
 
+        }
+
+        .dialog-box {
+            ::v-deep .el-dialog{
+                margin-top: 30vh !important;
+                .el-dialog__body{
+                    padding: 50px 20px;
+                    .row-line {
+                        margin-bottom: 40px !important;
+                        font-size: 16px;
+                        display: flex;align-items: center;
+                        .label {
+                            width: 120px;
+                            text-align: left;
+                            padding-right: 10px;
+                            box-sizing: border-box;
+                            padding-left: 27px
+                        }
+                        span{
+                            font-weight: bold;
+                            color: #53d2e7;
+                            background-image: -webkit-linear-gradient(180deg, #53d2e7, #f41392);
+                            -webkit-background-clip: text;
+                            -webkit-text-fill-color: transparent;
+                            -webkit-animation: change 2s infinite linear;
+                            @-webkit-keyframes change {
+                                from {
+                                    -webkit-filter: hue-rotate(0deg);
+                                }
+                                to {
+                                    -webkit-filter: hue-rotate(-360deg);
+                                }
+                            }
+                        }
+                    }
+
+                    .el-form-item__label {
+                        font-size: 16px;
+                    }
+                }
+
+            }
 
         }
     }
