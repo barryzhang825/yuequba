@@ -78,7 +78,7 @@
                             />
                         </div>
                     </el-radio>
-                    <div class="text">paypal支付（不需要Paypal账号 ,直接点击下方“扣帐卡或用信卡付款"付款后会<span style="color: red">线上开通</span>付费会员）</div>
+                    <div class="text">PayPal支付<br>（不需要PayPal账号 ,直接点击下方“使用信用卡或借记卡付款"，付款后会自动<span style="color: red">线上开通</span>会员）</div>
                 </div>
                 <div class="line3" v-if="siteInfo.site_pay_status_three==1">
                     <el-radio v-model="paymentIndex" label="3">
@@ -102,7 +102,6 @@
                         :amount="payAmount"
                         currency="TWD"
                         :client="credentials"
-                        env="sandbox"
                         :button-style="buttonStyle"
                         :notify-url="notifyUrl"
                         @payment-authorized="paymentAuthorized"
