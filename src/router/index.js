@@ -197,11 +197,9 @@ router.beforeEach(function (to, from, next) {
     const setDevice=localStorage.getItem('setDevice')
     if(setDevice=='pc'&&isMobile){
         if (hasMobile==-1) {
-
             next()
         }else if (hasMobile>-1) {
             let newPah = to.fullPath.replace(new RegExp("/mobile","g"),"");
-
             next(newPah)
         }
     }else {

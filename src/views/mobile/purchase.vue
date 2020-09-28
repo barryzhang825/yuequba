@@ -124,7 +124,7 @@
                 <div class="label-item">
                     <div class="label">套餐类型:</div>
                     <div class="text">
-                        <span>{{vipList[selectedIndex].name}}</span>
+                        <span :class="vipList[selectedIndex].mony==4?'span':''">{{vipList[selectedIndex].name}}</span>
                     </div>
                 </div>
                 <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="50px" class="demo-ruleForm">
@@ -787,7 +787,7 @@
                         padding-right: 0.4rem;
                         box-sizing: border-box;
                     }
-                    span{
+                    .span{
                         font-weight: bold;
                         color: #53d2e7;
                         background-image: -webkit-linear-gradient(180deg, #53d2e7, #f41392);

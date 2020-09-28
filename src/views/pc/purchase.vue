@@ -129,7 +129,7 @@
             </el-row>
             <el-row class="row-line" >
                 <div class="label" > 套餐类型:</div>
-                <span>
+                <span :class="vipList[selectedIndex].mony==4?'span':''">
                     {{vipList[selectedIndex].name}}
                 </span>
             </el-row>
@@ -821,7 +821,7 @@
                             box-sizing: border-box;
                             padding-left: 27px
                         }
-                        span{
+                        .span{
                             font-weight: bold;
                             color: #53d2e7;
                             background-image: -webkit-linear-gradient(180deg, #53d2e7, #f41392);
