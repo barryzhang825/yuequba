@@ -78,7 +78,7 @@
                             />
                         </div>
                     </el-radio>
-                    <div class="text">PayPal支付<br>（不需要PayPal账号 ,直接点击下方“使用信用卡或银联卡付款"，付款后会自动<span style="color: red">线上开通</span>会员）</div>
+                    <div class="text">PayPal支付(付款后可<span style="color: red">自动开通</span>付费会员)<br>不需要PayPal账号,直接点击下方信用卡或银联卡付款即可</div>
                 </div>
                 <div class="line3" v-if="siteInfo.site_pay_status_three==1">
                     <el-radio v-model="paymentIndex" label="3">
@@ -732,7 +732,8 @@
                     }
 
                     .text {
-                        font-size: 18px;
+                        line-height: 2;
+                        font-size: 17px;
                         font-weight: normal;
                         font-stretch: normal;
                         letter-spacing: 0px;

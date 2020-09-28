@@ -71,7 +71,7 @@
                             />
                         </div>
                     </el-radio>
-                    <div class="text">PayPal支付（不需要PayPal账号 ,直接点击下方“使用信用卡或银联卡付款"，付款后会自动<span style="color: red">线上开通</span>会员）</div>
+                    <div class="text">PayPal支付(付款后可<span style="color: red">自动开通</span>付费会员)不需要PayPal账号,直接点击下方信用卡或银联卡付款即可</div>
                 </div>
 <!--                <div class="line3">-->
 <!--                    <el-radio v-model="paymentIndex" label="3">-->
