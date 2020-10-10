@@ -33,7 +33,7 @@
                         <div class="line2">
                             <span>{{item.money}}</span>RMB/{{item.mony==1?'月':item.mony==2?'季度':item.mony==3?'半年':item.mony==4?'年':''}}
                             <br>
-                            (约{{item.taibi}}台币)
+                            ({{item.taibi}})
                         </div>
                         <div class="line3">{{item.idt_name}}</div>
                         <img class="check" v-if="selectedIndex==index" src="../../../public/images/check.png" alt="">
