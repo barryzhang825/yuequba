@@ -28,7 +28,7 @@
                     <div class="line2">
                         <span>{{item.money}}</span>RMB/{{item.mony==1?'月':item.mony==2?'季度':item.mony==3?'半年':item.mony==4?'年':''}}
                         <br>
-                        {{item.taibi}}
+                        (约{{item.taibi}}台币)
                     </div>
                     <div class="line3">{{item.idt_name}}</div>
                     <img class="check" v-if="selectedIndex==index" src="../../../public/images/check.png" alt="">
@@ -73,20 +73,7 @@
                     </el-radio>
                     <div class="text">PayPal支付(付款后可<span style="color: red">自动开通</span>付费会员)不需要PayPal账号,直接点击下方信用卡或银联卡付款即可</div>
                 </div>
-<!--                <div class="line3">-->
-<!--                    <el-radio v-model="paymentIndex" label="3">-->
-<!--                        <div class="select-item">-->
-<!--                            <van-image-->
-<!--                                    width="100%"-->
-<!--                                    height="100%"-->
-<!--                                    fit="cover"-->
-<!--                                    :src="require('../../../public/images/kf1.png')"-->
-<!--                            />-->
-<!--                        </div>-->
-<!--                    </el-radio>-->
-<!--                    <div class="text">联系客服支付开通</div>-->
-<!--                </div>-->
-                <div class="button-box" v-show="!showPayPal">
+                <div class="button-box" v-show="!showPayPal  && siteInfo.site_paypal_status==1">
                     <el-button type="primary" @click="buyVip">立即购买</el-button>
                 </div>
                 <PayPal
@@ -166,6 +153,7 @@
                 vipList: [],
                 leftTime:0,
                 token:'',
+                siteInfo:null,
                 user_info:{},
                 notifyUrl:this.hookBaseUrl,
                 hookBaseUrl:'http://yuequba.zhengshangwl.com/home/pay/paypalreturnurl',
@@ -203,11 +191,14 @@
             }
         },
         watch:{
-            paymentIndex(val){
-                if(val==2){
-                    this.showPayPal=true
-                }else {
-                    this.showPayPal=false
+            paymentIndex(val) {
+                if (val == 2 && this.siteInfo.site_paypal_status==1) {
+                    this.showPayPal = true
+                } else if(val == 2 && this.siteInfo.site_paypal_status==0) {
+                    this.showPayPal = false
+                    Dialog({title:'温馨提示', message: 'PAYPAL支付，不支持台湾地区的信用卡，请改为：支付宝或QQ币支付' ,messageAlign:'left'});
+                }else{
+                    this.showPayPal = false
                 }
             }
         },
@@ -307,12 +298,6 @@
             buyVip() {
                 let that = this
                 if (that.paymentIndex == '1') {
-                    // buyVip({
-                    //     token: localStorage.getItem('token'),
-                    //     id: that.vipList[that.selectedIndex].id
-                    // }).then(res => {
-                    //     window.open(that.vipList[that.selectedIndex].ext_link)
-                    // })
                     window.open(that.vipList[that.selectedIndex].ext_link)
                 } else if (that.paymentIndex == '2') {
                     if(that.showPayPal==true){
@@ -327,7 +312,6 @@
                 this.selectedIndex=index
                 this.notifyUrl=this.hookBaseUrl+'?goodsid='+this.vipList[index].id+'&token='+this.token
                 this.payAmount=this.vipList[this.selectedIndex].taibi
-                //console.log( this.notifyUrl)
             },
             paypalClick(){
                 let that = this

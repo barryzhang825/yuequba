@@ -33,7 +33,7 @@
                         <div class="line2">
                             <span>{{item.money}}</span>RMB/{{item.mony==1?'月':item.mony==2?'季度':item.mony==3?'半年':item.mony==4?'年':''}}
                             <br>
-                            {{item.taibi}}
+                            (约{{item.taibi}}台币)
                         </div>
                         <div class="line3">{{item.idt_name}}</div>
                         <img class="check" v-if="selectedIndex==index" src="../../../public/images/check.png" alt="">
@@ -68,7 +68,7 @@
                     </div>
                 </div>
                 <div class="line2" v-if="siteInfo.site_pay_status_two==1">
-                    <el-radio v-model="paymentIndex" label="2">
+                    <el-radio v-model="paymentIndex" label="2"  >
                         <div class="select-item">
                             <van-image
                                     width="100%"
@@ -93,7 +93,7 @@
                     </el-radio>
                     <div class="text">联系人工支付开通</div>
                 </div>
-                <div class="button-box" v-show="!showPayPal">
+                <div class="button-box" v-show="!showPayPal && siteInfo.site_paypal_status==1">
                     <el-button type="primary" @click="buyVip">立即购买</el-button>
                 </div>
                 <PayPal
@@ -143,6 +143,22 @@
                 <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
             </span>
         </el-dialog>
+
+        <el-dialog
+                class="dialog-box1"
+                title="温馨提示"
+                :visible.sync="disableTW"
+                width="500px">
+            <el-row class="row-line">
+                <div class="label">PAYPAL支付，不支持台湾地区的信用卡</div>
+            </el-row>
+            <el-row class="row-line" >
+                <div class="label" >请改为：支付宝或QQ币支付</div>
+            </el-row>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="disableTW=false">确 定</el-button>
+            </span>
+        </el-dialog>
         <Contact ref="contact"></Contact>
         <Footer></Footer>
     </div>
@@ -180,6 +196,7 @@
                 user_info: '',
                 siteInfo: null,
                 leftTime: 0,
+                disableTW:false,
 
                 notifyUrl: this.hookBaseUrl,
                 hookBaseUrl: 'http://yuequba.zhengshangwl.com/home/pay/paypalreturnurl',
@@ -213,9 +230,12 @@
         },
         watch: {
             paymentIndex(val) {
-                if (val == 2) {
+                if (val == 2 && this.siteInfo.site_paypal_status==1) {
                     this.showPayPal = true
-                } else {
+                } else if(val == 2 && this.siteInfo.site_paypal_status==0) {
+                    this.showPayPal = false
+                    this.disableTW=true
+                }else{
                     this.showPayPal = false
                 }
             }
@@ -837,6 +857,30 @@
                                     -webkit-filter: hue-rotate(-360deg);
                                 }
                             }
+                        }
+                    }
+
+                    .el-form-item__label {
+                        font-size: 16px;
+                    }
+                }
+
+            }
+
+        }
+        .dialog-box1 {
+            ::v-deep .el-dialog{
+                /*margin-top: 30vh !important;*/
+                .el-dialog__body{
+                    .row-line {
+                        margin-bottom: 10px !important;
+                        font-size: 16px;
+                        display: flex;align-items: center;
+                        .label {
+                            text-align: left;
+                            padding-right: 10px;
+                            box-sizing: border-box;
+                            padding-left: 27px
                         }
                     }
 
