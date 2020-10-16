@@ -93,7 +93,7 @@
                     </el-radio>
                     <div class="text">联系人工支付开通</div>
                 </div>
-                <div class="button-box" v-show="!showPayPal && siteInfo.site_paypal_status==1">
+                <div class="button-box" v-show="!showPayPal && !hiddenBuyButton ">
                     <el-button type="primary" @click="buyVip">立即购买</el-button>
                 </div>
                 <PayPal
@@ -202,6 +202,7 @@
                 hookBaseUrl: 'http://yuequba.zhengshangwl.com/home/pay/paypalreturnurl',
                 payAmount: '0',
                 showPayPalLoading: false,
+                hiddenBuyButton: false,
                 credentials: {
                     sandbox: 'AWbB35er5_gd3sVwwFfXh4ma_J4vwXgfOQUxYJIpXGDki-DyLhenlA17gUIXH_qIJXF6APtCOgsvMC0B',
                     production: 'AS4bSmYH4MLmnuF6ObGKYMtu0T_XeeZa67fMoQ4ivhEnZ66RoH76--MX0AWoGgdKhVQlUpFY_EfqI15v'
@@ -232,11 +233,14 @@
             paymentIndex(val) {
                 if (val == 2 && this.siteInfo.site_paypal_status==1) {
                     this.showPayPal = true
+                    this.hiddenBuyButton = false
                 } else if(val == 2 && this.siteInfo.site_paypal_status==0) {
                     this.showPayPal = false
                     this.disableTW=true
+                    this.hiddenBuyButton = true
                 }else{
                     this.showPayPal = false
+                    this.hiddenBuyButton = false
                 }
             }
         },

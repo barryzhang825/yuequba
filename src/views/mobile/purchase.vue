@@ -73,7 +73,7 @@
                     </el-radio>
                     <div class="text">PayPal支付(付款后可<span style="color: red">自动开通</span>付费会员)不需要PayPal账号,直接点击下方信用卡或银联卡付款即可</div>
                 </div>
-                <div class="button-box" v-show="!showPayPal  && siteInfo.site_paypal_status==1">
+                <div class="button-box" v-show="!showPayPal  && !hiddenBuyButton">
                     <el-button type="primary" @click="buyVip">立即购买</el-button>
                 </div>
                 <PayPal
@@ -169,7 +169,7 @@
                     shape: 'rect',
                     color: 'silver'
                 },
-
+                hiddenBuyButton: false,
                 toPay: false,
                 paymentIndex: '1',
                 showEWM: false,
@@ -194,11 +194,14 @@
             paymentIndex(val) {
                 if (val == 2 && this.siteInfo.site_paypal_status==1) {
                     this.showPayPal = true
+                    this.hiddenBuyButton = false
                 } else if(val == 2 && this.siteInfo.site_paypal_status==0) {
                     this.showPayPal = false
+                    this.hiddenBuyButton = true
                     Dialog({title:'温馨提示', message: 'PAYPAL支付，不支持台湾地区的信用卡，请改为：支付宝或QQ币支付' ,messageAlign:'left'});
                 }else{
                     this.showPayPal = false
+                    this.hiddenBuyButton = false
                 }
             }
         },
