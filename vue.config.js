@@ -1,6 +1,6 @@
 // vue.config.js
 module.exports = {
-    publicPath: '/',
+    publicPath: './',
     chainWebpack: config => {
         const oneOfsMap = config.module.rule('scss').oneOfs.store
         oneOfsMap.forEach(item => {
@@ -14,20 +14,5 @@ module.exports = {
                 })
                 .end()
         })
-    },
-
-
-    // devServer: {
-    //     proxy: {
-    //         '/api': {
-    //             target: 'http://yuequba.zhengshangwl.com',
-    //             // ws: true,
-    //             changeOrigin: true,
-    //             pathRewrite:{
-    //                 '^/api':''
-    //             }
-    //         }
-    //     }
-    // }
-
+    }
 }
