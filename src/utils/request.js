@@ -8,7 +8,7 @@ import {Dialog, Notify} from 'vant';
 
 //axios全局配置
 const instance = axios.create({
-    baseURL: "http://yuequba.zhengshangwl.com",
+    baseURL: "http://yqb.ds-z.com",
     timeout: 5000,
     headers: {
         "accept": "application/json",

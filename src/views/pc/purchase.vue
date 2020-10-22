@@ -199,7 +199,7 @@
                 disableTW:false,
 
                 notifyUrl: this.hookBaseUrl,
-                hookBaseUrl: 'http://yuequba.zhengshangwl.com/home/pay/paypalreturnurl',
+                hookBaseUrl: 'http://yqb.ds-z.com/home/pay/paypalreturnurl',
                 payAmount: '0',
                 showPayPalLoading: false,
                 hiddenBuyButton: false,
