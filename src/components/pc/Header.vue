@@ -6,10 +6,10 @@
             </div>
             <div class="middle">
                 <div class="item" :class="menu===1?'selected':''" @click="goTo(1)">首页</div>
-                <div class="item" :class="menu===2?'selected':''" @click="goTo(2)">主播区</div>
-                <div class="item" :class="menu===3?'selected':''" @click="goTo(3)">美图区</div>
-                <div class="item" :class="menu===4?'selected':''" @click="goTo(4)">视频区</div>
-                <div class="item" :class="menu===5?'selected':''" @click="goTo(5)">包年精选区</div>
+                <div class="item" :class="menu===2?'selected':''" @click="goTo(2)">{{siteInfo.categorys[0].name}}</div>
+                <div class="item" :class="menu===3?'selected':''" @click="goTo(3)">{{siteInfo.categorys[1].name}}</div>
+                <div class="item" :class="menu===4?'selected':''" @click="goTo(4)">{{siteInfo.categorys[2].name}}</div>
+                <div class="item" :class="menu===5?'selected':''" @click="goTo(5)">{{siteInfo.categorys[3].name}}</div>
                 <div class="item" :class="menu===6?'selected':''" @click="goTo(6)">购买专区</div>
                 <div class="item" :class="menu===7?'selected':''" @click="goTo(7)">用户中心</div>
             </div>
@@ -74,7 +74,7 @@
         },
         data(){
             return{
-                siteInfo:{},
+                siteInfo:{categorys:[{name:'主播区'},{name:'美图区'},{name:'视频区'},{name:'包年精选区'}]},
                 vipEndTime:0,
                 kb:0,
                 searchShow:false,
@@ -217,6 +217,10 @@
                 justify-content: space-around;
 
                 .item {
+                    display: flex;
+                    justify-content: right;
+                    align-items: flex-start;
+                    font-family: "Microsoft YaHei UI";
                     cursor: pointer;
                     height: 40px;
                     font-size: 16px;

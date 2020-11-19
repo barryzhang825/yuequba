@@ -8,25 +8,25 @@
                 </template>
             </van-tabbar-item>
             <van-tabbar-item replace to="/mobile/category?type=1">
-                <span>主播区</span>
+                <span>{{siteInfo.categorys[0].name}}</span>
                 <template #icon="props">
                     <img :src="props.active ? icon2.active : icon2.inactive" />
                 </template>
             </van-tabbar-item>
             <van-tabbar-item replace to="/mobile/category?type=2">
-                <span>美图区</span>
+                <span>{{siteInfo.categorys[1].name}}</span>
                 <template #icon="props">
                     <img :src="props.active ? icon3.active : icon3.inactive" />
                 </template>
             </van-tabbar-item>
             <van-tabbar-item replace to="/mobile/category?type=3">
-                <span>视频区</span>
+                <span>{{siteInfo.categorys[2].name}}</span>
                 <template #icon="props">
                     <img :src="props.active ? icon4.active : icon4.inactive" />
                 </template>
             </van-tabbar-item>
             <van-tabbar-item replace to="/mobile/category?type=4">
-                <span>包年精选</span>
+                <span>{{siteInfo.categorys[3].name}}</span>
                 <template #icon="props">
                     <img :src="props.active ? icon5.active : icon5.inactive" />
                 </template>
@@ -51,6 +51,7 @@
         },
         data(){
             return{
+                siteInfo:{categorys:[{name:''},{name:''},{name:''},{name:''}]},
                 icon1: {
                     inactive: require('../../../public/images/h10.png'),
                     active: require('../../../public/images/h11.png'),
@@ -115,6 +116,7 @@
 
         },
         mounted() {
+            this.siteInfo=JSON.parse(localStorage.getItem('siteInfo'))
             let clientWidth = document.documentElement.clientWidth;
             document.documentElement.style.fontSize = clientWidth/10+'px';
         }

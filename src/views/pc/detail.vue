@@ -7,7 +7,7 @@
                     <div class="article">
                         <div class="resultTip">
                             <img src="../../../public/images/home.png" alt="">
-                            首页 ><span>&nbsp;{{category==1?'主播区':category==2?'美图区':category==3?'视频区':category==4?'包年精选区':''}}</span>
+                            首页 ><span>&nbsp;{{category==1?siteInfo.categorys[0].name:category==2?siteInfo.categorys[1].name:category==3?siteInfo.categorys[2].name:category==4?siteInfo.categorys[3].name:'栏目专区'}}</span>
                             > <span style="color:#646464;">正文</span>
                         </div>
                         <div class="line1">
@@ -23,7 +23,7 @@
                                 <img :class="articleDetail.category_id==1?'img-upper':articleDetail.category_id==2?'img-img':articleDetail.category_id==3?'img-video':articleDetail.category_id==4?'img-year':''"
                                      :src="articleDetail.category_id==1?require('../../../public/images/upper.png'):articleDetail.category_id==2?require('../../../public/images/img.png'):articleDetail.category_id==3?require('../../../public/images/video.png'):articleDetail.category_id==4?require('../../../public/images/year.png'):''"
                                      alt="">
-                                {{articleDetail.category_id==1?'主播区':articleDetail.category_id==2?'美图区':articleDetail.category_id==3?'视频区':articleDetail.category_id==4?'包年精选区':''}}
+                                {{articleDetail.category_id==1?siteInfo.categorys[0].name:articleDetail.category_id==2?siteInfo.categorys[1].name:articleDetail.category_id==3?siteInfo.categorys[2].name:articleDetail.category_id==4?siteInfo.categorys[3].name:'栏目专区'}}
                             </div>
                             <div class="time">
                                 <img class="img-time" src="../../../public/images/time1.png" alt="">{{articleDetail.create_time|timeFormat}}
@@ -353,6 +353,7 @@
         },
         data() {
             return {
+                siteInfo:{categorys:[{name:''},{name:''},{name:''},{name:''}]},
                 dialogVisible: false,
                 baseUrl: this.$baseUrl,
                 imgUrl: require('../../../public/images/default.png'),
@@ -569,6 +570,7 @@
             '$route': 'fetchData'
         },
         mounted() {
+            this.siteInfo=JSON.parse(localStorage.getItem('siteInfo'))
             this.fetchData()
             let swiper = new Swiper('.swiper-container', {
                 pagination: '.swiper-pagination',

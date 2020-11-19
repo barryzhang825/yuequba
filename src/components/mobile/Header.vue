@@ -16,10 +16,10 @@
             </div>
             <div class="top-menu-box" @click.stop>
                 <div class="top-menu-item" @click="goTo(1)">首页</div>
-                <div class="top-menu-item" @click="goTo(2)">主播区</div>
-                <div class="top-menu-item" @click="goTo(3)">美图区</div>
-                <div class="top-menu-item" @click="goTo(4)">视频区</div>
-                <div class="top-menu-item" @click="goTo(5)">包年精选区</div>
+                <div class="top-menu-item" @click="goTo(2)">{{siteInfo.categorys[0].name}}</div>
+                <div class="top-menu-item" @click="goTo(3)">{{siteInfo.categorys[1].name}}</div>
+                <div class="top-menu-item" @click="goTo(4)">{{siteInfo.categorys[2].name}}</div>
+                <div class="top-menu-item" @click="goTo(5)">{{siteInfo.categorys[3].name}}</div>
                 <div class="top-menu-item" @click="goTo(6)">购买专区</div>
                 <div class="top-menu-item" @click="goTo(7)">用户中心</div>
             </div>
@@ -51,7 +51,7 @@
         },
         data(){
             return{
-                siteInfo:{},
+                siteInfo:{categorys:[{name:''},{name:''},{name:''},{name:''}]},
                 ifShow:false,
                 ifSearch:false,
                 searchWord:''
