@@ -74,7 +74,7 @@
         },
         data(){
             return{
-                siteInfo:{categorys:[{name:'主播区'},{name:'美图区'},{name:'视频区'},{name:'包年精选区'}]},
+                siteInfo:{categorys:[{name:''},{name:''},{name:''},{name:''}]},
                 vipEndTime:0,
                 kb:0,
                 searchShow:false,

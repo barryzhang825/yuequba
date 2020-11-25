@@ -18,7 +18,7 @@
                             <div class="type">
                                 <img :class="item.category_id==1?'img-upper':item.category_id==2?'img-img':item.category_id==3?'img-video':item.category_id==4?'img-year':''"
                                      :src="item.category_id==1?require('../../../public/images/upper.png'):item.category_id==2?require('../../../public/images/img.png'):item.category_id==3?require('../../../public/images/video.png'):item.category_id==4?require('../../../public/images/year.png'):''" alt="">
-                                {{item.category_id==1?'主播区':item.category_id==2?'美图区':item.category_id==3?'视频区':item.category_id==4?'包年精选区':''}}
+                                {{item.category_id==1?siteInfo.categorys[0].name:item.category_id==2?siteInfo.categorys[1].name:item.category_id==3?siteInfo.categorys[2].name:item.category_id==4?siteInfo.categorys[3].name:''}}
                             </div>
                             <div class="time">
                                 <img class="img-time" src="../../../public/images/time.png" alt="">{{item.create_time|timeFormat}}
@@ -179,6 +179,7 @@
         },
         data() {
             return {
+                siteInfo:{categorys:[{name:''},{name:''},{name:''},{name:''}]},
                 device:localStorage.getItem('device'),
                 baseUrl: this.$baseUrl,
                 imgUrl: require('../../../public/images/avatar.gif'),
@@ -315,10 +316,8 @@
             },
         },
         mounted() {
-
             this.fetchData()
-
-
+            this.siteInfo=JSON.parse(localStorage.getItem('siteInfo'))
             let swiper = new Swiper('.swiper-container', {
                 pagination: '.swiper-pagination',
                 nextButton: '.swiper-button-next',
