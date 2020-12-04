@@ -23,9 +23,9 @@ import VueClipboard from 'vue-clipboard2'
 Vue.use(VueClipboard)
 
 //图片显示Host
-Vue.prototype.$baseUrl = 'http://yqb.ds-z.com/upload/'
+Vue.prototype.$baseUrl = 'http://ds-z.com/upload/'
 //项目地址Host
-Vue.prototype.$baseHost = 'http://yqb.ds-z.com'
+Vue.prototype.$baseHost = 'http://ds-z.com'
 
 import Contact from "./components/pc/Contact";
 Vue.component('Contact', Contact)
