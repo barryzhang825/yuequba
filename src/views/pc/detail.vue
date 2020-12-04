@@ -72,27 +72,29 @@
                         </div>
                         <div class="art-list">
                             <div class="item"
+                                 v-if="articleDetail.prev_article"
                                  @click="articleDetail.prev_article?$router.push('/detail?type='+category+'&id='+articleDetail.prev_article.id):''">
                                 <div v-if="articleDetail.prev_article" class="img"
                                      :style="'background-image: url('+baseUrl+articleDetail.prev_article.more.thumbnail+')'"></div>
-                                <div v-if="!articleDetail.prev_article" class="img"
-                                     :style="'background-image: url('+imgUrl+')'"></div>
+<!--                                <div v-if="!articleDetail.prev_article" class="img"-->
+<!--                                     :style="'background-image: url('+imgUrl+')'"></div>-->
                                 <div class="info">
                                     <div class="button">上一篇</div>
                                     <div class="title">
-                                        {{articleDetail.prev_article?articleDetail.prev_article.post_title:'暂无更多'}}
+                                        {{articleDetail.prev_article?articleDetail.prev_article.post_title:''}}
                                     </div>
                                 </div>
                             </div>
                             <div class="item"
+                                 v-if="articleDetail.next_article"
                                  @click="articleDetail.next_article?$router.push('/detail?type='+category+'&id='+articleDetail.next_article.id):''">
                                 <div v-if="articleDetail.next_article" class="img"
                                      :style="'background-image: url('+baseUrl+articleDetail.next_article.more.thumbnail+')'"></div>
-                                <div v-if="!articleDetail.next_article" class="img"
-                                     :style="'background-image: url('+imgUrl+')'"></div>
+<!--                                <div v-if="!articleDetail.next_article" class="img"-->
+<!--                                     :style="'background-image: url('+imgUrl+')'"></div>-->
                                 <div class="info">
                                     <div class="title">
-                                        {{articleDetail.next_article?articleDetail.next_article.post_title:'暂无更多'}}
+                                        {{articleDetail.next_article?articleDetail.next_article.post_title:''}}
                                     </div>
                                     <div class="button">下一篇</div>
                                 </div>
