@@ -18,7 +18,6 @@
                     <el-form-item>
                         <div class="center-box">
                             <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
-
                         </div>
                     </el-form-item>
                     <el-form-item>
