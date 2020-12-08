@@ -23,15 +23,15 @@
                 <div class="time">
                     <img class="img-time" src="../../../public/images/time1.png" alt="">{{articleDetail.create_time|timeFormatTwo}}
                 </div>
-                <div class="like">
-                    <img class="img-like" src="../../../public/images/heart1.png" alt="">{{articleDetail.post_like}}
-                </div>
-                <div class="com">
-                    <img class="img-comment" src="../../../public/images/comment.png" alt="">{{articleDetail.comment_count}}
-                </div>
-                <div class="download">
-                    下载资源：{{articleDetail.down_num}}
-                </div>
+<!--                <div class="like">-->
+<!--                    <img class="img-like" src="../../../public/images/heart1.png" alt="">{{articleDetail.post_like}}-->
+<!--                </div>-->
+<!--                <div class="com">-->
+<!--                    <img class="img-comment" src="../../../public/images/comment.png" alt="">{{articleDetail.comment_count}}-->
+<!--                </div>-->
+<!--                <div class="download">-->
+<!--                    下载资源：{{articleDetail.down_num}}-->
+<!--                </div>-->
             </div>
             <div class="introduction">
                 <img src="../../../public/images/tag.png" alt="">
@@ -56,10 +56,10 @@
                 </div>
             </div>
             <div class="set">
-                <div class="set-like" @click="likeArt">
-                    <img src="../../../public/images/like0.png" alt="">
-                    喜欢（{{articleDetail.post_like}}）
-                </div>
+<!--                <div class="set-like" @click="likeArt">-->
+<!--                    <img src="../../../public/images/like0.png" alt="">-->
+<!--                    喜欢（{{articleDetail.post_like}}）-->
+<!--                </div>-->
                 <div class="set-share" v-clipboard:copy="shareUrl" v-clipboard:success="onCopy">
                     <img src="../../../public/images/share0.png" alt="">
                     分享
