@@ -114,7 +114,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="comment">
+                    <div class="comment" v-if="articleDetail.site_comment_status==1">
                         <div class="title">发表评论</div>
                         <el-input
                                 ref="commentIpnut"
