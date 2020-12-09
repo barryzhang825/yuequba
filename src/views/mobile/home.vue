@@ -96,9 +96,9 @@
                             <div class="time">
                                 <img class="img-time" src="../../../public/images/time.png" alt="">{{item.create_time|timeFormat}}
                             </div>
-                            <div class="like">
-                                <img class="img-like" src="../../../public/images/heart.png" alt="">{{item.post_like}}
-                            </div>
+<!--                            <div class="like">-->
+<!--                                <img class="img-like" src="../../../public/images/heart.png" alt="">{{item.post_like}}-->
+<!--                            </div>-->
                         </div>
                         <div class="line4">
                             <div v-if="item.more.photos.length>0"

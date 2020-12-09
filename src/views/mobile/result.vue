@@ -24,9 +24,9 @@
                             <div class="time">
                                 <img class="img-time" src="../../../public/images/time.png" alt="">{{item.create_time|timeFormat}}
                             </div>
-                            <div class="like">
-                                <img class="img-like" src="../../../public/images/heart.png" alt="">{{item.post_like}}
-                            </div>
+<!--                            <div class="like">-->
+<!--                                <img class="img-like" src="../../../public/images/heart.png" alt="">{{item.post_like}}-->
+<!--                            </div>-->
                         </div>
                         <div class="line4">
                             <div v-if="item.more.photos.length>0" @click="$router.push('/detail?type='+item.category_id+'&id='+item.id)" class="line4-item" :style="'background-image: url('+baseUrl+item.more.photos[0].url+')'"></div>
