@@ -1,7 +1,9 @@
 <template>
     <div class="footer-page">
         <div class="center">
-            {{siteInfo.site_icp}}
+            <div class="left"></div>
+            <div class="center"><span>{{siteInfo.site_icp}}</span></div>
+            <div class="right"><span>联络邮箱：</span><span>{{siteInfo.site_admin_email}}</span></div>
         </div>
     </div>
 </template>
@@ -49,9 +51,24 @@
             text-align: center;
             margin: 0 auto;
             width: 1200px;
-            font-size:16px;
-            font-weight:400;
-            color:rgba(100,100,100,1);
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            span{
+                font-size:16px;
+                font-weight:400;
+                color:rgba(100,100,100,1);
+            }
+            .right{
+                flex-shrink: 0;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+            }
+            .center{
+                flex-basis: 0;
+            }
         }
     }
 
