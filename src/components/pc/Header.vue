@@ -15,13 +15,13 @@
             </div>
             <div class="right">
                 <img class="search" @click="searchShow = true" src="../../../public/images/search.png" alt="">
-                <div class="link" v-if="!user_email"><router-link to="/login">登录</router-link> | <router-link to="/register">注册</router-link></div>
-                <div class="userinfo" v-if="user_email">
+                <div class="link" v-if="!user_email && !user_nickname"><router-link to="/login">登录</router-link> | <router-link to="/register">注册</router-link></div>
+                <div class="userinfo" v-if="user_email || user_nickname">
                     <div class="userinfo-left" @click="refreshUserInfo">
 <!--                        <router-link to="/user" class="user-email">{{user_email}}</router-link>-->
                         <el-dropdown trigger="click" @command="handleCommand" >
                             <span class="el-dropdown-link" style="cursor: pointer">
-                                {{user_email}}
+                                {{user_email||user_nickname}}
                             </span>
                             <el-dropdown-menu slot="dropdown">
                                 <el-dropdown-item v-if="vipEndTime">
